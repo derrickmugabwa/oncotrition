@@ -38,7 +38,7 @@ const SliderSettingsTab = () => {
 
   const validateImage = (file: File): Promise<boolean> => {
     return new Promise((resolve) => {
-      const img = new Image();
+      const img = new window.Image();
       img.src = URL.createObjectURL(file);
       
       img.onload = () => {

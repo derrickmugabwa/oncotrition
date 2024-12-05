@@ -292,7 +292,7 @@ const TestimonialsTab = () => {
                             key={rating}
                             onClick={() => handleUpdateTestimonial(testimonial.id, { rating })}
                             className={`p-2 rounded-lg transition-all duration-300 ${
-                              editState.rating >= rating 
+                              (editState?.rating ?? testimonial.rating) >= rating 
                                 ? 'text-yellow-400 hover:text-yellow-500' 
                                 : 'text-gray-300 hover:text-gray-400'
                             }`}
@@ -312,8 +312,8 @@ const TestimonialsTab = () => {
                       <div className="flex items-center space-x-4">
                         <div className="relative w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-xl overflow-hidden ring-2 ring-primary/20">
                           <Image
-                            src={editState.image}
-                            alt={editState.name}
+                            src={editState?.image ?? testimonial.image}
+                            alt={editState?.name ?? testimonial.name}
                             fill
                             className="object-cover"
                           />
