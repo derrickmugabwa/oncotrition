@@ -9,7 +9,13 @@ import Team from '@/components/about/Team';
 import Modules from '@/components/about/Modules';
 import WhyChooseUs from '@/components/about/WhyChooseUs';
 
-const AnimatedSection = ({ children, className = "", delay = 0 }) => {
+interface AnimatedSectionProps {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}
+
+const AnimatedSection = ({ children, className = "", delay = 0 }: AnimatedSectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 

@@ -67,6 +67,99 @@ export interface Database {
           metadata?: Json
         }
       }
+      contact_info: {
+        Row: {
+          id: string
+          created_at: string
+          title: string
+          description: string
+          email: string
+          phone: string
+          address: string
+          social_links: {
+            facebook?: string
+            twitter?: string
+            instagram?: string
+          }
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          title: string
+          description: string
+          email: string
+          phone: string
+          address: string
+          social_links?: {
+            facebook?: string
+            twitter?: string
+            instagram?: string
+          }
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          title?: string
+          description?: string
+          email?: string
+          phone?: string
+          address?: string
+          social_links?: {
+            facebook?: string
+            twitter?: string
+            instagram?: string
+          }
+        }
+      }
+      form_submissions: {
+        Row: {
+          id: string
+          created_at: string
+          name: string
+          email: string
+          subject: string
+          message: string
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          name: string
+          email: string
+          subject: string
+          message: string
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          name?: string
+          email?: string
+          subject?: string
+          message?: string
+        }
+      }
+      site_settings: {
+        Row: {
+          id: string
+          created_at: string
+          logo_url?: string
+          favicon_url?: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          logo_url?: string
+          favicon_url?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          logo_url?: string
+          favicon_url?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

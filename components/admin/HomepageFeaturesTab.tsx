@@ -4,7 +4,7 @@ import React from 'react'
 import { useState, useEffect, useRef } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import toast from 'react-hot-toast'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd'
 import { 
   HeartIcon,  // Health & Wellness
   ScaleIcon,  // Weight & Measurements
@@ -214,7 +214,7 @@ const HomepageFeaturesTab = () => {
     }
   }
 
-  const handleDragEnd = async (result) => {
+  const handleDragEnd = async (result: DropResult) => {
     if (!result.destination) return
 
     const items = Array.from(features)

@@ -41,7 +41,16 @@ const featureIcons = {
   presentation: PresentationChartLineIcon,
   academic: AcademicCapIcon,
   thumbUp: HandThumbUpIcon,
-};
+} as const;
+
+type IconName = keyof typeof featureIcons;
+
+interface FeatureCardProps {
+  title: string;
+  description: string;
+  icon_name: IconName;
+  index: number;
+}
 
 const defaultFeatures = [
   {
@@ -74,7 +83,7 @@ const defaultFeatures = [
   }
 ];
 
-const FeatureCard = ({ title, description, icon_name, index }) => {
+const FeatureCard = ({ title, description, icon_name, index }: FeatureCardProps) => {
   const cardRef = useRef(null);
   const isInView = useInView(cardRef, { once: true });
   const IconComponent = featureIcons[icon_name] || featureIcons.scale;
@@ -232,9 +241,22 @@ export default function Features() {
 
           {/* Right side features */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {features.map((feature, index) => (
-              <FeatureCard key={feature.id} {...feature} index={index} />
-            ))}
+            {features.map((feature, index) => {
+              // Validate icon_name is a valid icon
+              const icon_name = (feature.icon_name as IconName) in featureIcons 
+                ? (feature.icon_name as IconName) 
+                : 'scale';
+              
+              return (
+                <FeatureCard
+                  key={feature.id}
+                  title={feature.title}
+                  description={feature.description}
+                  icon_name={icon_name}
+                  index={index}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

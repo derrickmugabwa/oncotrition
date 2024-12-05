@@ -108,7 +108,7 @@ const SiteLogoTab = () => {
       try {
         const { data: existingSettings } = await supabase
           .from('site_settings')
-          .select(type === 'logo' ? 'logo_url' : 'favicon_url')
+          .select('logo_url, favicon_url')
           .single()
 
         if (existingSettings) {
