@@ -160,6 +160,44 @@ export interface Database {
           updated_at?: string
         }
       }
+      homepage_mentorship: {
+        Row: {
+          id: string
+          title: string
+          subtitle: string
+          description: string
+          image_url: string | null
+          button_text: string
+          button_link: string
+          features: string[]
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          subtitle: string
+          description: string
+          image_url?: string | null
+          button_text?: string
+          button_link?: string
+          features?: string[]
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          subtitle?: string
+          description?: string
+          image_url?: string | null
+          button_text?: string
+          button_link?: string
+          features?: string[]
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

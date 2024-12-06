@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
+import ThemeToggle from '@/components/ThemeToggle'
 import {
   HomeIcon,
   InformationCircleIcon,
@@ -29,16 +30,17 @@ export default function Sidebar() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Logo */}
-      <div className="p-6">
+      {/* Logo and Theme Toggle */}
+      <div className="p-6 flex items-center justify-between">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent"
+          className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-400 bg-clip-text text-transparent"
         >
           Oncotrition
         </motion.div>
+        <ThemeToggle />
       </div>
 
       {/* Navigation */}
@@ -58,20 +60,20 @@ export default function Sidebar() {
                   className={`
                     flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200
                     ${isActive
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100'
                     }
                   `}
                 >
                   <item.icon
                     className={`mr-3 h-5 w-5 transition-colors duration-200 ${
-                      isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-500'
+                      isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-400 group-hover:text-gray-500'
                     }`}
                   />
                   {item.name}
                   {isActive && (
                     <motion.div
-                      className="absolute left-0 w-1 h-8 bg-blue-600 rounded-r-full"
+                      className="absolute left-0 w-1 h-8 bg-emerald-600 dark:bg-emerald-400 rounded-r-full"
                       layoutId="activeTab"
                       transition={{
                         type: "spring",
@@ -90,7 +92,7 @@ export default function Sidebar() {
       {/* Settings Button */}
       <div className="p-4">
         <button
-          className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+          className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-200"
         >
           <Cog6ToothIcon className="mr-3 h-5 w-5 text-gray-400" />
           Settings
