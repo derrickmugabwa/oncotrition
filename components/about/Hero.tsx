@@ -76,7 +76,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto"
           >
-            Discover the tools and capabilities that make NutriLife the perfect companion for your wellness journey
+            Discover the tools and capabilities that make Oncotrition the perfect companion for your wellness journey
           </motion.p>
 
           {/* Decorative Line */}

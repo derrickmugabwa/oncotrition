@@ -84,7 +84,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto"
           >
-            Get started with NutriLife today and transform your nutrition journey
+            Get started with Oncotrition today and transform your nutrition journey
           </motion.p>
 
           {/* Decorative Line */}
