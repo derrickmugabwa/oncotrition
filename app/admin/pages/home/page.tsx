@@ -3,23 +3,43 @@
 import { useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { motion } from 'framer-motion';
-import MissionTab from '@/components/admin/about/MissionTab';
-import ModulesTab from '@/components/admin/about/ModulesTab';
-import TeamTab from '@/components/admin/about/TeamTab';
-import ValuesTab from '@/components/admin/about/ValuesTab';
-import WhyChooseUsTab from '@/components/admin/about/WhyChooseUsTab';
+import SiteLogoTab from '@/components/admin/SiteLogoTab';
+import HomepageMentorshipTab from '@/components/admin/HomepageMentorshipTab';
+import HomepageFeaturesTab from '@/components/admin/HomepageFeaturesTab';
+import SliderSettingsTab from '@/components/admin/SliderSettingsTab';
+import StatisticsTab from '@/components/admin/StatisticsTab';
+import TestimonialsTab from '@/components/admin/TestimonialsTab';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function AboutPage() {
+export default function HomeAdminPage() {
   const tabs = [
-    { name: 'Mission', component: <MissionTab /> },
-    { name: 'Modules', component: <ModulesTab /> },
-    { name: 'Team', component: <TeamTab /> },
-    { name: 'Values', component: <ValuesTab /> },
-    { name: 'Why Choose Us', component: <WhyChooseUsTab /> },
+    { 
+      name: 'Site Logo',
+      component: <SiteLogoTab />
+    },
+    { 
+      name: 'Slider Settings',
+      component: <SliderSettingsTab />
+    },
+    { 
+      name: 'Features',
+      component: <HomepageFeaturesTab />
+    },
+    { 
+      name: 'Statistics',
+      component: <StatisticsTab />
+    },
+    { 
+      name: 'Testimonials',
+      component: <TestimonialsTab />
+    },
+    { 
+      name: 'Mentorship',
+      component: <HomepageMentorshipTab />
+    }
   ];
 
   return (
@@ -29,25 +49,6 @@ export default function AboutPage() {
       transition={{ duration: 0.5 }}
       className="p-6"
     >
-      <div className="max-w-3xl mb-8">
-        <motion.h1 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-4"
-        >
-          About Page Management
-        </motion.h1>
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-gray-600 dark:text-gray-300"
-        >
-          Customize your about page content through these sections.
-        </motion.p>
-      </div>
-
       <Tab.Group>
         <Tab.List className="flex flex-wrap gap-2 p-2 rounded-2xl bg-gradient-to-r from-emerald-50/50 to-teal-50/50 dark:from-emerald-900/10 dark:to-teal-900/10 shadow-lg backdrop-blur-sm">
           {tabs.map((tab) => (

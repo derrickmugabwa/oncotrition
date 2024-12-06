@@ -125,7 +125,7 @@ export default function Header() {
                 className={`nav-link text-sm font-medium transition-colors duration-200 ${
                   isScrolled
                     ? 'text-gray-700 hover:text-primary dark:text-gray-200 dark:hover:text-primary'
-                    : 'text-white hover:text-primary'
+                    : 'text-gray-700 hover:text-primary dark:text-gray-200'
                 }`}
               >
                 {item.name}
@@ -141,47 +141,29 @@ export default function Header() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex items-center space-x-4 md:hidden">
-            <ThemeToggle />
+          <div className="flex items-center space-x-6 md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`p-2 rounded-md ${
                 isScrolled
                   ? 'text-gray-700 dark:text-gray-200'
-                  : 'text-white'
+                  : 'text-gray-700 dark:text-gray-200'
               }`}
+              aria-label="Toggle menu"
             >
-              <span className="sr-only">Open menu</span>
-              {!isMobileMenuOpen ? (
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              )}
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path>
+              </svg>
             </button>
+            <ThemeToggle />
           </div>
         </div>
 
@@ -203,7 +185,7 @@ export default function Header() {
                     className={`block px-3 py-2 rounded-md text-base font-medium ${
                       isScrolled
                         ? 'text-gray-700 hover:text-primary dark:text-gray-200 dark:hover:text-primary'
-                        : 'text-white hover:text-primary'
+                        : 'text-gray-700 hover:text-primary dark:text-gray-200 dark:hover:text-primary'
                     }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
@@ -211,11 +193,11 @@ export default function Header() {
                   </Link>
                 ))}
                 <Link
-                  href="/login"
+                  href="/smartspoon"
                   className="block w-full btn btn-primary mt-4 text-center"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Login
+                  Smartspoon+
                 </Link>
               </div>
             </motion.div>

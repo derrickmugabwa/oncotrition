@@ -2,6 +2,7 @@
 
 import { useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 interface Statistic {
@@ -18,42 +19,68 @@ interface StatCardProps {
 
 const StatCard = ({ stat, index }: StatCardProps) => {
   const cardRef = useRef(null);
-  const isInView = useInView(cardRef, { once: true });
+  const isInView = useInView(cardRef, { once: true, margin: "-50px" });
 
   return (
-    <div
+    <motion.div
       ref={cardRef}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{ duration: 0.5, delay: index * 0.2 }}
       className="relative bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 dark:from-emerald-900/20 dark:via-green-900/10 dark:to-teal-900/20 p-8 rounded-2xl shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
     >
-      <h3 className="text-4xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
+      <motion.h3 
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+        transition={{ duration: 0.5, delay: index * 0.2 + 0.2 }}
+        className="text-4xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
+      >
         {stat.number}
-      </h3>
-      <p className="text-emerald-800 dark:text-emerald-200">
+      </motion.h3>
+      <motion.p 
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
+        className="text-emerald-800 dark:text-emerald-200"
+      >
         {stat.label}
-      </p>
-    </div>
+      </motion.p>
+    </motion.div>
   );
 };
 
 const Header = () => {
   const headingRef = useRef(null);
-  const isHeadingInView = useInView(headingRef, { once: true });
+  const isHeadingInView = useInView(headingRef, { once: true, margin: "-50px" });
 
   return (
-    <div
+    <motion.div
       ref={headingRef}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isHeadingInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{ duration: 0.6 }}
       className="text-center mb-12"
     >
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <motion.h2 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={isHeadingInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="text-3xl md:text-4xl font-bold mb-4"
+      >
         <span className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
           Trusted by Health Professionals Worldwide
         </span>
-      </h2>
-      <p className="text-gray-600 dark:text-gray-300 max-w-4xl mx-auto text-lg">
+      </motion.h2>
+      <motion.p 
+        initial={{ opacity: 0 }}
+        animate={isHeadingInView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="text-gray-600 dark:text-gray-300 max-w-4xl mx-auto text-lg"
+      >
         Join thousands of nutritionists, dietitians, and health coaches who trust SmartSpoon+ to streamline their practice 
         and deliver exceptional results to their clients. Our platform is designed to help you work smarter, not harder.
-      </p>
-    </div>
+      </motion.p>
+    </motion.div>
   );
 };
 

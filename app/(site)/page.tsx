@@ -5,6 +5,7 @@ import HeroSlider from '@/components/HeroSlider'
 import Statistics from '@/components/Statistics'
 import Features from '@/components/Features'
 import Testimonials from '@/components/Testimonials'
+import HomepageMentorship from '@/components/HomepageMentorship'
 import { usePageLoading } from '@/hooks/usePageLoading'
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
       <HeroSlider />
       <Features />
       <Statistics />
+      <HomepageMentorship />
       <Testimonials />
     </main>
   )

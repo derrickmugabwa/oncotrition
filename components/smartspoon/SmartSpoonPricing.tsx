@@ -137,7 +137,7 @@ export default function SmartSpoonPricing() {
                     className="relative"
                   >
                     <Link
-                      href="/signup"
+                      href="https://smartspoonplus.com/professionals/account/login"
                       className={`block w-full py-3 px-6 text-center rounded-xl font-medium transition-all duration-300
                         ${plan.recommended
                           ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:shadow-lg hover:shadow-blue-500/25'

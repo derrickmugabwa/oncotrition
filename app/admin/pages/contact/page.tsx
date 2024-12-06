@@ -1,63 +1,80 @@
 'use client';
 
 import { useState } from 'react';
+import { Tab } from '@headlessui/react';
+import { motion } from 'framer-motion';
 import ContactSubmissionsTab from '@/components/admin/contact/ContactSubmissionsTab';
 import ContactInformationTab from '@/components/admin/contact/ContactInformationTab';
-import { motion } from 'framer-motion';
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ');
+}
 
 export default function ContactPage() {
-  const [activeTab, setActiveTab] = useState('submissions');
-
   const tabs = [
-    { id: 'submissions', label: 'Contact Submissions' },
-    { id: 'information', label: 'Contact Information' },
+    { name: 'Contact Submissions', component: <ContactSubmissionsTab /> },
+    { name: 'Contact Information', component: <ContactInformationTab /> },
   ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Contact Management</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="p-6 max-w-7xl mx-auto"
+    >
+      <div className="max-w-3xl mb-8">
+        <motion.h1 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-4"
+        >
+          Contact Management
+        </motion.h1>
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-gray-600 dark:text-gray-300"
+        >
           Manage contact form submissions and contact information displayed on the website.
-        </p>
+        </motion.p>
       </div>
 
-      {/* Tabs */}
-      <div className="mb-6">
-        <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex space-x-8">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`
-                  py-4 px-1 inline-flex items-center border-b-2 font-medium text-sm
-                  ${activeTab === tab.id
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
-                  }
-                `}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
-
-      {/* Tab Content */}
-      <motion.div
-        key={activeTab}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {activeTab === 'submissions' ? (
-          <ContactSubmissionsTab />
-        ) : (
-          <ContactInformationTab />
-        )}
-      </motion.div>
-    </div>
+      <Tab.Group>
+        <Tab.List className="flex flex-wrap gap-2 p-2 rounded-2xl bg-gradient-to-r from-emerald-50/50 to-teal-50/50 dark:from-emerald-900/10 dark:to-teal-900/10 shadow-lg backdrop-blur-sm">
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.name}
+              className={({ selected }) =>
+                classNames(
+                  'px-6 py-3 text-sm font-medium rounded-xl transition-all duration-200',
+                  'focus:outline-none',
+                  selected
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md shadow-emerald-500/20 scale-105 hover:shadow-lg'
+                    : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400'
+                )
+              }
+            >
+              {tab.name}
+            </Tab>
+          ))}
+        </Tab.List>
+        <Tab.Panels className="mt-8">
+          {tabs.map((tab, idx) => (
+            <Tab.Panel
+              key={idx}
+              className={classNames(
+                'rounded-2xl bg-white dark:bg-gray-800/80 p-6 shadow-xl backdrop-blur-sm',
+                'ring-white/60 ring-offset-2 ring-offset-emerald-400 focus:outline-none focus:ring-2'
+              )}
+            >
+              {tab.component}
+            </Tab.Panel>
+          ))}
+        </Tab.Panels>
+      </Tab.Group>
+    </motion.div>
   );
 }
