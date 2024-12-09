@@ -137,14 +137,21 @@ export default function MentorshipCards() {
                     className="relative"
                   >
                     <Link
-                      href="/signup"
-                      className={`block w-full py-3 px-6 text-center rounded-xl font-medium transition-all duration-300
-                        ${plan.recommended
-                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:shadow-lg hover:shadow-blue-500/25'
+                      href="#events-section"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document.getElementById('events-section')?.scrollIntoView({
+                          behavior: 'smooth',
+                          block: 'start'
+                        });
+                      }}
+                      className={`inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-xl transition duration-300 ease-in-out ${
+                        plan.recommended
+                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-700 hover:to-indigo-700'
                           : 'bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 text-gray-900 dark:text-white hover:shadow-lg dark:hover:shadow-gray-900/25'
                         }`}
                     >
-                      Get Started
+                      Book Now
                     </Link>
                   </motion.div>
                 </div>
