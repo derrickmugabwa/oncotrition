@@ -11,10 +11,12 @@ const SiteLogoTab = () => {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [settings, setSettings] = useState<{
+    id: number
     logo_url: string | null
     favicon_url: string | null
     show_site_name: boolean
   }>({
+    id: 0,
     logo_url: null,
     favicon_url: null,
     show_site_name: true
@@ -95,14 +97,11 @@ const SiteLogoTab = () => {
         throw new Error('Not authenticated')
       }
 
-      console.log('Starting file upload for:', type)
-
-      // Create a clean filename
+      // Create a clean filename with timestamp
       const fileExt = file.name.split('.').pop()?.toLowerCase() || ''
-      const fileName = `${type}-${Date.now()}.${fileExt}`
-      const filePath = `${session.user.id}/${fileName}`
-
-      console.log('Uploading file:', filePath)
+      const timestamp = Date.now()
+      const fileName = `${type}-${timestamp}.${fileExt}`
+      const filePath = `site-assets/${fileName}`
 
       // First, try to delete existing file if any
       try {
@@ -114,73 +113,54 @@ const SiteLogoTab = () => {
         if (existingSettings) {
           const existingUrl = type === 'logo' ? existingSettings.logo_url : existingSettings.favicon_url
           if (existingUrl) {
-            const existingPath = existingUrl.split('/').slice(-2).join('/')
-            await supabase.storage
-              .from('site-assets')
-              .remove([existingPath])
+            // Extract the file path from the full URL
+            const existingPath = existingUrl.split('site-assets/').pop()?.split('?')[0]
+            if (existingPath) {
+              await supabase.storage
+                .from('site-assets')
+                .remove([existingPath])
+            }
           }
         }
       } catch (error) {
         console.warn('Error removing existing file:', error)
-        // Continue with upload even if delete fails
       }
 
       // Upload new file
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('site-assets')
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: true
         })
 
-      if (uploadError) {
-        console.error('Upload error:', uploadError)
-        throw uploadError
-      }
+      if (uploadError) throw uploadError
 
-      console.log('File uploaded successfully:', uploadData)
-
-      // Get public URL with cache-busting parameter
+      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('site-assets')
         .getPublicUrl(filePath)
 
-      // Add a timestamp to prevent caching
-      const urlWithTimestamp = `${publicUrl}?t=${Date.now()}`
+      // Add timestamp to prevent caching
+      const urlWithTimestamp = `${publicUrl}?t=${timestamp}`
 
-      console.log('Public URL generated:', urlWithTimestamp)
-
-      // Update settings with the timestamped URL
-      const { error: updateError, data: updateData } = await supabase
+      // Update settings
+      const { error: updateError } = await supabase
         .from('site_settings')
-        .upsert({ 
+        .update({ 
           [`${type}_url`]: urlWithTimestamp,
-          show_site_name: settings.show_site_name
         })
-        .select()
-        .single()
+        .eq('id', settings.id)
 
-      if (updateError) {
-        console.error('Update error:', updateError)
-        throw updateError
-      }
+      if (updateError) throw updateError
 
-      console.log('Settings updated successfully:', updateData)
-
-      // Update local state with the timestamped URL
+      // Update local state
       setSettings(prev => ({
         ...prev,
         [`${type}_url`]: urlWithTimestamp
       }))
 
-      // Preload the image using a hidden img element
-      const preloadLink = document.createElement('link')
-      preloadLink.rel = 'preload'
-      preloadLink.as = 'image'
-      preloadLink.href = urlWithTimestamp
-      document.head.appendChild(preloadLink)
-
-      // Refresh the page to show new images
+      // Force router refresh to update all components
       router.refresh()
 
     } catch (error: any) {
@@ -257,90 +237,113 @@ const SiteLogoTab = () => {
         </div>
       )}
 
-      <div className="bg-white rounded-lg p-6 shadow-sm">
+      <div className="bg-white shadow sm:rounded-lg p-6 space-y-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Current Logo</h3>
-        <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
-          <div className="mx-auto w-32 h-32 bg-gray-50 rounded-lg flex items-center justify-center mb-4">
-            {settings.logo_url ? (
+        <div className="flex items-center space-x-4">
+          {settings.logo_url ? (
+            <div className="relative w-20 h-20 border border-gray-200 rounded-lg overflow-hidden bg-white flex items-center justify-center">
               <Image
                 src={settings.logo_url}
                 alt="Site Logo"
-                width={128}
-                height={128}
-                className="object-contain"
+                fill
+                className="object-contain p-2"
+                sizes="80px"
               />
-            ) : (
-              <span className="text-gray-400">No logo uploaded</span>
-            )}
-          </div>
-          <input
-            type="file"
-            id="logo-upload"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => handleFileInputChange(e, 'logo')}
-            disabled={isUploading}
-          />
-          <label
-            htmlFor="logo-upload"
-            className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer ${
-              isUploading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {isUploading ? 'Uploading...' : 'Upload New Logo'}
-          </label>
-        </div>
-
-        <div className="mt-6">
-          <h4 className="text-md font-medium text-gray-900 mb-2">Favicon</h4>
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-gray-50 rounded flex items-center justify-center">
-              {settings.favicon_url ? (
-                <Image
-                  src={settings.favicon_url}
-                  alt="Favicon"
-                  width={32}
-                  height={32}
-                  className="object-contain"
-                />
-              ) : (
-                <span className="text-gray-400 text-xs">No favicon</span>
-              )}
             </div>
+          ) : (
+            <div className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+              <span className="text-gray-400">No logo</span>
+            </div>
+          )}
+          <div className="flex-1">
             <input
               type="file"
-              id="favicon-upload"
-              accept="image/*"
+              id="logo-upload"
               className="hidden"
-              onChange={(e) => handleFileInputChange(e, 'favicon')}
+              accept="image/*"
+              onChange={(e) => handleFileInputChange(e, 'logo')}
               disabled={isUploading}
             />
             <label
-              htmlFor="favicon-upload"
-              className={`px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer ${
-                isUploading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              htmlFor="logo-upload"
+              className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
+                isUploading
+                  ? 'bg-purple-400 cursor-not-allowed'
+                  : 'bg-purple-600 hover:bg-purple-700 cursor-pointer'
+              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
             >
-              {isUploading ? 'Uploading...' : 'Upload Favicon'}
+              {isUploading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Uploading...
+                </>
+              ) : (
+                'Upload New Logo'
+              )}
             </label>
+            {error && (
+              <p className="mt-2 text-sm text-red-600">{error}</p>
+            )}
+            <p className="mt-2 text-sm text-gray-500">
+              Recommended: Square image, at least 100x100 pixels. Supports PNG, JPG, SVG, GIF, or WebP.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Logo Settings</h3>
+          <div className="mt-4 space-y-4">
+            <div className="flex items-center">
+              <input
+                id="show-site-name"
+                type="checkbox"
+                checked={settings.show_site_name}
+                onChange={(e) => handleShowSiteNameToggle(e.target.checked)}
+                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              />
+              <label htmlFor="show-site-name" className="ml-3">
+                <span className="text-sm text-gray-700">Show site name next to logo</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Logo Settings</h3>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                className="rounded border-gray-300 text-blue-600"
-                checked={settings.show_site_name}
-                onChange={(e) => handleShowSiteNameToggle(e.target.checked)}
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Favicon</h3>
+        <div className="flex items-center space-x-4">
+          <div className="w-8 h-8 bg-gray-50 rounded flex items-center justify-center">
+            {settings.favicon_url ? (
+              <Image
+                src={settings.favicon_url}
+                alt="Favicon"
+                width={32}
+                height={32}
+                className="object-contain"
               />
-              <span className="text-sm text-gray-700">Show site name next to logo</span>
-            </label>
+            ) : (
+              <span className="text-gray-400 text-xs">No favicon</span>
+            )}
           </div>
+          <input
+            type="file"
+            id="favicon-upload"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => handleFileInputChange(e, 'favicon')}
+            disabled={isUploading}
+          />
+          <label
+            htmlFor="favicon-upload"
+            className={`px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer ${
+              isUploading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            {isUploading ? 'Uploading...' : 'Upload Favicon'}
+          </label>
         </div>
       </div>
     </div>

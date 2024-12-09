@@ -1,23 +1,14 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { Tab } from '@headlessui/react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import MentorshipFeaturesTab from '@/components/admin/mentorship/MentorshipFeaturesTab';
-import PackagesTab from '@/components/admin/mentorship/PackagesTab';
-import SubmissionsTab from '@/components/admin/mentorship/SubmissionsTab';
-import MentorshipEventsTab from '@/components/admin/mentorship/MentorshipEventsTab';
-import EventBookingsTab from '@/components/admin/mentorship/EventBookingsTab';
+import { Tab } from '@headlessui/react'
+import { motion } from 'framer-motion'
+import { cn } from '@/lib/utils'
+import FooterTab from '@/components/admin/footer/FooterTab'
 
-export default function MentorshipAdminPage() {
+export default function FooterPage() {
   const tabs = [
-    { name: 'Mentorship Features', component: <MentorshipFeaturesTab /> },
-    { name: 'Packages', component: <PackagesTab /> },
-    { name: 'Events', component: <MentorshipEventsTab /> },
-    { name: 'Bookings', component: <EventBookingsTab /> },
-    // { name: 'Submissions', component: <SubmissionsTab /> },
-  ];
+    { name: 'Footer Settings', component: <FooterTab /> },
+  ]
 
   return (
     <motion.div
@@ -33,7 +24,7 @@ export default function MentorshipAdminPage() {
           transition={{ delay: 0.2 }}
           className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-4"
         >
-          Mentorship Page Management
+          Footer Management
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0 }}
@@ -41,7 +32,7 @@ export default function MentorshipAdminPage() {
           transition={{ delay: 0.3 }}
           className="text-gray-600 dark:text-gray-300"
         >
-          Manage your mentorship page content, packages, and user submissions.
+          Manage your website's footer content, social media links, and contact information.
         </motion.p>
       </div>
 
@@ -79,5 +70,5 @@ export default function MentorshipAdminPage() {
         </Tab.Panels>
       </Tab.Group>
     </motion.div>
-  );
+  )
 }

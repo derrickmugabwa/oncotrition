@@ -2,68 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import Logo from './Logo';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [settings, setSettings] = useState<{
-    logo_url: string | null;
-    show_site_name: boolean;
-  }>({
-    logo_url: null,
-    show_site_name: true
-  });
-  const supabase = createClientComponentClient();
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        // Get the most recent settings
-        const { data: allSettings, error } = await supabase
-          .from('site_settings')
-          .select('logo_url, show_site_name')
-          .order('created_at', { ascending: false })
-          .limit(1);
-
-        if (error) throw error;
-
-        const settings = allSettings?.[0];
-        console.log('Fetched site settings:', settings);
-        
-        if (settings) {
-          // Preload logo if it exists
-          if (settings.logo_url) {
-            const preloadLink = document.createElement('link');
-            preloadLink.rel = 'preload';
-            preloadLink.as = 'image';
-            preloadLink.href = settings.logo_url;
-            preloadLink.crossOrigin = 'anonymous';
-            document.head.appendChild(preloadLink);
-          }
-          setSettings(settings);
-        } else {
-          // Use default settings if none found
-          setSettings({
-            logo_url: null,
-            show_site_name: true
-          });
-        }
-      } catch (error: any) {
-        console.error('Error fetching site settings:', error.message);
-        // Handle the error gracefully - show default logo/name
-        setSettings({
-          logo_url: null,
-          show_site_name: true
-        });
-      }
-    };
-
-    fetchSettings();
-  }, [supabase]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -94,28 +39,11 @@ export default function Header() {
       transition={{ duration: 0.5 }}
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            {settings.logo_url ? (
-              <div className="relative w-16 h-16 sm:w-32 sm:h-32">
-                <Image
-                  src={settings.logo_url}
-                  alt="Site Logo"
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 640px) 64px, 128px"
-                  priority
-                />
-              </div>
-            ) : null}
-            {/* {settings.show_site_name && (
-              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Oncotrition<span className="text-blue-500"></span>
-              </span>
-            )} */}
-          </Link>
-
+          <div className="flex-shrink-0">
+            <Logo />
+          </div>
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
