@@ -13,6 +13,7 @@ interface Package {
   recommended: boolean;
   gradient: string;
   order_number: number;
+  duration_type: string;
 }
 
 const defaultPackages = [
@@ -27,7 +28,8 @@ const defaultPackages = [
     ],
     recommended: false,
     gradient: 'from-blue-400/20 to-indigo-400/20',
-    order_number: 1
+    order_number: 1,
+    duration_type: 'month'
   },
   {
     name: 'Pro Plan',
@@ -41,7 +43,8 @@ const defaultPackages = [
     ],
     recommended: true,
     gradient: 'from-purple-400/20 to-pink-400/20',
-    order_number: 2
+    order_number: 2,
+    duration_type: 'month'
   },
   {
     name: 'Premium Plan',
@@ -56,7 +59,8 @@ const defaultPackages = [
     ],
     recommended: false,
     gradient: 'from-amber-400/20 to-orange-400/20',
-    order_number: 3
+    order_number: 3,
+    duration_type: 'month'
   }
 ];
 
@@ -71,14 +75,17 @@ export default function PackagesTab() {
     recommended: boolean;
     gradient: string;
     order_number: number;
+    duration_type: string;
   }>({
     name: '',
     price: 0,
     features: [],
     recommended: false,
     gradient: '',
-    order_number: 0
+    order_number: 0,
+    duration_type: 'month'
   });
+  const [isCustomDuration, setIsCustomDuration] = useState(false);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
@@ -93,7 +100,8 @@ export default function PackagesTab() {
         features: [...editingPackage.features],
         recommended: editingPackage.recommended,
         gradient: editingPackage.gradient,
-        order_number: editingPackage.order_number
+        order_number: editingPackage.order_number,
+        duration_type: editingPackage.duration_type
       });
     }
   }, [editingPackage]);
@@ -153,7 +161,8 @@ export default function PackagesTab() {
         features: ['New Feature'],
         recommended: false,
         gradient: 'from-blue-400/20 to-indigo-400/20',
-        order_number: newOrderNumber
+        order_number: newOrderNumber,
+        duration_type: 'month'
       };
 
       const { data, error } = await supabase
@@ -215,7 +224,8 @@ export default function PackagesTab() {
           features: editForm.features,
           recommended: editForm.recommended,
           gradient: editForm.gradient,
-          order_number: editForm.order_number
+          order_number: editForm.order_number,
+          duration_type: editForm.duration_type
         })
         .eq('id', editingPackage.id);
 
@@ -303,7 +313,7 @@ export default function PackagesTab() {
                     {pkg.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    ${pkg.price}
+                    KES {pkg.price.toLocaleString()}/{pkg.duration_type}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                     {pkg.features.length} features
@@ -372,23 +382,59 @@ export default function PackagesTab() {
                     />
                   </div>
 
-                  {/* Price */}
+                  {/* Price and Duration */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Price (USD)
+                      Price (KES)
                     </label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
-                        $
+                        KES
                       </span>
                       <input
                         type="number"
                         step="0.01"
                         value={editForm.price}
                         onChange={(e) => setEditForm(prev => ({ ...prev, price: parseFloat(e.target.value) }))}
-                        className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                        className="w-full pl-14 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
                         placeholder="0.00"
                       />
+                    </div>
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Duration
+                      </label>
+                      <select
+                        value={isCustomDuration ? 'custom' : editForm.duration_type}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === 'custom') {
+                            setIsCustomDuration(true);
+                          } else {
+                            setIsCustomDuration(false);
+                            setEditForm(prev => ({ ...prev, duration_type: value }));
+                          }
+                        }}
+                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                      >
+                        <option value="day">Per Day</option>
+                        <option value="week">Per Week</option>
+                        <option value="month">Per Month</option>
+                        <option value="year">Per Year</option>
+                        <option value="custom">Custom</option>
+                      </select>
+
+                      {isCustomDuration && (
+                        <div className="mt-2">
+                          <input
+                            type="text"
+                            value={editForm.duration_type}
+                            onChange={(e) => setEditForm(prev => ({ ...prev, duration_type: e.target.value }))}
+                            placeholder="Enter custom duration (e.g., lifetime)"
+                            className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

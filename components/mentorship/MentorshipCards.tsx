@@ -12,6 +12,8 @@ interface Package {
   features: string[];
   recommended: boolean;
   gradient: string;
+  order_number: number;
+  duration_type: string;
 }
 
 export default function MentorshipCards() {
@@ -98,17 +100,19 @@ export default function MentorshipCards() {
                 )}
                 
                 <div className="relative p-8">
-                  {/* Plan name and price */}
-                  <div className="space-y-4 mb-8">
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                      {plan.name}
-                    </h3>
-                    <div className="flex items-baseline space-x-1">
-                      <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                        ${plan.price}
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400">/month</span>
-                    </div>
+                  {/* Plan name */}
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                    {plan.name}
+                  </h3>
+                  
+                  {/* Price and duration */}
+                  <div className="mt-8 flex items-baseline justify-center gap-x-2">
+                    <span className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+                      KES {plan.price.toLocaleString()}
+                    </span>
+                    <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600 dark:text-gray-400">
+                      /{plan.duration_type}
+                    </span>
                   </div>
                   
                   {/* Features list */}

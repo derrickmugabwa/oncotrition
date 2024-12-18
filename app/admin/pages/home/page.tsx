@@ -9,6 +9,7 @@ import HomepageFeaturesTab from '@/components/admin/HomepageFeaturesTab';
 import SliderSettingsTab from '@/components/admin/SliderSettingsTab';
 import StatisticsTab from '@/components/admin/StatisticsTab';
 import TestimonialsTab from '@/components/admin/TestimonialsTab';
+import PluginsTab from '@/components/admin/home/PluginsTab';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -39,6 +40,10 @@ export default function HomeAdminPage() {
     { 
       name: 'Mentorship',
       component: <HomepageMentorshipTab />
+    },
+    { 
+      name: 'Plugins',
+      component: <PluginsTab />
     }
   ];
 

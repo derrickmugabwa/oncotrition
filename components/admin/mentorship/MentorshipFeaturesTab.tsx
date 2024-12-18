@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase-client';
 import { FaEdit, FaTrash, FaPlus, FaGripVertical } from 'react-icons/fa';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -36,15 +36,36 @@ const AVAILABLE_GRADIENTS = [
 
 function FeatureCard({ feature, onUpdate, onDelete }: { 
   feature: Feature; 
-  onUpdate: (id: number, updates: Partial<Feature>) => void;
+  onUpdate: (feature: Feature) => void;
   onDelete: (id: number) => void;
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedFeature, setEditedFeature] = useState(feature);
+  const [editedFeature, setEditedFeature] = useState<Feature>(feature);
+
+  // Update local state when feature prop changes
+  useEffect(() => {
+    setEditedFeature(feature);
+  }, [feature]);
+
   const IconComponent = Icons[feature.icon_name as keyof typeof Icons];
 
   const handleSave = () => {
-    onUpdate(feature.id, editedFeature);
+    // Create an updates object with only the changed fields
+    const updates: Partial<Feature> = {};
+    if (editedFeature.title !== feature.title) updates.title = editedFeature.title;
+    if (editedFeature.description !== feature.description) updates.description = editedFeature.description;
+    if (editedFeature.icon_name !== feature.icon_name) updates.icon_name = editedFeature.icon_name;
+    if (editedFeature.gradient !== feature.gradient) updates.gradient = editedFeature.gradient;
+    if (editedFeature.display_order !== feature.display_order) updates.display_order = editedFeature.display_order;
+
+    console.log('Saving changes:', {
+      id: feature.id,
+      originalFeature: feature,
+      editedFeature,
+      updates
+    });
+
+    onUpdate(editedFeature);
     setIsEditing(false);
   };
 
@@ -119,7 +140,10 @@ function FeatureCard({ feature, onUpdate, onDelete }: {
               </div>
               <div className="flex justify-end gap-2 mt-4">
                 <button
-                  onClick={() => setIsEditing(false)}
+                  onClick={() => {
+                    setIsEditing(false);
+                    setEditedFeature(feature); // Reset to original feature
+                  }}
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
                 >
                   Cancel
@@ -151,47 +175,108 @@ function FeatureCard({ feature, onUpdate, onDelete }: {
 export default function MentorshipFeaturesTab() {
   const [features, setFeatures] = useState<Feature[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
-
-  useEffect(() => {
-    fetchFeatures();
-  }, []);
+  const [updating, setUpdating] = useState(false);
 
   const fetchFeatures = async () => {
     try {
       setLoading(true);
-      const { data: { session }, error: authError } = await supabase.auth.getSession();
-      if (authError) throw authError;
-      if (!session) {
-        throw new Error('Not authenticated');
-      }
-
+      const supabase = createClient();
+      
+      console.log('Fetching features...');
       const { data, error } = await supabase
         .from('mentorship_features')
         .select('*')
         .order('display_order');
 
-      if (error) throw error;
-
-      if (data) {
-        setFeatures(data);
+      if (error) {
+        console.error('Error fetching features:', error);
+        toast.error(`Error fetching features: ${error.message}`);
+        return;
       }
+
+      console.log('Features fetched successfully:', data);
+      setFeatures(data || []);
     } catch (error: any) {
-      console.error('Error fetching features:', error);
-      toast.error(error.message || 'Failed to load features');
+      console.error('Error in fetchFeatures:', error);
+      toast.error(`Error fetching features: ${error.message}`);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddFeature = async () => {
+  useEffect(() => {
+    fetchFeatures();
+  }, []);
+
+  const handleUpdateFeature = async (feature: Feature) => {
     try {
-      const { data: { session }, error: authError } = await supabase.auth.getSession();
-      if (authError) throw authError;
-      if (!session) {
-        throw new Error('Not authenticated');
+      setUpdating(true);
+      const supabase = createClient();
+
+      // Prepare the update data
+      const updateData = {
+        title: feature.title,
+        description: feature.description,
+        icon_name: feature.icon_name,
+        gradient: feature.gradient,
+        display_order: feature.display_order,
+        updated_at: new Date().toISOString()
+      };
+
+      console.log('Updating feature:', feature.id, updateData);
+
+      const { data, error } = await supabase
+        .from('mentorship_features')
+        .update(updateData)
+        .eq('id', feature.id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating feature:', error);
+        toast.error(`Error updating feature: ${error.message}`);
+        return;
       }
 
+      console.log('Feature updated successfully:', data);
+      
+      // Refresh the features list to ensure we have the latest data
+      await fetchFeatures();
+      
+      toast.success('Feature updated successfully');
+    } catch (error: any) {
+      console.error('Error in handleUpdateFeature:', error);
+      toast.error(`Error updating feature: ${error.message}`);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleDeleteFeature = async (id: number) => {
+    try {
+      const supabase = createClient();
+      
+      const { error } = await supabase
+        .from('mentorship_features')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting feature:', error);
+        toast.error(`Error deleting feature: ${error.message}`);
+        return;
+      }
+
+      setFeatures(prev => prev.filter(f => f.id !== id));
+      toast.success('Feature deleted successfully');
+    } catch (error: any) {
+      console.error('Error in handleDeleteFeature:', error);
+      toast.error(`Error deleting feature: ${error.message}`);
+    }
+  };
+
+  const handleAddFeature = async () => {
+    try {
       const newOrder = features.length > 0 ? Math.max(...features.map(f => f.display_order)) + 1 : 0;
       const newFeature = {
         title: 'New Feature',
@@ -201,81 +286,26 @@ export default function MentorshipFeaturesTab() {
         display_order: newOrder,
       };
 
+      const supabase = createClient();
+      
       const { data, error } = await supabase
         .from('mentorship_features')
         .insert([newFeature])
         .select()
         .single();
 
-      if (error) throw error;
-
-      if (data) {
-        setFeatures(prevFeatures => [...prevFeatures, data]);
-        toast.success('Feature added successfully');
-      }
-    } catch (error: any) {
-      console.error('Error adding feature:', error);
-      toast.error(error.message || 'Failed to add feature');
-    }
-  };
-
-  const handleDeleteFeature = async (id: number) => {
-    try {
-      // Get session
-      const { data: { session }, error: authError } = await supabase.auth.getSession();
-      
-      if (authError) {
-        console.error('Auth error:', authError);
-        throw new Error(`Authentication error: ${authError.message}`);
-      }
-      
-      if (!session) {
-        throw new Error('Not authenticated - no session found');
+      if (error) {
+        console.error('Error adding feature:', error);
+        toast.error(`Error adding feature: ${error.message}`);
+        return;
       }
 
-      // Attempt delete
-      const { error: deleteError } = await supabase
-        .from('mentorship_features')
-        .delete()
-        .eq('id', id);
-
-      if (deleteError) {
-        console.error('Delete error:', deleteError);
-        throw new Error(`Failed to delete feature: ${deleteError.message}`);
-      }
-
-      // Update UI after successful database operation
-      setFeatures(prevFeatures => prevFeatures.filter(f => f.id !== id));
-      toast.success('Feature deleted successfully');
-    } catch (error: any) {
-      console.error('Delete operation failed:', error);
-      toast.error(error.message || 'Failed to delete feature');
-      
-      // Refresh the features list to ensure UI is in sync with database
+      console.log('Feature added successfully:', data);
       await fetchFeatures();
-    }
-  };
-
-  const handleUpdateFeature = async (id: number, updates: Partial<Feature>) => {
-    try {
-      const { data: { session }, error: authError } = await supabase.auth.getSession();
-      if (authError) throw authError;
-      if (!session) {
-        throw new Error('Not authenticated');
-      }
-
-      const { error } = await supabase
-        .from('mentorship_features')
-        .update(updates)
-        .eq('id', id);
-
-      if (error) throw error;
-
-      await fetchFeatures();
-      toast.success('Feature updated successfully');
+      toast.success('Feature added successfully');
     } catch (error: any) {
-      console.error('Error updating feature:', error);
-      toast.error(error.message || 'Failed to update feature');
+      console.error('Error in handleAddFeature:', error);
+      toast.error(`Error adding feature: ${error.message}`);
     }
   };
 
@@ -287,10 +317,13 @@ export default function MentorshipFeaturesTab() {
       }));
 
       for (const update of updates) {
-        await supabase
-          .from('mentorship_features')
-          .update({ display_order: update.display_order })
-          .eq('id', update.id);
+        await fetch('/api/mentorship/features/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: update.id, updates: { display_order: update.display_order } }),
+        });
       }
 
       await fetchFeatures();
