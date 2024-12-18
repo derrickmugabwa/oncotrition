@@ -1,0 +1,22 @@
+2024-12-13T10:32:43.667Z - === BASIC CALLBACK RECEIVED ===
+2024-12-13T10:32:43.672Z - URL: https://localhost:3000/api/basic-callback
+2024-12-13T10:32:43.674Z - Method: POST
+2024-12-13T10:32:43.677Z - Headers: {
+  "accept": "application/json, text/plain, */*",
+  "accept-encoding": "gzip, compress, deflate, br",
+  "content-length": "78",
+  "content-type": "application/json",
+  "host": "32b5-197-136-154-2.ngrok-free.app",
+  "user-agent": "axios/1.7.9",
+  "x-forwarded-for": "197.136.154.2",
+  "x-forwarded-host": "32b5-197-136-154-2.ngrok-free.app",
+  "x-forwarded-port": "3000",
+  "x-forwarded-proto": "https"
+}
+2024-12-13T10:32:43.682Z - Raw Body: {"test":true,"timestamp":"2024-12-13T10:32:41.725Z","message":"Test callback"}
+2024-12-13T10:32:43.684Z - Parsed Body: {
+  "test": true,
+  "timestamp": "2024-12-13T10:32:41.725Z",
+  "message": "Test callback"
+}
+2024-12-13T10:32:43.685Z - === BASIC CALLBACK END ===

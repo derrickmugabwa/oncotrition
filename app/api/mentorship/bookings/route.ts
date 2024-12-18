@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/server';
+import { publicSupabase } from '@/lib/supabase/public';
 
 export async function GET() {
   try {
@@ -29,26 +30,87 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { eventId, name, email, phone } = await req.json();
+    const body = await req.json();
+    console.log('Received booking request:', body);
+    const { eventId, name, email, phone, amount, payment_status } = body;
 
+    // Validate required fields
+    if (!eventId || !name || !email || !phone || amount === undefined) {
+      const missingFields = [];
+      if (!eventId) missingFields.push('eventId');
+      if (!name) missingFields.push('name');
+      if (!email) missingFields.push('email');
+      if (!phone) missingFields.push('phone');
+      if (amount === undefined) missingFields.push('amount');
+
+      console.error('Missing required fields:', missingFields);
+      return NextResponse.json(
+        { 
+          error: 'Missing required fields',
+          details: `Missing fields: ${missingFields.join(', ')}`
+        },
+        { status: 400 }
+      );
+    }
+
+    console.log('Checking event availability:', { eventId });
     // Check if there are available slots
-    const { data: event, error: eventError } = await supabase
+    const { data: event, error: eventError } = await publicSupabase
       .from('mentorship_events')
-      .select('available_slots')
+      .select('available_slots, name')
       .eq('id', eventId)
       .single();
 
-    if (eventError) throw eventError;
+    if (eventError) {
+      console.error('Error fetching event:', {
+        error: eventError,
+        code: eventError.code,
+        message: eventError.message,
+        details: eventError.details
+      });
+      return NextResponse.json(
+        { 
+          error: 'Failed to fetch event details',
+          details: eventError.message,
+          code: eventError.code
+        },
+        { status: 500 }
+      );
+    }
 
-    if (!event || event.available_slots <= 0) {
+    if (!event) {
+      console.error('Event not found:', { eventId });
+      return NextResponse.json(
+        { error: 'Event not found' },
+        { status: 404 }
+      );
+    }
+
+    console.log('Event data:', event);
+
+    if (event.available_slots <= 0) {
+      console.error('No available slots:', { 
+        eventId, 
+        eventName: event.name,
+        availableSlots: event.available_slots 
+      });
       return NextResponse.json(
         { error: 'No available slots for this event' },
         { status: 400 }
       );
     }
 
-    // Create booking
-    const { data: booking, error: bookingError } = await supabase
+    console.log('Creating booking record:', {
+      eventId,
+      name,
+      email,
+      phone,
+      amount,
+      payment_status
+    });
+
+    // Create booking using public client
+    const { data: booking, error: bookingError } = await publicSupabase
       .from('event_bookings')
       .insert([
         {
@@ -56,19 +118,73 @@ export async function POST(req: Request) {
           name,
           email,
           phone,
-          booking_status: 'pending'
+          amount,
+          payment_status: payment_status || 'pending',
+          booking_status: 'pending',
+          payment_phone: phone
         }
       ])
       .select()
       .single();
 
-    if (bookingError) throw bookingError;
+    if (bookingError) {
+      console.error('Error creating booking:', {
+        error: bookingError,
+        code: bookingError.code,
+        message: bookingError.message,
+        details: bookingError.details,
+        hint: bookingError.hint
+      });
+      
+      // Check for specific error types
+      if (bookingError.code === '23503') {
+        return NextResponse.json(
+          { 
+            error: 'Invalid event reference',
+            details: 'The specified event does not exist'
+          },
+          { status: 400 }
+        );
+      }
+      
+      if (bookingError.code === '42501') {
+        return NextResponse.json(
+          { 
+            error: 'Permission denied',
+            details: 'You do not have permission to create bookings'
+          },
+          { status: 403 }
+        );
+      }
 
+      return NextResponse.json(
+        { 
+          error: 'Failed to create booking',
+          details: bookingError.message,
+          code: bookingError.code,
+          hint: bookingError.hint
+        },
+        { status: 500 }
+      );
+    }
+
+    console.log('Booking created successfully:', booking);
     return NextResponse.json(booking);
-  } catch (error) {
-    console.error('Error creating booking:', error);
+  } catch (error: any) {
+    console.error('Detailed error creating booking:', {
+      error,
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint
+    });
     return NextResponse.json(
-      { error: 'Failed to create booking' },
+      { 
+        error: 'Failed to create booking',
+        details: error.message || 'Unknown error',
+        code: error.code,
+        hint: error.hint
+      },
       { status: 500 }
     );
   }

@@ -15,10 +15,10 @@ const nextConfig = {
       {
         source: '/api/:path*',
         headers: [
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, PATCH',
-          },
+          { key: 'Content-Type', value: 'application/json;charset=UTF-8' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'POST, OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: '*' },
         ],
       },
     ];

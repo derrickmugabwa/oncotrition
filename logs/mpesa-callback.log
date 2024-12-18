@@ -1,0 +1,174 @@
+2024-12-13T09:27:32.589Z - [2024-12-13T09:27:32.583Z] M-PESA CALLBACK RECEIVED
+2024-12-13T09:27:32.598Z - [2024-12-13T09:27:32.583Z] Headers: {
+  "accept": "*/*",
+  "content-length": "339",
+  "content-type": "application/json",
+  "host": "localhost:3000",
+  "user-agent": "curl/8.9.1",
+  "x-forwarded-for": "::1",
+  "x-forwarded-host": "localhost:3000",
+  "x-forwarded-port": "3000",
+  "x-forwarded-proto": "http"
+}
+2024-12-13T09:27:32.609Z - [2024-12-13T09:27:32.583Z] Body: {
+  "Body": {
+    "stkCallback": {
+      "MerchantRequestID": "test-request",
+      "CheckoutRequestID": "test-checkout",
+      "ResultCode": 0,
+      "ResultDesc": "Success",
+      "CallbackMetadata": {
+        "Item": [
+          {
+            "Name": "Amount",
+            "Value": 1
+          },
+          {
+            "Name": "PhoneNumber",
+            "Value": "254712345678"
+          },
+          {
+            "Name": "MpesaReceiptNumber",
+            "Value": "TEST123"
+          },
+          {
+            "Name": "TransactionDate",
+            "Value": "20231213121212"
+          }
+        ]
+      }
+    }
+  }
+}
+2024-12-13T09:55:33.061Z - [2024-12-13T09:55:33.060Z] M-PESA CALLBACK RECEIVED
+2024-12-13T09:55:33.064Z - [2024-12-13T09:55:33.060Z] URL: https://localhost:3000/api/mpesa/callback
+2024-12-13T09:55:33.067Z - [2024-12-13T09:55:33.060Z] Headers: {
+  "accept": "application/json, text/plain, */*",
+  "accept-encoding": "gzip, compress, deflate, br",
+  "content-length": "400",
+  "content-type": "application/json",
+  "host": "32b5-197-136-154-2.ngrok-free.app",
+  "user-agent": "axios/1.7.9",
+  "x-forwarded-for": "197.136.154.2",
+  "x-forwarded-host": "32b5-197-136-154-2.ngrok-free.app",
+  "x-forwarded-port": "3000",
+  "x-forwarded-proto": "https"
+}
+2024-12-13T09:55:33.072Z - [2024-12-13T09:55:33.060Z] Raw body: {"Body":{"stkCallback":{"MerchantRequestID":"test-merchant-request-id","CheckoutRequestID":"test-checkout-request-id","ResultCode":0,"ResultDesc":"The service request is processed successfully.","CallbackMetadata":{"Item":[{"Name":"Amount","Value":1},{"Name":"MpesaReceiptNumber","Value":"TEST123456"},{"Name":"TransactionDate","Value":20240113125500},{"Name":"PhoneNumber","Value":254712345678}]}}}}
+2024-12-13T09:55:33.075Z - [2024-12-13T09:55:33.060Z] Extracted data: {
+  "MerchantRequestID": "test-merchant-request-id",
+  "CheckoutRequestID": "test-checkout-request-id",
+  "ResultCode": 0,
+  "ResultDesc": "The service request is processed successfully.",
+  "PaymentDetails": {
+    "Amount": 1,
+    "MpesaReceiptNumber": "TEST123456",
+    "TransactionDate": 20240113125500,
+    "PhoneNumber": 254712345678
+  }
+}
+2024-12-13T09:55:33.852Z - [2024-12-13T09:55:33.060Z] Error finding booking: {
+  "code": "PGRST116",
+  "details": "The result contains 0 rows",
+  "hint": null,
+  "message": "JSON object requested, multiple (or no) rows returned"
+}
+2024-12-13T09:55:34.602Z - [2024-12-13T09:55:33.060Z] Successfully stored in Supabase
+2024-12-13T09:55:34.607Z - [2024-12-13T09:55:33.060Z] === MPESA CALLBACK END ===
+2024-12-13T10:25:58.554Z - === MPESA CALLBACK RECEIVED ===
+2024-12-13T10:25:58.605Z - URL: https://localhost:3000/api/mpesa/callback
+2024-12-13T10:25:58.635Z - Headers: {
+  "accept": "application/json, text/plain, */*",
+  "accept-encoding": "gzip, compress, deflate, br",
+  "content-length": "392",
+  "content-type": "application/json",
+  "host": "32b5-197-136-154-2.ngrok-free.app",
+  "user-agent": "axios/1.7.9",
+  "x-forwarded-for": "197.136.154.2",
+  "x-forwarded-host": "32b5-197-136-154-2.ngrok-free.app",
+  "x-forwarded-port": "3000",
+  "x-forwarded-proto": "https"
+}
+2024-12-13T10:25:58.677Z - Raw body: {"Body":{"stkCallback":{"MerchantRequestID":"29115-34620561-1","CheckoutRequestID":"ws_CO_191220191020363925","ResultCode":0,"ResultDesc":"The service request is processed successfully.","CallbackMetadata":{"Item":[{"Name":"Amount","Value":1},{"Name":"MpesaReceiptNumber","Value":"NLJ7RT61SV"},{"Name":"TransactionDate","Value":20191219102115},{"Name":"PhoneNumber","Value":254722000000}]}}}}
+2024-12-13T10:25:58.722Z - Parsed JSON body: {
+  "Body": {
+    "stkCallback": {
+      "MerchantRequestID": "29115-34620561-1",
+      "CheckoutRequestID": "ws_CO_191220191020363925",
+      "ResultCode": 0,
+      "ResultDesc": "The service request is processed successfully.",
+      "CallbackMetadata": {
+        "Item": [
+          {
+            "Name": "Amount",
+            "Value": 1
+          },
+          {
+            "Name": "MpesaReceiptNumber",
+            "Value": "NLJ7RT61SV"
+          },
+          {
+            "Name": "TransactionDate",
+            "Value": 20191219102115
+          },
+          {
+            "Name": "PhoneNumber",
+            "Value": 254722000000
+          }
+        ]
+      }
+    }
+  }
+}
+2024-12-13T10:26:00.020Z - Successfully logged to Supabase
+2024-12-13T10:26:00.084Z - === MPESA CALLBACK END ===
+2024-12-15T12:28:20.133Z - === CALLBACK STARTED ===
+2024-12-15T12:28:20.137Z - Method: POST
+2024-12-15T12:28:20.139Z - URL: http://localhost:3000/api/mpesa/callback
+2024-12-15T12:28:20.142Z - Headers: {
+  "accept": "*/*",
+  "accept-encoding": "gzip, deflate",
+  "accept-language": "*",
+  "connection": "keep-alive",
+  "content-length": "368",
+  "content-type": "application/json",
+  "host": "localhost:3000",
+  "sec-fetch-mode": "cors",
+  "user-agent": "node",
+  "x-forwarded-for": "::1",
+  "x-forwarded-host": "localhost:3000",
+  "x-forwarded-port": "3000",
+  "x-forwarded-proto": "http"
+}
+2024-12-15T12:28:20.144Z - Raw body: {"Body":{"stkCallback":{"MerchantRequestID":"test-123","CheckoutRequestID":"test-456","ResultCode":0,"ResultDesc":"The service request is processed successfully.","CallbackMetadata":{"Item":[{"Name":"Amount","Value":1},{"Name":"MpesaReceiptNumber","Value":"TEST123456"},{"Name":"TransactionDate","Value":20241215000000},{"Name":"PhoneNumber","Value":254712345678}]}}}}
+2024-12-15T12:28:20.146Z - Parsed body: {
+  "Body": {
+    "stkCallback": {
+      "MerchantRequestID": "test-123",
+      "CheckoutRequestID": "test-456",
+      "ResultCode": 0,
+      "ResultDesc": "The service request is processed successfully.",
+      "CallbackMetadata": {
+        "Item": [
+          {
+            "Name": "Amount",
+            "Value": 1
+          },
+          {
+            "Name": "MpesaReceiptNumber",
+            "Value": "TEST123456"
+          },
+          {
+            "Name": "TransactionDate",
+            "Value": 20241215000000
+          },
+          {
+            "Name": "PhoneNumber",
+            "Value": 254712345678
+          }
+        ]
+      }
+    }
+  }
+}
+2024-12-15T12:28:20.148Z - === CALLBACK COMPLETED ===

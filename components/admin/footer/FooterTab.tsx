@@ -147,17 +147,31 @@ export default function FooterTab() {
       setIsSaving(true)
       setError(null)
 
-      // Create a copy of settings without the id field
-      const { id, ...settingsWithoutId } = settings
-
-      const { error } = await supabase
+      // First check if we have any existing settings
+      const { data: existingSettings } = await supabase
         .from('footer_settings')
-        .upsert(settingsWithoutId, { 
-          onConflict: 'id'
-        })
-        .eq('id', 1)
+        .select('id')
+        .single();
 
-      if (error) throw error
+      // Create a copy of settings without the id field
+      const { id, ...settingsWithoutId } = settings;
+
+      if (existingSettings) {
+        // Update existing settings
+        const { error } = await supabase
+          .from('footer_settings')
+          .update(settingsWithoutId)
+          .eq('id', existingSettings.id);
+
+        if (error) throw error;
+      } else {
+        // Insert new settings with id = 1
+        const { error } = await supabase
+          .from('footer_settings')
+          .insert({ ...settingsWithoutId, id: 1 });
+
+        if (error) throw error;
+      }
 
       toast.success('Footer settings saved successfully!')
       router.refresh()

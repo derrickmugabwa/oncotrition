@@ -29,12 +29,12 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log('Received request body:', body);
 
-    const { name, date, totalSlots } = body;
-    console.log('Parsed values:', { name, date, totalSlots });
+    const { name, date, totalSlots, price } = body;
+    console.log('Parsed values:', { name, date, totalSlots, price });
 
     // Validate input
-    if (!name || !date || !totalSlots) {
-      console.error('Missing required fields:', { name, date, totalSlots });
+    if (!name || !date || !totalSlots || price === undefined) {
+      console.error('Missing required fields:', { name, date, totalSlots, price });
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -51,11 +51,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate slots
+    // Validate slots and price
     if (totalSlots < 1) {
       console.error('Invalid total slots:', totalSlots);
       return NextResponse.json(
         { error: 'Total slots must be at least 1' },
+        { status: 400 }
+      );
+    }
+
+    if (price < 0) {
+      console.error('Invalid price:', price);
+      return NextResponse.json(
+        { error: 'Price cannot be negative' },
         { status: 400 }
       );
     }
@@ -71,6 +79,7 @@ export async function POST(req: Request) {
           date,
           total_slots: totalSlots,
           available_slots: totalSlots,
+          price,
         },
       ])
       .select()
@@ -117,13 +126,13 @@ export async function PATCH(req: Request) {
     const body = await req.json();
     console.log('[PATCH] Received request body:', body);
 
-    const { id, name, date, totalSlots } = body;
-    console.log('[PATCH] Parsed values:', { id, name, date, totalSlots });
+    const { id, name, date, totalSlots, price } = body;
+    console.log('[PATCH] Parsed values:', { id, name, date, totalSlots, price });
 
     // Validate input
-    if (!id || !name || !date || !totalSlots) {
+    if (!id || !name || !date || !totalSlots || price === undefined) {
       const error = 'Missing required fields';
-      console.error('[PATCH] ' + error, { id, name, date, totalSlots });
+      console.error('[PATCH] ' + error, { id, name, date, totalSlots, price });
       return NextResponse.json({ error }, { status: 400 });
     }
 
@@ -132,6 +141,13 @@ export async function PATCH(req: Request) {
     if (isNaN(dateObj.getTime())) {
       const error = 'Invalid date format';
       console.error('[PATCH] ' + error, { date });
+      return NextResponse.json({ error }, { status: 400 });
+    }
+
+    // Validate price
+    if (price < 0) {
+      const error = 'Price cannot be negative';
+      console.error('[PATCH] ' + error, { price });
       return NextResponse.json({ error }, { status: 400 });
     }
 
@@ -180,6 +196,7 @@ export async function PATCH(req: Request) {
         date,
         total_slots: totalSlots,
         available_slots: newAvailableSlots,
+        price,
         updated_at: new Date().toISOString()
       })
       .eq('id', id)
@@ -202,13 +219,9 @@ export async function PATCH(req: Request) {
     console.log('[PATCH] Successfully updated event:', updatedEvent);
     return NextResponse.json(updatedEvent);
   } catch (error: any) {
-    console.error('[PATCH] Unexpected error:', {
-      error,
-      message: error.message,
-      stack: error.stack
-    });
+    console.error('[PATCH] Error updating event:', error);
     return NextResponse.json(
-      { error: 'Failed to update event', details: error.message },
+      { error: 'Failed to update event', details: error.message || 'Unknown error' },
       { status: 500 }
     );
   }
@@ -216,51 +229,31 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    console.log('Starting event deletion...');
-    
-    const { id } = await req.json();
-    console.log('Deleting event with ID:', id);
+    const body = await req.json();
+    const { id } = body;
 
     if (!id) {
-      console.error('Missing event ID');
       return NextResponse.json(
         { error: 'Event ID is required' },
         { status: 400 }
       );
     }
 
-    console.log('Attempting to delete event from Supabase...');
     const { error } = await supabase
       .from('mentorship_events')
       .delete()
       .eq('id', id);
 
     if (error) {
-      console.error('Supabase delete error:', {
-        error,
-        code: error.code,
-        message: error.message,
-        details: error.details
-      });
+      console.error('Error deleting event:', error);
       throw error;
     }
 
-    console.log('Successfully deleted event');
     return NextResponse.json({ message: 'Event deleted successfully' });
-  } catch (error: any) {
-    console.error('Detailed error deleting event:', {
-      error,
-      message: error.message,
-      name: error.name,
-      stack: error.stack
-    });
-    
+  } catch (error) {
+    console.error('Error in DELETE:', error);
     return NextResponse.json(
-      { 
-        error: 'Failed to delete event',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        code: error.code
-      }, 
+      { error: 'Failed to delete event' },
       { status: 500 }
     );
   }

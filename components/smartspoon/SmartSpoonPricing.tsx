@@ -12,6 +12,8 @@ interface Package {
   features: string[];
   recommended: boolean;
   gradient: string;
+  order_number: number;
+  duration_type: 'day' | 'week' | 'month' | 'year';
 }
 
 export default function SmartSpoonPricing() {
@@ -105,9 +107,11 @@ export default function SmartSpoonPricing() {
                     </h3>
                     <div className="flex items-baseline space-x-1">
                       <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                        ${plan.price}
+                        KES {plan.price.toLocaleString()}
                       </span>
-                      <span className="text-gray-500 dark:text-gray-400">/month</span>
+                      <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600 dark:text-gray-400">
+                        /{plan.duration_type}
+                      </span>
                     </div>
                   </div>
                   

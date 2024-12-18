@@ -198,6 +198,90 @@ export interface Database {
           updated_at?: string
         }
       }
+      mentorship_events: {
+        Row: {
+          id: string
+          created_at: string
+          name: string
+          date: string
+          total_slots: number
+          price: number
+          description: string
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          name: string
+          date: string
+          total_slots: number
+          price: number
+          description: string
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          name?: string
+          date?: string
+          total_slots?: number
+          price?: number
+          description?: string
+        }
+      }
+      event_bookings: {
+        Row: {
+          id: string
+          created_at: string
+          event_id: string
+          user_id: string
+          booking_status: 'pending' | 'approved' | 'rejected'
+          payment_status: 'pending' | 'completed' | 'failed'
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          event_id: string
+          user_id: string
+          booking_status?: 'pending' | 'approved' | 'rejected'
+          payment_status?: 'pending' | 'completed' | 'failed'
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          event_id?: string
+          user_id?: string
+          booking_status?: 'pending' | 'approved' | 'rejected'
+          payment_status?: 'pending' | 'completed' | 'failed'
+        }
+      }
+      mentorship_features: {
+        Row: {
+          id: number
+          created_at: string
+          title: string
+          description: string
+          icon_name: string
+          gradient: string
+          display_order: number
+        }
+        Insert: {
+          id?: number
+          created_at?: string
+          title: string
+          description: string
+          icon_name: string
+          gradient: string
+          display_order: number
+        }
+        Update: {
+          id?: number
+          created_at?: string
+          title?: string
+          description?: string
+          icon_name?: string
+          gradient?: string
+          display_order?: number
+        }
+      }
     }
     Views: {
       [_ in never]: never
