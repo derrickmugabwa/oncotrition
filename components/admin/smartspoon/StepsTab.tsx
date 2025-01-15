@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
-import { FiUser, FiUsers, FiClipboard, FiBarChart2, FiPlus, FiTrash2 } from 'react-icons/fi'
+import { FiUser, FiUsers, FiClipboard, FiBarChart2, FiPlus, FiTrash2, FiHeart, FiActivity, FiCreditCard, FiCalendar, FiMessageCircle, FiTarget, FiAward, FiShoppingBag, FiBookOpen, FiCoffee, FiGift, FiPieChart, FiThumbsUp, FiTrendingUp } from 'react-icons/fi'
+import { GiWeightScale, GiMeal, GiFruitBowl, GiCook, GiMedicines, GiSportMedal } from 'react-icons/gi'
+import { MdOutlineFoodBank, MdOutlineLocalGroceryStore, MdOutlineHealthAndSafety } from 'react-icons/md'
 
 interface Step {
   id: number
@@ -15,10 +17,46 @@ interface Step {
 }
 
 const iconMap = {
+  // User & Profile Icons
   FiUser,
   FiUsers,
-  FiClipboard,
+  
+  // Health & Wellness Icons
+  FiHeart,
+  FiActivity,
+  GiWeightScale,
+  MdOutlineHealthAndSafety,
+  GiMedicines,
+  
+  // Nutrition & Food Icons
+  GiMeal,
+  GiFruitBowl,
+  GiCook,
+  MdOutlineFoodBank,
+  MdOutlineLocalGroceryStore,
+  FiCoffee,
+  
+  // Progress & Goals Icons
   FiBarChart2,
+  FiTarget,
+  FiPieChart,
+  FiTrendingUp,
+  GiSportMedal,
+  FiAward,
+  
+  // Planning & Management Icons
+  FiClipboard,
+  FiCalendar,
+  FiBookOpen,
+  FiShoppingBag,
+  
+  // Communication & Rewards
+  FiMessageCircle,
+  FiThumbsUp,
+  FiGift,
+  
+  // Payment Icons
+  FiCreditCard,
 }
 
 const defaultSteps = [
@@ -29,13 +67,13 @@ const defaultSteps = [
     order_number: 1
   },
   {
-    icon: 'FiUsers',
+    icon: 'GiMeal',
     title: 'Add Clients and Gather Data',
     description: 'Add new clients, record their health information, dietary restrictions, and nutrition goals.',
     order_number: 2
   },
   {
-    icon: 'FiClipboard',
+    icon: 'MdOutlineFoodBank',
     title: 'Create and Assign Meal Plans',
     description: 'Develop personalized meal plans based on each client\'s needs and assign them through the platform.',
     order_number: 3
@@ -154,22 +192,26 @@ export default function StepsTab() {
     }
   }
 
-  const reorderSteps = async (steps: Step[]) => {
+  const reorderSteps = async (updatedSteps: Step[]) => {
     try {
-      const updates = steps.map((step, index) => ({
+      const updates = updatedSteps.map((step, index) => ({
         id: step.id,
+        icon: step.icon,
+        title: step.title,
+        description: step.description,
         order_number: index + 1
-      }))
+      }));
 
       const { error } = await supabase
         .from('smartspoon_steps')
-        .upsert(updates)
+        .upsert(updates);
 
-      if (error) throw error
-      await fetchSteps()
+      if (error) throw error;
+      toast.success('Steps reordered successfully');
+      await fetchSteps();
     } catch (error) {
-      console.error('Error:', error)
-      toast.error('Failed to reorder steps')
+      console.error('Error:', error);
+      toast.error('Failed to reorder steps');
     }
   }
 
@@ -196,73 +238,160 @@ export default function StepsTab() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4">
         {steps.map((step, index) => (
           <motion.div
             key={step.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg relative group"
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            className="group relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm hover:shadow-md transition-all"
           >
-            <button
-              onClick={() => deleteStep(step.id)}
-              className="absolute top-4 right-4 p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
-              title="Delete step"
-            >
-              <FiTrash2 className="w-5 h-5" />
-            </button>
-
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <select
-                  value={step.icon}
-                  onChange={(e) => updateStep(step.id, { icon: e.target.value })}
-                  className="block w-24 rounded-md border-gray-300 dark:border-gray-600 bg-transparent"
-                >
-                  {Object.keys(iconMap).map((iconName) => (
-                    <option key={iconName} value={iconName}>
-                      {iconName}
-                    </option>
-                  ))}
-                </select>
-                {step.icon && iconMap[step.icon as keyof typeof iconMap] && (
-                  <div className="p-3 bg-primary/10 rounded-lg">
-                    <div className="w-6 h-6 text-primary">
-                      {React.createElement(iconMap[step.icon as keyof typeof iconMap])}
-                    </div>
+            <div className="flex items-start gap-4">
+              {/* Icon Selection and Preview */}
+              <div className="flex-shrink-0">
+                <div className="relative">
+                  <div className="p-2 bg-primary/10 rounded-lg mb-2">
+                    {React.createElement(iconMap[step.icon as keyof typeof iconMap], {
+                      className: "w-6 h-6 text-primary"
+                    })}
                   </div>
-                )}
+                  <select
+                    value={step.icon}
+                    onChange={(e) => updateStep(step.id, { icon: e.target.value })}
+                    className="w-32 text-sm px-2 py-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-primary/20"
+                  >
+                    <optgroup label="User & Profile">
+                      <option value="FiUser">User</option>
+                      <option value="FiUsers">Users</option>
+                    </optgroup>
+                    <optgroup label="Health & Wellness">
+                      <option value="FiHeart">Heart</option>
+                      <option value="FiActivity">Activity</option>
+                      <option value="GiWeightScale">Scale</option>
+                      <option value="MdOutlineHealthAndSafety">Health</option>
+                      <option value="GiMedicines">Medicines</option>
+                    </optgroup>
+                    <optgroup label="Nutrition & Food">
+                      <option value="GiMeal">Meal</option>
+                      <option value="GiFruitBowl">Fruits</option>
+                      <option value="GiCook">Cook</option>
+                      <option value="MdOutlineFoodBank">Food Bank</option>
+                      <option value="MdOutlineLocalGroceryStore">Grocery</option>
+                      <option value="FiCoffee">Coffee</option>
+                    </optgroup>
+                    <optgroup label="Progress & Goals">
+                      <option value="FiBarChart2">Chart</option>
+                      <option value="FiTarget">Target</option>
+                      <option value="FiPieChart">Pie Chart</option>
+                      <option value="FiTrendingUp">Trending</option>
+                      <option value="GiSportMedal">Medal</option>
+                      <option value="FiAward">Award</option>
+                    </optgroup>
+                    <optgroup label="Planning">
+                      <option value="FiClipboard">Clipboard</option>
+                      <option value="FiCalendar">Calendar</option>
+                      <option value="FiBookOpen">Book</option>
+                      <option value="FiShoppingBag">Shopping</option>
+                    </optgroup>
+                    <optgroup label="Communication">
+                      <option value="FiMessageCircle">Message</option>
+                      <option value="FiThumbsUp">Like</option>
+                      <option value="FiGift">Gift</option>
+                    </optgroup>
+                    <optgroup label="Payment">
+                      <option value="FiCreditCard">Payment</option>
+                    </optgroup>
+                  </select>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Step {index + 1}
-                </label>
-                <input
-                  type="text"
-                  value={step.title}
-                  onChange={(e) => updateStep(step.id, { title: e.target.value })}
-                  className="block w-full text-lg font-semibold bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-primary focus:ring-0"
-                  placeholder="Step Title"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Description
-                </label>
+              {/* Main Content */}
+              <div className="flex-grow space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Step {index + 1}
+                  </span>
+                  <input
+                    type="text"
+                    value={step.title}
+                    onChange={(e) => updateStep(step.id, { title: e.target.value })}
+                    className="flex-grow text-base font-medium bg-transparent border-b border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-0 px-2 py-1"
+                    placeholder="Enter step title"
+                  />
+                </div>
                 <textarea
                   value={step.description}
                   onChange={(e) => updateStep(step.id, { description: e.target.value })}
-                  rows={3}
-                  className="block w-full bg-transparent border-gray-300 dark:border-gray-600 rounded-md focus:border-primary focus:ring-0"
-                  placeholder="Step Description"
+                  rows={2}
+                  className="w-full text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-primary/20 px-3 py-2 resize-none"
+                  placeholder="Enter step description"
                 />
+              </div>
+
+              {/* Actions */}
+              <div className="flex-shrink-0 flex items-start gap-1">
+                <button
+                  onClick={() => {
+                    const newIndex = index - 1;
+                    if (newIndex >= 0) {
+                      const updatedSteps = [...steps];
+                      [updatedSteps[index], updatedSteps[newIndex]] = [updatedSteps[newIndex], updatedSteps[index]];
+                      reorderSteps(updatedSteps);
+                    }
+                  }}
+                  disabled={index === 0}
+                  className={`p-1.5 rounded-md transition-colors ${
+                    index === 0
+                      ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                      : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => {
+                    const newIndex = index + 1;
+                    if (newIndex < steps.length) {
+                      const updatedSteps = [...steps];
+                      [updatedSteps[index], updatedSteps[newIndex]] = [updatedSteps[newIndex], updatedSteps[index]];
+                      reorderSteps(updatedSteps);
+                    }
+                  }}
+                  disabled={index === steps.length - 1}
+                  className={`p-1.5 rounded-md transition-colors ${
+                    index === steps.length - 1
+                      ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                      : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => deleteStep(step.id)}
+                  className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
+                >
+                  <FiTrash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </motion.div>
         ))}
+
+        {/* Add Step Button */}
+        <motion.button
+          onClick={addStep}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex items-center justify-center gap-2 p-3 w-full bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border-2 border-dashed border-gray-200 dark:border-gray-700"
+        >
+          <FiPlus className="w-5 h-5" />
+          <span>Add New Step</span>
+        </motion.button>
       </div>
     </div>
   )

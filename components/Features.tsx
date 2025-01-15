@@ -9,7 +9,25 @@ import {
   LightBulbIcon, ScaleIcon, SparklesIcon, UserGroupIcon,
   ShieldCheckIcon, StarIcon, TrophyIcon, FireIcon,
   BoltIcon, GlobeAltIcon, PresentationChartLineIcon,
-  AcademicCapIcon, HandThumbUpIcon
+  AcademicCapIcon, HandThumbUpIcon, CakeIcon,
+  BookOpenIcon, BellAlertIcon, CalendarIcon,
+  ChatBubbleLeftRightIcon, ClipboardDocumentCheckIcon,
+  RocketLaunchIcon, UserIcon, DocumentCheckIcon,
+  DocumentChartBarIcon, DocumentMagnifyingGlassIcon,
+  CloudArrowUpIcon, ArrowPathIcon, LinkIcon,
+  MagnifyingGlassIcon, MapPinIcon, PhoneIcon,
+  ServerIcon, Square3Stack3DIcon, SunIcon,
+  TableCellsIcon, TagIcon, UserPlusIcon,
+  UsersIcon, VideoCameraIcon, WrenchScrewdriverIcon,
+  XCircleIcon, CheckCircleIcon, ExclamationCircleIcon,
+  InformationCircleIcon, QuestionMarkCircleIcon,
+  ArrowPathRoundedSquareIcon, Bars3BottomLeftIcon,
+  Bars3CenterLeftIcon, BarsArrowUpIcon, BuildingLibraryIcon,
+  ChartPieIcon, CircleStackIcon, ClipboardIcon,
+  CloudIcon, CubeIcon, CubeTransparentIcon,
+  FingerPrintIcon, ArrowTrendingUpIcon, BuildingOfficeIcon,
+  CalculatorIcon, ComputerDesktopIcon, DevicePhoneMobileIcon,
+  FlagIcon
 } from '@heroicons/react/24/outline';
 
 interface Feature {
@@ -18,6 +36,20 @@ interface Feature {
   description: string;
   icon_name: string;
   order: number;
+}
+
+interface HeaderContent {
+  heading: string;
+  paragraph: string;
+  button_text: string;
+  button_url: string;
+}
+
+interface FeatureCardProps {
+  title: string;
+  description: string;
+  icon_name: string;
+  index: number;
 }
 
 const featureIcons = {
@@ -41,16 +73,69 @@ const featureIcons = {
   presentation: PresentationChartLineIcon,
   academic: AcademicCapIcon,
   thumbUp: HandThumbUpIcon,
+  cake: CakeIcon,
+  book: BookOpenIcon,
+  bell: BellAlertIcon,
+  calendar: CalendarIcon,
+  chat: ChatBubbleLeftRightIcon,
+  clipboard: ClipboardDocumentCheckIcon,
+  rocket: RocketLaunchIcon,
+  user: UserIcon,
+  supplements: BeakerIcon,  // Reusing BeakerIcon
+  cardio: HeartIcon,  // Reusing HeartIcon
+  metabolism: FireIcon,  // Reusing FireIcon
+  bodyComp: ScaleIcon,  // Reusing ScaleIcon
+  mealTime: ClockIcon,  // Reusing ClockIcon
+  immune: ShieldCheckIcon,  // Reusing ShieldCheckIcon
+  performance: BoltIcon,  // Reusing BoltIcon
+  wellness: SparklesIcon,  // Reusing SparklesIcon
+  healthyChoice: HandThumbUpIcon,  // Reusing HandThumbUpIcon
+  personalHealth: UserIcon,  // Reusing UserIcon
+  healthRecords: DocumentCheckIcon,
+  healthAnalytics: DocumentChartBarIcon,
+  healthInsights: DocumentMagnifyingGlassIcon,
+  sync: CloudArrowUpIcon,
+  update: ArrowPathIcon,
+  connect: LinkIcon,
+  search: MagnifyingGlassIcon,
+  location: MapPinIcon,
+  phone: PhoneIcon,
+  server: ServerIcon,
+  features: Square3Stack3DIcon,
+  lifestyle: SunIcon,
+  mealPlan: TableCellsIcon,
+  foodLabel: TagIcon,
+  groupSupport: UserGroupIcon,  // Reusing UserGroupIcon
+  addMember: UserPlusIcon,
+  community: UsersIcon,
+  video: VideoCameraIcon,
+  tools: WrenchScrewdriverIcon,
+  allergies: XCircleIcon,
+  approved: CheckCircleIcon,
+  warning: ExclamationCircleIcon,
+  info: InformationCircleIcon,
+  help: QuestionMarkCircleIcon,
+  foodCycle: ArrowPathRoundedSquareIcon,
+  menu: Bars3BottomLeftIcon,
+  categories: Bars3CenterLeftIcon,
+  progressUp: BarsArrowUpIcon,
+  library: BuildingLibraryIcon,
+  nutrition: ChartPieIcon,
+  database: CircleStackIcon,
+  foodLog: ClipboardIcon,
+  cloud: CloudIcon,
+  portions: CubeIcon,
+  macros: CubeTransparentIcon,
+  fingerprint: FingerPrintIcon,
+  trend: ArrowTrendingUpIcon,
+  building: BuildingOfficeIcon,
+  calculator: CalculatorIcon,
+  desktop: ComputerDesktopIcon,
+  mobile: DevicePhoneMobileIcon,
+  flag: FlagIcon
 } as const;
 
 type IconName = keyof typeof featureIcons;
-
-interface FeatureCardProps {
-  title: string;
-  description: string;
-  icon_name: IconName;
-  index: number;
-}
 
 const defaultFeatures = [
   {
@@ -58,35 +143,42 @@ const defaultFeatures = [
     title: "Personalized Nutrition Plans",
     description: "Get customized meal plans tailored to your specific goals, preferences, and dietary requirements.",
     icon_name: "scale",
-    order: 0
+    order: 0,
   },
   {
     id: 2,
     title: "Expert Guidance",
     description: "Access to certified nutritionists and health experts who provide professional guidance and support.",
     icon_name: "academic",
-    order: 1
+    order: 1,
   },
   {
     id: 3,
     title: "Progress Tracking",
     description: "Monitor your health journey with our advanced tracking tools and detailed analytics dashboard.",
     icon_name: "chart",
-    order: 2
+    order: 2,
   },
   {
     id: 4,
     title: "Community Support",
     description: "Join our vibrant community of health enthusiasts and share experiences, tips, and success stories.",
     icon_name: "users",
-    order: 3
+    order: 3,
   }
 ];
+
+const defaultHeaderContent = {
+  heading: "Transform Your Health Journey",
+  paragraph: "Experience a revolutionary approach to nutrition tracking and wellness management.",
+  button_text: "Learn More",
+  button_url: "/features"
+};
 
 const FeatureCard = ({ title, description, icon_name, index }: FeatureCardProps) => {
   const cardRef = useRef(null);
   const isInView = useInView(cardRef, { once: true });
-  const IconComponent = featureIcons[icon_name] || featureIcons.scale;
+  const IconComponent = featureIcons[icon_name as keyof typeof featureIcons] || featureIcons.scale;
 
   return (
     <motion.div 
@@ -139,31 +231,42 @@ const FeatureCard = ({ title, description, icon_name, index }: FeatureCardProps)
 
 export default function Features() {
   const [features, setFeatures] = useState<Feature[]>(defaultFeatures);
+  const [headerContent, setHeaderContent] = useState<HeaderContent>(defaultHeaderContent);
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    const fetchFeatures = async () => {
-      const { data, error } = await supabase
+    const fetchData = async () => {
+      // Fetch features
+      const { data: featuresData, error: featuresError } = await supabase
         .from('features')
         .select('*')
         .order('order');
 
-      if (error) {
-        console.error('Error fetching features:', error);
-        return;
+      if (featuresError) {
+        console.error('Error fetching features:', featuresError);
+      } else if (featuresData && featuresData.length > 0) {
+        setFeatures(featuresData);
       }
 
-      if (data && data.length > 0) {
-        setFeatures(data);
+      // Fetch header content
+      const { data: headerData, error: headerError } = await supabase
+        .from('features_header')
+        .select('*')
+        .single();
+
+      if (headerError) {
+        console.error('Error fetching header content:', headerError);
+      } else if (headerData) {
+        setHeaderContent(headerData);
       }
     };
 
-    fetchFeatures();
+    fetchData();
 
     // Subscribe to changes
-    const channel = supabase
+    const featuresChannel = supabase
       .channel('features_changes')
       .on(
         'postgres_changes',
@@ -173,13 +276,29 @@ export default function Features() {
           table: 'features'
         },
         () => {
-          fetchFeatures();
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    const headerChannel = supabase
+      .channel('header_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'features_header'
+        },
+        () => {
+          fetchData();
         }
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(featuresChannel);
+      supabase.removeChannel(headerChannel);
     };
   }, [supabase]);
 
@@ -199,43 +318,50 @@ export default function Features() {
           {/* Left side content */}
           <motion.div
             ref={containerRef}
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
-            className="space-y-6"
+            className="text-center lg:text-left"
           >
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-4xl font-bold mb-6"
+              className="text-4xl font-bold text-gray-900 dark:text-white mb-6"
             >
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Nutrition software for professionals and their clients
-              </span>
+              {headerContent.heading}
             </motion.h2>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
+              className="text-lg text-gray-600 dark:text-gray-300 mb-8"
             >
-              We systematically collect the feedback of thousands of our users (your peers) to learn how to eliminate the biggest pains in running their practices/businesses. Whether you are a 
-              nutritionist, personal trainer, or coach, Smartspoon can work for you.
+              {headerContent.paragraph}
             </motion.p>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex space-x-4"
             >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn btn-primary"
+              <a
+                href={headerContent.button_url}
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark transition-colors duration-200"
               >
-                Get Started
-              </motion.button>
+                {headerContent.button_text}
+                <svg
+                  className="ml-2 -mr-1 w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </a>
             </motion.div>
           </motion.div>
 

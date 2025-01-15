@@ -14,6 +14,7 @@ import {
   Cog6ToothIcon,
   BeakerIcon,
   NewspaperIcon,
+  DocumentIcon,
 } from '@heroicons/react/24/outline'
 
 const menuItems = [
@@ -25,6 +26,7 @@ const menuItems = [
   { name: 'SmartSpoon', href: '/admin/pages/smartspoon', icon: BeakerIcon },
   { name: 'Contact Page', href: '/admin/pages/contact', icon: EnvelopeIcon },
   { name: 'Footer', href: '/admin/pages/footer', icon: NewspaperIcon },
+  { name: 'Documents', href: '/admin/pages/documents', icon: DocumentIcon },
 ]
 
 export default function Sidebar() {

@@ -2,14 +2,52 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiUser, FiUsers, FiClipboard, FiBarChart2 } from 'react-icons/fi';
+import { FiUser, FiUsers, FiClipboard, FiBarChart2, FiHeart, FiActivity, FiCreditCard, FiCalendar, FiMessageCircle, FiTarget, FiAward, FiShoppingBag, FiBookOpen, FiCoffee, FiGift, FiPieChart, FiThumbsUp, FiTrendingUp } from 'react-icons/fi';
+import { GiWeightScale, GiMeal, GiFruitBowl, GiCook, GiMedicines, GiSportMedal } from 'react-icons/gi';
+import { MdOutlineFoodBank, MdOutlineLocalGroceryStore, MdOutlineHealthAndSafety } from 'react-icons/md';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const iconMap = {
+  // User & Profile Icons
   FiUser,
   FiUsers,
-  FiClipboard,
+  
+  // Health & Wellness Icons
+  FiHeart,
+  FiActivity,
+  GiWeightScale,
+  MdOutlineHealthAndSafety,
+  GiMedicines,
+  
+  // Nutrition & Food Icons
+  GiMeal,
+  GiFruitBowl,
+  GiCook,
+  MdOutlineFoodBank,
+  MdOutlineLocalGroceryStore,
+  FiCoffee,
+  
+  // Progress & Goals Icons
   FiBarChart2,
+  FiTarget,
+  FiPieChart,
+  FiTrendingUp,
+  GiSportMedal,
+  FiAward,
+  
+  // Planning & Management Icons
+  FiClipboard,
+  FiCalendar,
+  FiBookOpen,
+  FiShoppingBag,
+  
+  // Communication & Rewards
+  FiMessageCircle,
+  FiThumbsUp,
+  FiGift,
+  
+  // Payment Icons
+  FiCreditCard,
 };
 
 interface Step {
@@ -30,20 +68,41 @@ const staggerContainer = {
 };
 
 const cardHover = {
-  rest: { scale: 1, y: 0 },
+  rest: { 
+    scale: 1, 
+    y: 0,
+    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+  },
   hover: { 
-    scale: 1.05, 
+    scale: 1.02, 
     y: -5,
-    transition: { duration: 0.3, ease: "easeOut" }
+    boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+    transition: { 
+      duration: 0.3, 
+      ease: "easeOut" 
+    }
   },
 };
 
 const iconHover = {
-  rest: { rotate: 0, scale: 1 },
+  rest: { 
+    rotate: 0, 
+    scale: 1,
+    y: 0
+  },
   hover: { 
-    rotate: 10,
+    rotate: [0, -10, 10, -5, 5, 0],
     scale: 1.1,
-    transition: { duration: 0.3, ease: "easeOut" }
+    y: -5,
+    transition: { 
+      duration: 0.6,
+      ease: "easeOut",
+      rotate: {
+        duration: 0.8,
+        ease: "easeInOut",
+        times: [0, 0.2, 0.4, 0.6, 0.8, 1]
+      }
+    }
   },
 };
 
@@ -54,6 +113,10 @@ export default function Steps() {
 
   useEffect(() => {
     fetchSteps();
+
+    // Add CSS variable for primary color RGB values
+    const style = document.documentElement.style;
+    style.setProperty('--primary-rgb', '79, 70, 229'); // Indigo-600 RGB values
   }, []);
 
   const fetchSteps = async () => {
@@ -81,14 +144,14 @@ export default function Steps() {
   }
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+    <section className="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
           variants={staggerContainer}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
           <motion.p
             variants={fadeInUp}
@@ -116,8 +179,11 @@ export default function Steps() {
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
-          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4"
+          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 relative"
         >
+          {/* Background decoration */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,theme(colors.primary.DEFAULT/0.05),transparent_70%)] pointer-events-none" />
+          
           {steps.map((step, index) => {
             const IconComponent = iconMap[step.icon as keyof typeof iconMap];
             
@@ -131,7 +197,7 @@ export default function Steps() {
               >
                 <motion.div
                   variants={cardHover}
-                  className="h-full p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-100 dark:border-gray-700"
+                  className="h-full p-8 bg-white dark:bg-gray-800/80 rounded-2xl shadow-xl dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-100 dark:border-gray-700/50 relative z-10"
                 >
                   <div className="relative flex flex-col items-center">
                     {/* Step Number */}
@@ -144,11 +210,25 @@ export default function Steps() {
                     {/* Icon */}
                     <motion.div
                       variants={iconHover}
-                      className="mb-6 w-16 h-16 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center group-hover:from-primary/20 group-hover:to-primary/10 transition-colors duration-300"
+                      className="relative mb-5 w-16 h-16 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300 shadow-lg shadow-primary/5 group-hover:shadow-primary/10 overflow-hidden"
                     >
+                      {/* Background glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-50" />
+                      
                       {IconComponent && (
-                        <div className="w-8 h-8 text-primary">
-                          {React.createElement(IconComponent)}
+                        <div className="relative w-10 h-10 text-primary transform group-hover:scale-110 transition-transform duration-300" style={{
+                          filter: 'drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.3))',
+                        }}>
+                          {React.createElement(IconComponent, {
+                            size: 40,
+                            style: { 
+                              strokeWidth: IconComponent.toString().includes('Fi') ? 1.5 : undefined,
+                              width: '100%',
+                              height: '100%',
+                              color: 'rgb(var(--primary-rgb))',
+                              opacity: 0.9
+                            }
+                          })}
                         </div>
                       )}
                     </motion.div>
@@ -162,7 +242,12 @@ export default function Steps() {
                     </p>
 
                     {/* Decorative Elements */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
+
+                    {/* Connecting Lines (only for non-last items) */}
+                    {index < steps.length - 1 && (
+                      <div className="hidden lg:block absolute top-1/2 -right-12 w-24 h-px bg-gradient-to-r from-primary/30 to-transparent transform -translate-y-1/2" />
+                    )}
                   </div>
                 </motion.div>
               </motion.div>

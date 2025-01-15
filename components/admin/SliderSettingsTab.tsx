@@ -14,6 +14,7 @@ interface SliderImage {
   description: string
   image_url: string
   cta_text: string
+  cta_url: string
   order: number
 }
 
@@ -21,6 +22,7 @@ interface SlideForm {
   title: string
   description: string
   cta_text: string
+  cta_url: string
 }
 
 const MAX_SLIDES = 5
@@ -31,7 +33,7 @@ const SliderSettingsTab = () => {
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [forms, setForms] = useState<SlideForm[]>([
-    { title: '', description: '', cta_text: '' }
+    { title: '', description: '', cta_text: '', cta_url: '' }
   ])
   const supabase = createClientComponentClient()
   const router = useRouter()
@@ -126,7 +128,8 @@ const SliderSettingsTab = () => {
           order: index,
           title: forms[index].title,
           description: forms[index].description,
-          cta_text: forms[index].cta_text
+          cta_text: forms[index].cta_text,
+          cta_url: forms[index].cta_url
         }
       }
       setSliderImages(newSliderImages)
@@ -156,7 +159,8 @@ const SliderSettingsTab = () => {
           const initialForms = data.map(slide => ({
             title: slide.title,
             description: slide.description || '',
-            cta_text: slide.cta_text || ''
+            cta_text: slide.cta_text || '',
+            cta_url: slide.cta_url || ''
           }))
           setForms(initialForms)
         }
@@ -198,6 +202,7 @@ const SliderSettingsTab = () => {
         title: form.title,
         description: form.description,
         cta_text: form.cta_text,
+        cta_url: form.cta_url,
         image_url: sliderImages[index]?.image_url,
         order: index
       }))
@@ -230,7 +235,7 @@ const SliderSettingsTab = () => {
       toast.error(`Maximum ${MAX_SLIDES} slides allowed`)
       return
     }
-    setForms([...forms, { title: '', description: '', cta_text: '' }])
+    setForms([...forms, { title: '', description: '', cta_text: '', cta_url: '' }])
     toast.success('New slide added')
   }
 
@@ -385,6 +390,14 @@ const SliderSettingsTab = () => {
                   value={form.cta_text}
                   onChange={(e) => handleFormChange(index, 'cta_text', e.target.value)}
                   placeholder="Button Text"
+                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+
+                <input
+                  type="text"
+                  value={form.cta_url}
+                  onChange={(e) => handleFormChange(index, 'cta_url', e.target.value)}
+                  placeholder="Button URL"
                   className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>

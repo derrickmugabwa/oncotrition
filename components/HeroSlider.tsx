@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 
 interface SliderImage {
   id: number
@@ -12,6 +13,7 @@ interface SliderImage {
   description: string
   image_url: string
   cta_text: string
+  cta_url: string
   order: number
 }
 
@@ -22,6 +24,7 @@ const defaultSlides = [
     description: 'Your personal nutrition tracking assistant',
     image_url: '/images/default-hero.jpg',
     cta_text: 'Get Started',
+    cta_url: '/',
     order: 0
   }
 ]
@@ -64,6 +67,7 @@ export default function HeroSlider() {
   const [slides, setSlides] = useState<SliderImage[]>(defaultSlides)
   const [isLoading, setIsLoading] = useState(true)
   const supabase = createClientComponentClient()
+  const router = useRouter()
 
   useEffect(() => {
     const fetchSlides = async () => {
@@ -183,7 +187,10 @@ export default function HeroSlider() {
                   </motion.p>
 
                   <motion.div variants={childVariants} className="relative z-10">
-                    <button className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium inline-flex items-center group">
+                    <button 
+                      onClick={() => router.push(slide.cta_url || '/')}
+                      className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium inline-flex items-center group"
+                    >
                       {slide.cta_text}
                       <svg
                         className="w-5 h-5 ml-2 transform transition-transform group-hover:translate-x-1"

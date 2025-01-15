@@ -17,15 +17,23 @@ export async function generateMetadata(): Promise<Metadata> {
   const { data: settings } = await supabase
     .from('site_settings')
     .select('*')
-    .order('created_at', { ascending: false })
-    .limit(1)
+    .eq('is_active', true)
     .single();
+
+  // Construct the favicon URL
+  const faviconUrl = settings?.favicon_url
+    ? settings.favicon_url.startsWith('http')
+      ? settings.favicon_url
+      : settings.favicon_url.startsWith('/')
+        ? settings.favicon_url
+        : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/favicons/${settings.favicon_url}`
+    : '/favicon.ico';
 
   return {
     title: 'Oncotrition',
     description: 'Your personal nutrition guide',
     icons: {
-      icon: settings?.favicon_url || '/favicon.ico', // Fallback to default favicon if none in settings
+      icon: faviconUrl,
     },
   };
 }

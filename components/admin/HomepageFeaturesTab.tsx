@@ -1,7 +1,6 @@
 'use client'
 
-import React from 'react'
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import toast from 'react-hot-toast'
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd'
@@ -25,7 +24,72 @@ import {
   ClipboardDocumentCheckIcon,  // Tracking & Monitoring
   RocketLaunchIcon,  // Progress & Growth
   TrophyIcon,  // Achievements
-  UserIcon  // Personal Profile
+  UserIcon,  // Personal Profile
+  CakeIcon,  // Food & Desserts
+  CogIcon,  // Settings & Customization
+  CurrencyDollarIcon,  // Pricing & Value
+  DocumentTextIcon,  // Documentation & Resources
+  GlobeAltIcon,  // Global & Accessibility
+  LightBulbIcon,  // Ideas & Innovation
+  PresentationChartLineIcon,  // Analytics & Insights
+  PuzzlePieceIcon,  // Integration & Compatibility
+  QueueListIcon,  // Lists & Organization
+  StarIcon,  // Ratings & Reviews
+  TableCellsIcon,  // Data & Tables
+  TagIcon,  // Labels & Categories
+  WrenchIcon,  // Tools & Utilities
+  ArrowTrendingUpIcon,  // Growth & Trends
+  BuildingOfficeIcon,  // Business & Professional
+  CalculatorIcon,  // Calculations & Math
+  ComputerDesktopIcon,  // Technology & Devices
+  DevicePhoneMobileIcon,  // Mobile & Apps
+  FlagIcon,  // Goals & Milestones
+  BeakerIcon as BeakerIcon2,  // Supplements & Vitamins
+  HeartIcon as HeartIcon2,  // Cardiovascular Health
+  FireIcon as FireIcon2,  // Metabolism & Energy
+  ScaleIcon as ScaleIcon2,  // Body Composition
+  ClockIcon as ClockIcon2,  // Meal Timing
+  ShieldCheckIcon as ShieldCheckIcon2,  // Immune System
+  BoltIcon as BoltIcon2,  // Athletic Performance
+  SparklesIcon as SparklesIcon2,  // Wellness & Vitality
+  HandThumbUpIcon as HandThumbUp2,  // Healthy Choices
+  UserIcon as UserIcon2,  // Personal Health
+  DocumentCheckIcon,  // Health Records
+  DocumentChartBarIcon,  // Health Analytics
+  DocumentMagnifyingGlassIcon,  // Health Insights
+  CloudArrowUpIcon,  // Cloud Sync
+  ArrowPathIcon,  // Sync & Updates
+  LinkIcon,  // Integrations
+  MagnifyingGlassIcon,  // Search & Discovery
+  MapPinIcon,  // Location Based
+  PhoneIcon,  // Mobile Access
+  ServerIcon,  // Data Storage
+  Square3Stack3DIcon,  // Multiple Features
+  SunIcon,  // Lifestyle
+  TableCellsIcon as TableCellsIcon2,  // Meal Planning
+  TagIcon as TagIcon2,  // Food Labels
+  UserGroupIcon as UserGroupIcon2,  // Group Support
+  UserPlusIcon,  // Add Members
+  UsersIcon,  // Community
+  VideoCameraIcon,  // Video Content
+  WrenchScrewdriverIcon,  // Tools & Settings
+  XCircleIcon,  // Restrictions & Allergies
+  CheckCircleIcon,  // Approved Foods
+  ExclamationCircleIcon,  // Food Warnings
+  InformationCircleIcon,  // Nutritional Info
+  QuestionMarkCircleIcon,  // Help & Support
+  ArrowPathRoundedSquareIcon,  // Food Cycle
+  Bars3BottomLeftIcon,  // Menu & Navigation
+  Bars3CenterLeftIcon,  // Categories
+  BarsArrowUpIcon,  // Progress Up
+  BuildingLibraryIcon,  // Knowledge Base
+  ChartPieIcon,  // Nutritional Charts
+  CircleStackIcon,  // Food Database
+  ClipboardIcon,  // Food Log
+  CloudIcon,  // Cloud Features
+  CubeIcon,  // Food Portions
+  CubeTransparentIcon,  // Macro Tracking
+  FingerPrintIcon  // Personal ID
 } from '@heroicons/react/24/outline'
 
 interface Feature {
@@ -43,6 +107,13 @@ interface FeatureChanges {
     icon_name?: string
     order?: number
   }
+}
+
+interface HeaderContent {
+  heading: string
+  paragraph: string
+  button_text: string
+  button_url: string
 }
 
 const featureIcons = {
@@ -65,7 +136,72 @@ const featureIcons = {
   clipboard: ClipboardDocumentCheckIcon,  // Tracking & Monitoring
   rocket: RocketLaunchIcon,  // Progress & Growth
   trophy: TrophyIcon,  // Achievements
-  user: UserIcon  // Personal Profile
+  user: UserIcon,  // Personal Profile
+  cake: CakeIcon,  // Food & Desserts
+  cog: CogIcon,  // Settings & Customization
+  dollar: CurrencyDollarIcon,  // Pricing & Value
+  document: DocumentTextIcon,  // Documentation & Resources
+  globe: GlobeAltIcon,  // Global & Accessibility
+  bulb: LightBulbIcon,  // Ideas & Innovation
+  presentation: PresentationChartLineIcon,  // Analytics & Insights
+  puzzle: PuzzlePieceIcon,  // Integration & Compatibility
+  list: QueueListIcon,  // Lists & Organization
+  star: StarIcon,  // Ratings & Reviews
+  table: TableCellsIcon,  // Data & Tables
+  tag: TagIcon,  // Labels & Categories
+  wrench: WrenchIcon,  // Tools & Utilities
+  trend: ArrowTrendingUpIcon,  // Growth & Trends
+  building: BuildingOfficeIcon,  // Business & Professional
+  calculator: CalculatorIcon,  // Calculations & Math
+  desktop: ComputerDesktopIcon,  // Technology & Devices
+  mobile: DevicePhoneMobileIcon,  // Mobile & Apps
+  flag: FlagIcon,  // Goals & Milestones
+  supplements: BeakerIcon2,  // Supplements & Vitamins
+  cardio: HeartIcon2,  // Cardiovascular Health
+  metabolism: FireIcon2,  // Metabolism & Energy
+  bodyComp: ScaleIcon2,  // Body Composition
+  mealTime: ClockIcon2,  // Meal Timing
+  immune: ShieldCheckIcon2,  // Immune System
+  performance: BoltIcon2,  // Athletic Performance
+  wellness: SparklesIcon2,  // Wellness & Vitality
+  healthyChoice: HandThumbUp2,  // Healthy Choices
+  personalHealth: UserIcon2,  // Personal Health
+  healthRecords: DocumentCheckIcon,  // Health Records
+  healthAnalytics: DocumentChartBarIcon,  // Health Analytics
+  healthInsights: DocumentMagnifyingGlassIcon,  // Health Insights
+  sync: CloudArrowUpIcon,  // Cloud Sync
+  update: ArrowPathIcon,  // Sync & Updates
+  connect: LinkIcon,  // Integrations
+  search: MagnifyingGlassIcon,  // Search & Discovery
+  location: MapPinIcon,  // Location Based
+  phone: PhoneIcon,  // Mobile Access
+  server: ServerIcon,  // Data Storage
+  features: Square3Stack3DIcon,  // Multiple Features
+  lifestyle: SunIcon,  // Lifestyle
+  mealPlan: TableCellsIcon2,  // Meal Planning
+  foodLabel: TagIcon2,  // Food Labels
+  groupSupport: UserGroupIcon2,  // Group Support
+  addMember: UserPlusIcon,  // Add Members
+  community: UsersIcon,  // Community
+  video: VideoCameraIcon,  // Video Content
+  tools: WrenchScrewdriverIcon,  // Tools & Settings
+  allergies: XCircleIcon,  // Restrictions & Allergies
+  approved: CheckCircleIcon,  // Approved Foods
+  warning: ExclamationCircleIcon,  // Food Warnings
+  info: InformationCircleIcon,  // Nutritional Info
+  help: QuestionMarkCircleIcon,  // Help & Support
+  foodCycle: ArrowPathRoundedSquareIcon,  // Food Cycle
+  menu: Bars3BottomLeftIcon,  // Menu & Navigation
+  categories: Bars3CenterLeftIcon,  // Categories
+  progressUp: BarsArrowUpIcon,  // Progress Up
+  library: BuildingLibraryIcon,  // Knowledge Base
+  nutrition: ChartPieIcon,  // Nutritional Charts
+  database: CircleStackIcon,  // Food Database
+  foodLog: ClipboardIcon,  // Food Log
+  cloud: CloudIcon,  // Cloud Features
+  portions: CubeIcon,  // Food Portions
+  macros: CubeTransparentIcon,  // Macro Tracking
+  fingerprint: FingerPrintIcon  // Personal ID
 } as const
 
 const defaultFeature: Omit<Feature, 'id'> = {
@@ -75,8 +211,16 @@ const defaultFeature: Omit<Feature, 'id'> = {
   order: 0
 }
 
+const defaultHeaderContent: HeaderContent = {
+  heading: '',
+  paragraph: '',
+  button_text: '',
+  button_url: ''
+}
+
 const HomepageFeaturesTab = () => {
   const [features, setFeatures] = useState<Feature[]>([])
+  const [headerContent, setHeaderContent] = useState<HeaderContent>(defaultHeaderContent)
   const [unsavedChanges, setUnsavedChanges] = useState<FeatureChanges>({})
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -85,6 +229,7 @@ const HomepageFeaturesTab = () => {
 
   useEffect(() => {
     fetchFeatures()
+    fetchHeaderContent()
   }, [])
 
   useEffect(() => {
@@ -114,6 +259,24 @@ const HomepageFeaturesTab = () => {
     }
   }
 
+  const fetchHeaderContent = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('features_header')
+        .select('*')
+        .single()
+
+      if (error) throw error
+
+      if (data) {
+        setHeaderContent(data)
+      }
+    } catch (error) {
+      console.error('Error fetching header content:', error)
+      toast.error('Failed to load header content')
+    }
+  }
+
   const handleUpdateFeature = (index: number, updates: Partial<Feature>) => {
     const feature = features[index]
     if (!feature) return
@@ -131,6 +294,13 @@ const HomepageFeaturesTab = () => {
     setUnsavedChanges(prev => ({
       ...prev,
       [feature.id]: { ...(prev[feature.id] || {}), ...updates }
+    }))
+  }
+
+  const handleHeaderChange = (field: keyof HeaderContent, value: string) => {
+    setHeaderContent(prev => ({
+      ...prev,
+      [field]: value
     }))
   }
 
@@ -152,6 +322,25 @@ const HomepageFeaturesTab = () => {
     } catch (error) {
       console.error('Error saving changes:', error)
       toast.error('Failed to save changes')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleSaveHeaderContent = async () => {
+    try {
+      setIsSaving(true)
+      const { error } = await supabase
+        .from('features_header')
+        .update(headerContent)
+        .eq('id', 1)
+
+      if (error) throw error
+
+      toast.success('Header content saved successfully')
+    } catch (error) {
+      console.error('Error saving header content:', error)
+      toast.error('Failed to save header content')
     } finally {
       setIsSaving(false)
     }
@@ -249,7 +438,76 @@ const HomepageFeaturesTab = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
+      {/* Header Content Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          Features Page Header
+        </h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Heading
+            </label>
+            <input
+              type="text"
+              value={headerContent.heading}
+              onChange={(e) => handleHeaderChange('heading', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Paragraph
+            </label>
+            <textarea
+              value={headerContent.paragraph}
+              onChange={(e) => handleHeaderChange('paragraph', e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Button Text
+              </label>
+              <input
+                type="text"
+                value={headerContent.button_text}
+                onChange={(e) => handleHeaderChange('button_text', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Button URL
+              </label>
+              <input
+                type="text"
+                value={headerContent.button_url}
+                onChange={(e) => handleHeaderChange('button_url', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={handleSaveHeaderContent}
+              disabled={isSaving}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+            >
+              {isSaving ? 'Saving...' : 'Save Header'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
@@ -375,75 +633,49 @@ const HomepageFeaturesTab = () => {
 
                             {/* Form Fields */}
                             <div className="space-y-5">
-                              <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                  Title
-                                </label>
-                                <input
-                                  type="text"
-                                  value={feature.title}
-                                  onChange={(e) => handleUpdateFeature(index, { title: e.target.value })}
-                                  placeholder="Enter feature title"
-                                  className="w-full px-4 py-3 rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 transition-colors"
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                  Icon
-                                </label>
-                                <div className="grid grid-cols-2 gap-4">
+                              <div className="space-y-4">
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Icon
+                                  </label>
                                   <select
                                     value={feature.icon_name}
                                     onChange={(e) => handleUpdateFeature(index, { icon_name: e.target.value as keyof typeof featureIcons })}
-                                    className="w-full px-4 py-3 rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 transition-colors"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                                   >
-                                    {(Object.keys(featureIcons) as Array<keyof typeof featureIcons>).map((iconName) => (
-                                      <option key={iconName} value={iconName}>
-                                        {iconName.charAt(0).toUpperCase() + iconName.slice(1)}
+                                    {Object.entries(featureIcons).map(([key, Icon]) => (
+                                      <option key={key} value={key}>
+                                        {key.charAt(0).toUpperCase() + key.slice(1)} Icon
                                       </option>
                                     ))}
                                   </select>
-                                  <div className="flex items-center justify-center px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
-                                    <div className="w-6 h-6 text-gray-700 dark:text-gray-300">
-                                      {(() => {
-                                        const IconComponent = featureIcons[feature.icon_name];
-                                        return IconComponent ? <IconComponent className="w-6 h-6" /> : null;
-                                      })()}
-                                    </div>
-                                  </div>
                                 </div>
-                                <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
-                                  <div className="grid grid-cols-5 gap-2">
-                                    {(Object.entries(featureIcons) as [keyof typeof featureIcons, React.ComponentType<any>][]).map(([name, IconComponent]) => (
-                                      <button
-                                        key={name}
-                                        onClick={() => handleUpdateFeature(index, { icon_name: name })}
-                                        className={`
-                                          p-2 rounded-lg transition-all duration-200
-                                          ${feature.icon_name === name 
-                                            ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 ring-2 ring-blue-500 dark:ring-blue-400' 
-                                            : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
-                                          }
-                                        `}
-                                        title={name.charAt(0).toUpperCase() + name.slice(1)}
-                                      >
-                                        <IconComponent className="w-5 h-5" />
-                                      </button>
-                                    ))}
-                                  </div>
+
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Title
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={feature.title}
+                                    onChange={(e) => handleUpdateFeature(index, { title: e.target.value })}
+                                    placeholder="Feature Title"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                  />
                                 </div>
-                              </div>
-                              <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                  Description
-                                </label>
-                                <textarea
-                                  value={feature.description}
-                                  onChange={(e) => handleUpdateFeature(index, { description: e.target.value })}
-                                  rows={3}
-                                  placeholder="Enter feature description"
-                                  className="w-full px-4 py-3 rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 resize-none transition-colors"
-                                />
+
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Description
+                                  </label>
+                                  <textarea
+                                    value={feature.description}
+                                    onChange={(e) => handleUpdateFeature(index, { description: e.target.value })}
+                                    placeholder="Feature Description"
+                                    rows={3}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>

@@ -5,21 +5,57 @@ import { motion } from 'framer-motion';
 import { IconType } from 'react-icons';
 import { 
   FaHeartbeat, 
-  FaChartLine, 
-  FaAppleAlt, 
-  FaBrain,
+  FaAppleAlt,
+  FaWeight,
   FaRunning,
-  FaUserFriends
+  FaUserMd,
+  FaUserFriends,
+  FaChartLine,
+  FaBrain,
+  FaCarrot,
+  FaLeaf,
+  FaPrescriptionBottle,
+  FaStethoscope,
+  FaDumbbell,
+  FaBed,
+  FaClock,
+  FaCalendarAlt,
+  FaChartBar,
+  FaChartPie,
+  FaUtensils,
+  FaGlassWhiskey,
+  FaBookMedical,
+  FaMedkit,
+  FaHospital,
+  FaNotesMedical
 } from 'react-icons/fa';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-const ICONS = {
+const ICONS: { [key: string]: IconType } = {
   FaHeartbeat,
-  FaChartLine,
   FaAppleAlt,
-  FaBrain,
+  FaWeight,
   FaRunning,
-  FaUserFriends
+  FaUserMd,
+  FaUserFriends,
+  FaChartLine,
+  FaBrain,
+  FaCarrot,
+  FaLeaf,
+  FaPrescriptionBottle,
+  FaStethoscope,
+  FaDumbbell,
+  FaBed,
+  FaClock,
+  FaCalendarAlt,
+  FaChartBar,
+  FaChartPie,
+  FaUtensils,
+  FaGlassWhiskey,
+  FaBookMedical,
+  FaMedkit,
+  FaHospital,
+  FaNotesMedical
 };
 
 interface Feature {
@@ -57,9 +93,10 @@ const itemVariants = {
 };
 
 const FeatureCard = ({ feature }: { feature: Feature }) => {
-  const Icon = ICONS[feature.icon_name as keyof typeof ICONS];
+  const Icon = ICONS[feature.icon_name];
   
   if (!Icon) {
+    console.warn(`Icon ${feature.icon_name} not found`);
     return null;
   }
 
@@ -78,7 +115,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
         
         {/* Icon Container */}
         <div className={`relative inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.gradient} bg-opacity-10 dark:bg-opacity-20 mb-4`}>
-          <Icon className="w-6 h-6 text-gray-900 dark:text-white" />
+          <Icon className="w-7 h-7 text-gray-900 dark:text-white" />
         </div>
 
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
@@ -88,6 +125,9 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
         <p className="text-gray-600 dark:text-gray-300">
           {feature.description}
         </p>
+
+        {/* Hover Effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/20 dark:from-gray-800/0 dark:to-gray-800/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
       </div>
     </motion.div>
   );

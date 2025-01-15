@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import axios from 'axios';
 import { getAccessToken, generateTimestamp, generatePassword, formatPhoneNumber, validatePhoneNumber } from '../utils';
 import { supabase } from '@/lib/supabase/server';
 
@@ -35,7 +34,7 @@ export async function POST(req: NextRequest) {
     console.log('Request body:', body);
     await logToSupabase({ body });
 
-    const { phoneNumber, amount } = body;
+    const { phoneNumber, amount, bookingId } = body;
 
     // Validate phone number
     if (!validatePhoneNumber(phoneNumber)) {
@@ -64,15 +63,41 @@ export async function POST(req: NextRequest) {
     try {
       console.log('Getting access token...');
       await logToSupabase('Getting access token...');
+
+      // Test the credentials first
+      const testResponse = await fetch(`${process.env.MPESA_BASE_URL}/oauth/v1/generate?grant_type=client_credentials`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Basic ${Buffer.from(`${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`).toString('base64')}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const testData = await testResponse.json();
+      console.log('Test response:', {
+        status: testResponse.status,
+        data: testData
+      });
+
+      if (!testResponse.ok) {
+        throw new Error(`Failed to validate credentials: ${JSON.stringify(testData)}`);
+      }
+
       accessToken = await getAccessToken();
       console.log('Successfully got access token');
       await logToSupabase('Successfully got access token');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      console.error('Failed to get access token:', errorMessage);
+      console.error('Failed to get access token:', {
+        error,
+        message: errorMessage,
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      
       await logToSupabase({
         error: 'Failed to get access token',
-        details: errorMessage
+        details: errorMessage,
+        stack: error instanceof Error ? error.stack : undefined
       }, 'error');
 
       return NextResponse.json(
@@ -94,20 +119,63 @@ export async function POST(req: NextRequest) {
     const stkPushUrl = process.env.MPESA_STK_PUSH_URL;
     const businessShortCode = process.env.MPESA_BUSINESS_SHORT_CODE;
     const passkey = process.env.MPESA_PASSKEY;
+    const callbackUrl = process.env.MPESA_CALLBACK_URL;
     const transactionType = "CustomerPayBillOnline";
-    const callbackUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/mpesa/callback`;
 
-    if (!stkPushUrl || !businessShortCode || !passkey) {
-      console.error('Missing required environment variables');
-      await logToSupabase('Missing required environment variables', 'error');
+    // Check each required variable individually
+    const missingVars = [];
+    if (!stkPushUrl) missingVars.push('MPESA_STK_PUSH_URL');
+    if (!businessShortCode) missingVars.push('MPESA_BUSINESS_SHORT_CODE');
+    if (!passkey) missingVars.push('MPESA_PASSKEY');
+    if (!callbackUrl) missingVars.push('MPESA_CALLBACK_URL');
+
+    if (missingVars.length > 0) {
+      const errorMessage = `Missing required environment variables: ${missingVars.join(', ')}`;
+      console.error(errorMessage);
+      await logToSupabase({
+        error: errorMessage,
+        missingVariables: missingVars
+      }, 'error');
+      
       return NextResponse.json(
         {
           error: 'Server configuration error',
-          details: 'Missing required environment variables'
+          details: errorMessage
         },
         { status: 500 }
       );
     }
+
+    // At this point, we know stkPushUrl is defined
+    const validatedStkPushUrl = stkPushUrl as string;
+
+    // Validate STK Push URL format
+    if (!validatedStkPushUrl.includes('/mpesa/stkpush/v1/processrequest')) {
+      const errorMessage = 'Invalid MPESA_STK_PUSH_URL. It should end with /mpesa/stkpush/v1/processrequest';
+      console.error(errorMessage);
+      await logToSupabase({
+        error: errorMessage,
+        currentUrl: validatedStkPushUrl
+      }, 'error');
+      
+      return NextResponse.json(
+        {
+          error: 'Server configuration error',
+          details: errorMessage
+        },
+        { status: 500 }
+      );
+    }
+
+    // Log the callback URL being used
+    console.log('Using callback URL:', callbackUrl);
+    await logToSupabase({
+      message: 'STK Push configuration',
+      callbackUrl,
+      businessShortCode,
+      phoneNumber: formattedPhone,
+      amount
+    });
 
     const stkPushRequestBody = {
       BusinessShortCode: businessShortCode,
@@ -123,8 +191,22 @@ export async function POST(req: NextRequest) {
       TransactionDesc: "Payment for Oncotrition services"
     };
 
-    console.log('STK push request body:', stkPushRequestBody);
-    await logToSupabase({ stkPushRequestBody });
+    console.log('STK push request configuration:', {
+      stkPushUrl,
+      businessShortCode,
+      callbackUrl,
+      formattedPhone,
+      amount,
+      mpesaTimestamp
+    });
+
+    console.log('Full STK push request body:', stkPushRequestBody);
+    await logToSupabase({
+      message: 'STK Push Request',
+      url: stkPushUrl,
+      callbackUrl,
+      requestBody: stkPushRequestBody
+    });
 
     // Make request to M-Pesa
     let response;
@@ -132,46 +214,121 @@ export async function POST(req: NextRequest) {
       console.log('Making request to M-Pesa...');
       await logToSupabase('Making request to M-Pesa...');
 
-      response = await axios.post(stkPushUrl, stkPushRequestBody, {
+      // Log the full request configuration
+      const requestConfig = {
+        url: validatedStkPushUrl,
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          'Authorization': 'Bearer [REDACTED]',
           'Content-Type': 'application/json',
         },
-      });
-
-      console.log('M-Pesa API Response:', response.data);
+        body: {
+          ...stkPushRequestBody,
+          CallBackURL: callbackUrl // Explicitly log the callback URL
+        }
+      };
+      console.log('STK Push Request Configuration:', JSON.stringify(requestConfig, null, 2));
       await logToSupabase({
-        message: 'M-Pesa API Response',
-        data: response.data
+        event: 'stk_push_request',
+        config: requestConfig
       });
 
-      if (response.data.ResponseCode !== "0") {
-        console.error('M-Pesa API Error Response:', response.data);
+      response = await fetch(validatedStkPushUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(stkPushRequestBody)
+      });
+
+      const responseText = await response.text();
+      console.log('Debug: Raw STK Push response:', responseText);
+      console.log('Debug: Response status:', response.status);
+      console.log('Debug: Response headers:', Object.fromEntries(response.headers.entries()));
+
+      let responseData;
+      try {
+        responseData = responseText ? JSON.parse(responseText) : null;
+      } catch (parseError) {
+        console.error('Failed to parse STK Push response:', parseError);
+        throw new Error(`Invalid response format: ${responseText}`);
+      }
+
+      // Log the full response
+      const fullResponse = {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        data: responseData,
+        originalRequest: {
+          callbackUrl,
+          businessShortCode,
+          phoneNumber: formattedPhone,
+          amount
+        }
+      };
+      
+      console.log('M-Pesa API Full Response:', JSON.stringify(fullResponse, null, 2));
+
+      await logToSupabase({
+        event: 'stk_push_response',
+        ...fullResponse
+      });
+
+      // Check for HTTP errors first
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}: ${responseText}`);
+      }
+
+      // Then check the M-Pesa response code
+      if (responseData?.ResponseCode !== "0") {
+        console.error('M-Pesa API Error Response:', responseData);
         await logToSupabase({
           error: 'M-Pesa API Error Response',
-          data: response.data
+          data: responseData,
+          request: requestConfig
         }, 'error');
 
         return NextResponse.json(
           {
             error: 'Failed to initiate payment',
-            details: response.data
+            details: responseData?.ResponseDescription || responseData?.errorMessage || 'Unknown error'
           },
           { status: 400 }
         );
       }
+
+      // Success case
+      return NextResponse.json({
+        success: true,
+        data: responseData,
+        message: 'Payment initiated successfully',
+        callbackUrl // Include callback URL in response for verification
+      });
+
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      console.error('M-Pesa API Error:', errorMessage);
+      const errorDetails = {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      };
+
+      console.error('M-Pesa API Error:', errorDetails);
       await logToSupabase({
         error: 'M-Pesa API Error',
-        details: errorMessage
+        details: errorDetails,
+        requestConfig: {
+          url: stkPushUrl,
+          callbackUrl,
+          businessShortCode,
+          phoneNumber: formattedPhone,
+          amount
+        }
       }, 'error');
 
       return NextResponse.json(
         {
           error: 'Failed to initiate payment',
-          details: errorMessage
+          details: errorDetails.message
         },
         { status: 500 }
       );
@@ -180,9 +337,52 @@ export async function POST(req: NextRequest) {
     console.log('=== STK PUSH SUCCESS ===');
     await logToSupabase('=== STK PUSH SUCCESS ===');
 
+    const paymentData = response.data;
+    console.log('M-Pesa API Response:', paymentData);
+    await logToSupabase({
+      message: 'M-Pesa API Response',
+      data: paymentData,
+      checkoutRequestId: paymentData.CheckoutRequestID,
+      bookingId: body.bookingId
+    });
+
+    // Update booking with checkout request ID
+    const { error: updateError } = await supabase
+      .from('event_bookings')
+      .update({
+        checkout_request_id: paymentData.CheckoutRequestID
+      })
+      .eq('id', body.bookingId)
+      .select()
+      .single();
+
+    if (updateError) {
+      console.error('Error updating booking with checkout request ID:', {
+        error: updateError,
+        bookingId: body.bookingId,
+        checkoutRequestId: paymentData.CheckoutRequestID
+      });
+      await logToSupabase({
+        error: 'Error updating booking with checkout request ID',
+        details: updateError,
+        bookingId: body.bookingId,
+        checkoutRequestId: paymentData.CheckoutRequestID
+      }, 'error');
+    } else {
+      console.log('Successfully updated booking with checkout request ID:', {
+        bookingId: body.bookingId,
+        checkoutRequestId: paymentData.CheckoutRequestID
+      });
+      await logToSupabase({
+        message: 'Successfully updated booking with checkout request ID',
+        bookingId: body.bookingId,
+        checkoutRequestId: paymentData.CheckoutRequestID
+      });
+    }
+
     return NextResponse.json({
       message: 'STK push initiated successfully',
-      data: response.data
+      data: paymentData
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';

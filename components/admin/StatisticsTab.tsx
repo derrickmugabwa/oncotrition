@@ -13,6 +13,19 @@ interface Statistic {
   updated_at?: string
 }
 
+interface HeaderContent {
+  heading: string
+  paragraph: string
+}
+
+interface StatisticChanges {
+  [key: number]: {
+    number?: string
+    label?: string
+    display_order?: number
+  }
+}
+
 const defaultStatistic = {
   number: '',
   label: '',
@@ -21,12 +34,18 @@ const defaultStatistic = {
 
 const StatisticsTab = () => {
   const [statistics, setStatistics] = useState<Statistic[]>([])
+  const [headerContent, setHeaderContent] = useState<HeaderContent>({
+    heading: '',
+    paragraph: ''
+  })
+  const [unsavedChanges, setUnsavedChanges] = useState<StatisticChanges>({})
+  const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [editStates, setEditStates] = useState<{ [key: number]: Partial<Statistic> }>({})
   const supabase = createClientComponentClient()
 
   useEffect(() => {
     fetchStatistics()
+    fetchHeaderContent()
   }, [])
 
   const fetchStatistics = async () => {
@@ -38,18 +57,29 @@ const StatisticsTab = () => {
 
       if (error) throw error
       setStatistics(data || [])
-      
-      // Initialize edit states
-      const initialEditStates = (data || []).reduce((acc, stat) => ({
-        ...acc,
-        [stat.id]: { ...stat }
-      }), {})
-      setEditStates(initialEditStates)
     } catch (error: any) {
       console.error('Error fetching statistics:', error)
       toast.error('Failed to load statistics')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const fetchHeaderContent = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('statistics_header')
+        .select('*')
+        .single()
+
+      if (error) throw error
+
+      if (data) {
+        setHeaderContent(data)
+      }
+    } catch (error) {
+      console.error('Error fetching header content:', error)
+      toast.error('Failed to load header content')
     }
   }
 
@@ -74,10 +104,6 @@ const StatisticsTab = () => {
 
       if (error) throw error
       setStatistics([...statistics, data])
-      setEditStates(prev => ({
-        ...prev,
-        [data.id]: { ...data }
-      }))
       toast.success('New statistic added successfully', { id: toastId })
     } catch (error: any) {
       console.error('Error adding statistic:', error)
@@ -86,14 +112,14 @@ const StatisticsTab = () => {
   }
 
   const handleUpdateStatistic = (id: number, updates: Partial<Statistic>) => {
-    setEditStates(prev => ({
+    setUnsavedChanges(prev => ({
       ...prev,
       [id]: { ...prev[id], ...updates }
     }))
   }
 
   const handleSaveStatistic = async (id: number) => {
-    const updates = editStates[id]
+    const updates = unsavedChanges[id]
     if (!updates) return
 
     const toastId = toast.loading('Saving statistic...')
@@ -147,7 +173,7 @@ const StatisticsTab = () => {
       }
 
       setStatistics(updatedStatistics)
-      setEditStates(prev => {
+      setUnsavedChanges(prev => {
         const newState = { ...prev }
         delete newState[id]
         return newState
@@ -156,6 +182,32 @@ const StatisticsTab = () => {
     } catch (error: any) {
       console.error('Error deleting statistic:', error)
       toast.error(error.message || 'Failed to delete statistic', { id: toastId })
+    }
+  }
+
+  const handleHeaderChange = (field: keyof HeaderContent, value: string) => {
+    setHeaderContent(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const handleSaveHeaderContent = async () => {
+    try {
+      setIsSaving(true)
+      const { error } = await supabase
+        .from('statistics_header')
+        .update(headerContent)
+        .eq('id', 1)
+
+      if (error) throw error
+
+      toast.success('Header content saved successfully')
+    } catch (error) {
+      console.error('Error saving header content:', error)
+      toast.error('Failed to save header content')
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -168,7 +220,50 @@ const StatisticsTab = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header Content Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          Statistics Page Header
+        </h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Heading
+            </label>
+            <input
+              type="text"
+              value={headerContent.heading}
+              onChange={(e) => handleHeaderChange('heading', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Paragraph
+            </label>
+            <textarea
+              value={headerContent.paragraph}
+              onChange={(e) => handleHeaderChange('paragraph', e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={handleSaveHeaderContent}
+              disabled={isSaving}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+            >
+              {isSaving ? 'Saving...' : 'Save Header'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Statistics Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
         <div className="flex justify-between items-center mb-8">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Manage Statistics</h3>
@@ -182,7 +277,7 @@ const StatisticsTab = () => {
 
         <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           {statistics.map((statistic) => {
-            const editState = editStates[statistic.id] || statistic
+            const editState = unsavedChanges[statistic.id] || statistic
             return (
               <div 
                 key={statistic.id} 
@@ -231,7 +326,7 @@ const StatisticsTab = () => {
                       type="text"
                       value={editState.label}
                       onChange={(e) => handleUpdateStatistic(statistic.id, { label: e.target.value })}
-                      placeholder="e.g., Active Users Worldwide"
+                      placeholder="e.g., Active Users"
                       className="w-full px-3 py-1.5 text-sm rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all duration-300"
                     />
                   </div>

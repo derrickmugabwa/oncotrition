@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { FaEdit, FaTrash, FaPlus, FaTimes } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaTimes, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
 interface Package {
@@ -14,6 +14,7 @@ interface Package {
   gradient: string;
   order_number: number;
   duration_type: string;
+  show_price: boolean;
 }
 
 const defaultPackages = [
@@ -29,7 +30,8 @@ const defaultPackages = [
     recommended: false,
     gradient: 'from-blue-400/20 to-indigo-400/20',
     order_number: 1,
-    duration_type: 'month'
+    duration_type: 'month',
+    show_price: true
   },
   {
     name: 'Pro Plan',
@@ -44,7 +46,8 @@ const defaultPackages = [
     recommended: true,
     gradient: 'from-purple-400/20 to-pink-400/20',
     order_number: 2,
-    duration_type: 'month'
+    duration_type: 'month',
+    show_price: true
   },
   {
     name: 'Premium Plan',
@@ -60,7 +63,8 @@ const defaultPackages = [
     recommended: false,
     gradient: 'from-amber-400/20 to-orange-400/20',
     order_number: 3,
-    duration_type: 'month'
+    duration_type: 'month',
+    show_price: true
   }
 ];
 
@@ -76,6 +80,7 @@ export default function PackagesTab() {
     gradient: string;
     order_number: number;
     duration_type: string;
+    show_price: boolean;
   }>({
     name: '',
     price: 0,
@@ -83,7 +88,8 @@ export default function PackagesTab() {
     recommended: false,
     gradient: '',
     order_number: 0,
-    duration_type: 'month'
+    duration_type: 'month',
+    show_price: true
   });
   const [isCustomDuration, setIsCustomDuration] = useState(false);
   const supabase = createClientComponentClient();
@@ -101,7 +107,8 @@ export default function PackagesTab() {
         recommended: editingPackage.recommended,
         gradient: editingPackage.gradient,
         order_number: editingPackage.order_number,
-        duration_type: editingPackage.duration_type
+        duration_type: editingPackage.duration_type,
+        show_price: editingPackage.show_price
       });
     }
   }, [editingPackage]);
@@ -162,7 +169,8 @@ export default function PackagesTab() {
         recommended: false,
         gradient: 'from-blue-400/20 to-indigo-400/20',
         order_number: newOrderNumber,
-        duration_type: 'month'
+        duration_type: 'month',
+        show_price: true
       };
 
       const { data, error } = await supabase
@@ -225,7 +233,8 @@ export default function PackagesTab() {
           recommended: editForm.recommended,
           gradient: editForm.gradient,
           order_number: editForm.order_number,
-          duration_type: editForm.duration_type
+          duration_type: editForm.duration_type,
+          show_price: editForm.show_price
         })
         .eq('id', editingPackage.id);
 
@@ -258,6 +267,42 @@ export default function PackagesTab() {
       ...prev,
       features: prev.features.filter((_, i) => i !== index)
     }));
+  };
+
+  const handleMovePackage = async (packageId: number, direction: 'up' | 'down') => {
+    try {
+      const currentIndex = packages.findIndex(p => p.id === packageId);
+      if (currentIndex === -1) return;
+
+      const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+      if (newIndex < 0 || newIndex >= packages.length) return;
+
+      const updatedPackages = [...packages];
+      const [movedPackage] = updatedPackages.splice(currentIndex, 1);
+      updatedPackages.splice(newIndex, 0, movedPackage);
+
+      // Update order_number for all packages
+      const updatedPackagesWithOrder = updatedPackages.map((pkg, index) => ({
+        ...pkg,
+        order_number: index + 1
+      }));
+
+      // Update all packages in the database
+      const { error } = await supabase
+        .from('smartspoon_packages')
+        .upsert(updatedPackagesWithOrder.map(pkg => ({
+          id: pkg.id,
+          order_number: pkg.order_number
+        })));
+
+      if (error) throw error;
+
+      setPackages(updatedPackagesWithOrder);
+      toast.success('Package order updated successfully');
+    } catch (error: any) {
+      console.error('Error:', error);
+      toast.error(error.message || 'Failed to update package order');
+    }
   };
 
   return (
@@ -313,7 +358,7 @@ export default function PackagesTab() {
                     {pkg.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    KES {pkg.price.toLocaleString()}/{pkg.duration_type}
+                    {pkg.show_price ? `KES ${pkg.price.toLocaleString()}/${pkg.duration_type}` : 'Price hidden'}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                     {pkg.features.length} features
@@ -321,19 +366,43 @@ export default function PackagesTab() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                     {pkg.recommended ? 'Yes' : 'No'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    <button
-                      onClick={() => setEditingPackage(pkg)}
-                      className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-4"
-                    >
-                      <FaEdit className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDeletePackage(pkg.id)}
-                      className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                    >
-                      <FaTrash className="h-4 w-4" />
-                    </button>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => handleMovePackage(pkg.id, 'up')}
+                        disabled={packages.indexOf(pkg) === 0}
+                        className={`p-2 rounded-lg transition-colors ${
+                          packages.indexOf(pkg) === 0
+                            ? 'text-gray-400 cursor-not-allowed'
+                            : 'text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                        }`}
+                      >
+                        <FaArrowUp className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleMovePackage(pkg.id, 'down')}
+                        disabled={packages.indexOf(pkg) === packages.length - 1}
+                        className={`p-2 rounded-lg transition-colors ${
+                          packages.indexOf(pkg) === packages.length - 1
+                            ? 'text-gray-400 cursor-not-allowed'
+                            : 'text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                        }`}
+                      >
+                        <FaArrowDown className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setEditingPackage(pkg)}
+                        className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                      >
+                        <FaEdit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeletePackage(pkg.id)}
+                        className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                      >
+                        <FaTrash className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -522,6 +591,33 @@ export default function PackagesTab() {
                       <option value="from-green-400/20 to-teal-400/20">Green to Teal</option>
                       <option value="from-red-400/20 to-rose-400/20">Red to Rose</option>
                     </select>
+                  </div>
+                </div>
+
+                {/* Show Price */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Show Price
+                  </label>
+                  <div 
+                    onClick={() => setEditForm(prev => ({ ...prev, show_price: !prev.show_price }))}
+                    className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all
+                      ${editForm.show_price 
+                        ? 'border-primary bg-primary/5 dark:bg-primary/10' 
+                        : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'}`}
+                  >
+                    <span className="text-sm text-gray-900 dark:text-white">
+                      Show Price
+                    </span>
+                    <div className="relative">
+                      <div className={`w-11 h-6 rounded-full transition-colors duration-200 ease-in-out ${
+                        editForm.show_price ? 'bg-primary' : 'bg-gray-200 dark:bg-gray-600'
+                      }`}>
+                        <div className={`absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ease-in-out ${
+                          editForm.show_price ? 'translate-x-5' : 'translate-x-0'
+                        }`} />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
