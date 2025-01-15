@@ -1,353 +1,472 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { toast } from 'react-hot-toast'
+import { v4 as uuidv4 } from 'uuid'
 
-const SiteLogoTab = () => {
-  const supabase = createClientComponentClient()
-  const router = useRouter()
-  const [isUploading, setIsUploading] = useState(false)
+interface SiteSettings {
+  logo_url: string | null
+  favicon_url: string | null
+}
+
+export default function SiteLogoTab() {
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
+  const [faviconUrl, setFaviconUrl] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadingFavicon, setUploadingFavicon] = useState(false)
+  const [preview, setPreview] = useState<string | null>(null)
+  const [faviconPreview, setFaviconPreview] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [settings, setSettings] = useState<{
-    id: number
-    logo_url: string | null
-    favicon_url: string | null
-    show_site_name: boolean
-  }>({
-    id: 0,
-    logo_url: null,
-    favicon_url: null,
-    show_site_name: true
-  })
-
-  // Define fetchSettings first
-  const fetchSettings = useCallback(async () => {
-    try {
-      // First check if user is authenticated
-      const { data: { session }, error: authError } = await supabase.auth.getSession()
-      
-      if (authError) throw authError
-      
-      if (!session) {
-        throw new Error('Not authenticated')
-      }
-
-      // Get all settings first to check what we have
-      const { data: allSettings, error: fetchError } = await supabase
-        .from('site_settings')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (fetchError) throw fetchError;
-
-      if (allSettings && allSettings.length > 0) {
-        // Use the most recent settings
-        setSettings(allSettings[0]);
-        
-        // If we have multiple settings, clean up old ones
-        if (allSettings.length > 1) {
-          console.log('Found multiple settings, cleaning up...');
-          const keepId = allSettings[0].id;
-          
-          // Delete all except the most recent
-          const { error: deleteError } = await supabase
-            .from('site_settings')
-            .delete()
-            .neq('id', keepId);
-
-          if (deleteError) {
-            console.error('Error cleaning up old settings:', deleteError);
-          }
-        }
-      } else {
-        // No settings exist, create initial settings
-        const { data: newData, error: insertError } = await supabase
-          .from('site_settings')
-          .insert([{ 
-            logo_url: null,
-            favicon_url: null,
-            show_site_name: true
-          }])
-          .select()
-          .single();
-
-        if (insertError) throw insertError;
-        if (newData) setSettings(newData);
-      }
-    } catch (error: any) {
-      console.error('Error fetching settings:', error.message);
-      setError(error.message || 'Failed to load settings');
-    }
-  }, [supabase])
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
-    fetchSettings()
-  }, [fetchSettings])
+    checkAuth()
+    fetchLogo()
+    fetchFavicon()
+  }, [])
 
-  const handleFileUpload = async (file: File, type: 'logo' | 'favicon') => {
+  const checkAuth = async () => {
     try {
-      setIsUploading(true)
-      setError(null)
-
-      // Check authentication
-      const { data: { session } } = await supabase.auth.getSession()
+      const { data: { session }, error: authError } = await supabase.auth.getSession()
+      if (authError) throw authError
       if (!session) {
         throw new Error('Not authenticated')
       }
+    } catch (error) {
+      console.error('Authentication error:', error)
+      toast.error('Please log in to manage site settings')
+      setError('Please log in to manage site settings')
+    }
+  }
 
-      // Create a clean filename with timestamp
-      const fileExt = file.name.split('.').pop()?.toLowerCase() || ''
-      const timestamp = Date.now()
-      const fileName = `${type}-${timestamp}.${fileExt}`
-      const filePath = `site-assets/${fileName}`
+  const fetchLogo = async () => {
+    try {
+      const { data: settings, error } = await supabase
+        .from('site_settings')
+        .select('logo_url')
+        .eq('is_active', true)
+        .single()
 
-      // First, try to delete existing file if any
-      try {
-        const { data: existingSettings } = await supabase
-          .from('site_settings')
-          .select('logo_url, favicon_url')
-          .single()
-
-        if (existingSettings) {
-          const existingUrl = type === 'logo' ? existingSettings.logo_url : existingSettings.favicon_url
-          if (existingUrl) {
-            // Extract the file path from the full URL
-            const existingPath = existingUrl.split('site-assets/').pop()?.split('?')[0]
-            if (existingPath) {
-              await supabase.storage
-                .from('site-assets')
-                .remove([existingPath])
-            }
-          }
-        }
-      } catch (error) {
-        console.warn('Error removing existing file:', error)
+      if (error) {
+        console.error('Error fetching logo:', error)
+        return
       }
 
-      // Upload new file
+      if (settings?.logo_url) {
+        const url = settings.logo_url.startsWith('http') 
+          ? settings.logo_url 
+          : settings.logo_url.startsWith('/')
+            ? settings.logo_url
+            : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logos/${settings.logo_url}`
+        setLogoUrl(url)
+        setPreview(url)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error('Failed to fetch logo')
+    }
+  }
+
+  const fetchFavicon = async () => {
+    try {
+      const { data: settings, error } = await supabase
+        .from('site_settings')
+        .select('favicon_url')
+        .eq('is_active', true)
+        .single()
+
+      if (error) {
+        console.error('Error fetching favicon:', error)
+        return
+      }
+
+      if (settings?.favicon_url) {
+        const url = settings.favicon_url.startsWith('http') 
+          ? settings.favicon_url 
+          : settings.favicon_url.startsWith('/')
+            ? settings.favicon_url
+            : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/favicons/${settings.favicon_url}`
+        setFaviconUrl(url)
+        setFaviconPreview(url)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error('Failed to fetch favicon')
+    }
+  }
+
+  const uploadLogo = async (file: File) => {
+    try {
+      setUploading(true)
+
+      // Check if file is an image
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file')
+        return
+      }
+
+      // Check file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('File size should be less than 2MB')
+        return
+      }
+
+      // Create a preview
+      const objectUrl = URL.createObjectURL(file)
+      setPreview(objectUrl)
+
+      // Generate a unique filename
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${uuidv4()}.${fileExt}`
+
+      // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
-        .from('site-assets')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true
-        })
+        .from('logos')
+        .upload(fileName, file)
 
-      if (uploadError) throw uploadError
+      if (uploadError) {
+        throw uploadError
+      }
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('site-assets')
-        .getPublicUrl(filePath)
+      // Get the public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('logos')
+        .getPublicUrl(fileName)
 
-      // Add timestamp to prevent caching
-      const urlWithTimestamp = `${publicUrl}?t=${timestamp}`
+      if (!publicUrlData.publicUrl) {
+        throw new Error('Failed to get public URL')
+      }
 
-      // Update settings
+      // Update site_settings with new logo URL
       const { error: updateError } = await supabase
         .from('site_settings')
-        .update({ 
-          [`${type}_url`]: urlWithTimestamp,
-        })
-        .eq('id', settings.id)
+        .update({ logo_url: fileName })
+        .eq('is_active', true)
+        .select()
+        .single()
 
-      if (updateError) throw updateError
-
-      // Update local state
-      setSettings(prev => ({
-        ...prev,
-        [`${type}_url`]: urlWithTimestamp
-      }))
-
-      // Force router refresh to update all components
-      router.refresh()
-
-    } catch (error: any) {
-      console.error(`Error uploading ${type}:`, error)
-      setError(error.message || `Failed to upload ${type}`)
-    } finally {
-      setIsUploading(false)
-    }
-  }
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'logo' | 'favicon') => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    // Validate file type
-    const validTypes = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/gif', 'image/webp']
-    if (!validTypes.includes(file.type)) {
-      setError('Please upload a valid image file (JPEG, PNG, SVG, GIF, or WebP)')
-      return
-    }
-
-    // Validate file size (max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      setError('File size should be less than 2MB')
-      return
-    }
-
-    handleFileUpload(file, type)
-  }
-
-  const handleShowSiteNameToggle = async (checked: boolean) => {
-    try {
-      // Check authentication
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        throw new Error('Not authenticated')
+      if (updateError) {
+        // If update fails, clean up the uploaded file
+        await supabase.storage
+          .from('logos')
+          .remove([fileName])
+        throw updateError
       }
 
+      setLogoUrl(publicUrlData.publicUrl)
+      toast.success('Logo updated successfully')
+
+      // Cleanup old logo if exists
+      if (logoUrl) {
+        try {
+          const oldFileName = logoUrl.split('/').pop()
+          if (oldFileName && oldFileName !== 'logo.png') {
+            await supabase.storage
+              .from('logos')
+              .remove([oldFileName])
+          }
+        } catch (error) {
+          console.error('Error cleaning up old logo:', error)
+        }
+      }
+
+    } catch (error: any) {
+      console.error('Error:', error)
+      toast.error(error.message || 'Failed to upload logo')
+      setError(error.message || 'Failed to upload logo')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const uploadFavicon = async (file: File) => {
+    try {
+      setUploadingFavicon(true)
+
+      // Check if file is an image
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file')
+        return
+      }
+
+      // Check file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('File size should be less than 2MB')
+        return
+      }
+
+      // Create a preview
+      const objectUrl = URL.createObjectURL(file)
+      setFaviconPreview(objectUrl)
+
+      // Generate a unique filename
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${uuidv4()}.${fileExt}`
+
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('favicons')
+        .upload(fileName, file)
+
+      if (uploadError) {
+        throw uploadError
+      }
+
+      // Get the public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('favicons')
+        .getPublicUrl(fileName)
+
+      if (!publicUrlData.publicUrl) {
+        throw new Error('Failed to get public URL')
+      }
+
+      // Update site_settings with new favicon URL
+      const { error: updateError } = await supabase
+        .from('site_settings')
+        .update({ favicon_url: fileName })
+        .eq('is_active', true)
+        .select()
+        .single()
+
+      if (updateError) {
+        // If update fails, clean up the uploaded file
+        await supabase.storage
+          .from('favicons')
+          .remove([fileName])
+        throw updateError
+      }
+
+      // Update the favicon URL and preview
+      const fullUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/favicons/${fileName}`
+      setFaviconUrl(fullUrl)
+      setFaviconPreview(fullUrl)
+      
+      // Force favicon refresh in the browser
+      const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+      if (favicon) {
+        favicon.href = fullUrl + '?t=' + new Date().getTime();
+      }
+
+      toast.success('Favicon updated successfully')
+
+      // Cleanup old favicon if exists
+      if (faviconUrl) {
+        try {
+          const oldFileName = faviconUrl.split('/').pop()
+          if (oldFileName && oldFileName !== 'favicon.png') {
+            await supabase.storage
+              .from('favicons')
+              .remove([oldFileName])
+          }
+        } catch (error) {
+          console.error('Error cleaning up old favicon:', error)
+        }
+      }
+
+    } catch (error: any) {
+      console.error('Error:', error)
+      toast.error(error.message || 'Failed to upload favicon')
+      setError(error.message || 'Failed to upload favicon')
+    } finally {
+      setUploadingFavicon(false)
+    }
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      return
+    }
+    uploadLogo(e.target.files[0])
+  }
+
+  const handleFaviconFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      return
+    }
+    uploadFavicon(e.target.files[0])
+  }
+
+  const removeLogo = async () => {
+    try {
+      if (!logoUrl) return
+
+      const fileName = logoUrl.split('/').pop()
+      if (!fileName) return
+
+      // Don't delete the default logo
+      if (fileName !== 'logo.png') {
+        await supabase.storage
+          .from('logos')
+          .remove([fileName])
+      }
+
+      // Update site_settings to use default logo
       const { error } = await supabase
         .from('site_settings')
-        .upsert({ 
-          show_site_name: checked,
-          logo_url: settings.logo_url,
-          favicon_url: settings.favicon_url
-        })
+        .update({ logo_url: 'logo.png' })
+        .eq('is_active', true)
 
       if (error) throw error
 
-      setSettings(prev => ({
-        ...prev,
-        show_site_name: checked
-      }))
-
-    } catch (error: any) {
-      console.error('Error updating show_site_name:', error)
-      setError(error.message || 'Failed to update settings')
+      setLogoUrl('/logo.png')
+      setPreview('/logo.png')
+      toast.success('Logo removed successfully')
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error('Failed to remove logo')
     }
   }
 
-  // If not authenticated, show login message
-  if (error === 'Not authenticated') {
-    return (
-      <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg">
-        Please log in to manage site settings
-      </div>
-    )
+  const removeFavicon = async () => {
+    try {
+      if (!faviconUrl) return
+
+      const fileName = faviconUrl.split('/').pop()
+      if (!fileName) return
+
+      // Don't delete the default favicon
+      if (fileName !== 'favicon.png') {
+        await supabase.storage
+          .from('favicons')
+          .remove([fileName])
+      }
+
+      // Update site_settings to use default favicon
+      const { error } = await supabase
+        .from('site_settings')
+        .update({ favicon_url: 'favicon.png' })
+        .eq('is_active', true)
+
+      if (error) throw error
+
+      setFaviconUrl('/favicon.png')
+      setFaviconPreview('/favicon.png')
+      toast.success('Favicon removed successfully')
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error('Failed to remove favicon')
+    }
   }
 
   return (
-    <div className="space-y-6">
-      {error && error !== 'Not authenticated' && (
-        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-          {error}
-        </div>
-      )}
-
-      <div className="bg-white shadow sm:rounded-lg p-6 space-y-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Current Logo</h3>
-        <div className="flex items-center space-x-4">
-          {settings.logo_url ? (
-            <div className="relative w-20 h-20 border border-gray-200 rounded-lg overflow-hidden bg-white flex items-center justify-center">
-              <Image
-                src={settings.logo_url}
-                alt="Site Logo"
-                fill
-                className="object-contain p-2"
-                sizes="80px"
-              />
-            </div>
-          ) : (
-            <div className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
-              <span className="text-gray-400">No logo</span>
-            </div>
-          )}
-          <div className="flex-1">
-            <input
-              type="file"
-              id="logo-upload"
-              className="hidden"
-              accept="image/*"
-              onChange={(e) => handleFileInputChange(e, 'logo')}
-              disabled={isUploading}
-            />
-            <label
-              htmlFor="logo-upload"
-              className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
-                isUploading
-                  ? 'bg-purple-400 cursor-not-allowed'
-                  : 'bg-purple-600 hover:bg-purple-700 cursor-pointer'
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
-            >
-              {isUploading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Uploading...
-                </>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Logo Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          Site Logo
+        </h3>
+        
+        {error ? (
+          <div className="text-red-600 dark:text-red-400 text-center mb-4">
+            {error}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Logo Preview */}
+            <div className="relative h-32 w-32 mx-auto bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+              {preview ? (
+                <Image
+                  src={preview}
+                  alt="Logo Preview"
+                  fill
+                  className="object-contain"
+                  priority
+                />
               ) : (
-                'Upload New Logo'
+                <div className="flex items-center justify-center h-full">
+                  <span className="text-gray-400 dark:text-gray-500">No logo</span>
+                </div>
               )}
-            </label>
-            {error && (
-              <p className="mt-2 text-sm text-red-600">{error}</p>
-            )}
-            <p className="mt-2 text-sm text-gray-500">
-              Recommended: Square image, at least 100x100 pixels. Supports PNG, JPG, SVG, GIF, or WebP.
-            </p>
-          </div>
-        </div>
+            </div>
 
-        <div className="mt-8">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Logo Settings</h3>
-          <div className="mt-4 space-y-4">
-            <div className="flex items-center">
-              <input
-                id="show-site-name"
-                type="checkbox"
-                checked={settings.show_site_name}
-                onChange={(e) => handleShowSiteNameToggle(e.target.checked)}
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-              />
-              <label htmlFor="show-site-name" className="ml-3">
-                <span className="text-sm text-gray-700">Show site name next to logo</span>
+            {/* Upload Button */}
+            <div className="flex flex-col items-center space-y-4">
+              <label className="relative cursor-pointer bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-colors">
+                <span>{uploading ? 'Uploading...' : 'Upload New Logo'}</span>
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  disabled={uploading}
+                />
               </label>
+
+              {logoUrl && logoUrl !== '/logo.png' && (
+                <button
+                  onClick={removeLogo}
+                  className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+                >
+                  Remove Logo
+                </button>
+              )}
+            </div>
+
+            {/* Help Text */}
+            <div className="text-sm text-gray-500 dark:text-gray-400 text-center">
+              Recommended: Square image, max 2MB.<br />
+              Supported formats: PNG, JPG, GIF
             </div>
           </div>
-        </div>
+        )}
       </div>
 
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Favicon</h3>
-        <div className="flex items-center space-x-4">
-          <div className="w-8 h-8 bg-gray-50 rounded flex items-center justify-center">
-            {settings.favicon_url ? (
+      {/* Favicon Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          Site Favicon
+        </h3>
+        <div className="space-y-6">
+          {/* Favicon Preview */}
+          <div className="relative h-16 w-16 mx-auto bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+            {faviconPreview ? (
               <Image
-                src={settings.favicon_url}
-                alt="Favicon"
-                width={32}
-                height={32}
+                src={faviconPreview}
+                alt="Favicon Preview"
+                fill
                 className="object-contain"
+                priority
               />
             ) : (
-              <span className="text-gray-400 text-xs">No favicon</span>
+              <div className="flex items-center justify-center h-full">
+                <span className="text-gray-400 dark:text-gray-500 text-xs">No favicon</span>
+              </div>
             )}
           </div>
-          <input
-            type="file"
-            id="favicon-upload"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => handleFileInputChange(e, 'favicon')}
-            disabled={isUploading}
-          />
-          <label
-            htmlFor="favicon-upload"
-            className={`px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer ${
-              isUploading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {isUploading ? 'Uploading...' : 'Upload Favicon'}
-          </label>
+
+          {/* Upload Favicon Button */}
+          <div className="flex flex-col items-center space-y-4">
+            <label className="relative cursor-pointer bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-colors">
+              <span>{uploadingFavicon ? 'Uploading...' : 'Upload New Favicon'}</span>
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleFaviconFileChange}
+                disabled={uploadingFavicon}
+              />
+            </label>
+
+            {faviconUrl && faviconUrl !== '/favicon.png' && (
+              <button
+                onClick={removeFavicon}
+                className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+              >
+                Remove Favicon
+              </button>
+            )}
+          </div>
+
+          {/* Help Text */}
+          <div className="text-sm text-gray-500 dark:text-gray-400 text-center">
+            Recommended: 32x32 or 16x16 pixels, max 2MB.<br />
+            Supported formats: ICO, PNG
+          </div>
         </div>
       </div>
     </div>
   )
 }
-
-export default SiteLogoTab

@@ -17,6 +17,11 @@ interface StatCardProps {
   index: number
 }
 
+interface HeaderContent {
+  heading: string
+  paragraph: string
+}
+
 const StatCard = ({ stat, index }: StatCardProps) => {
   const cardRef = useRef(null);
   const isInView = useInView(cardRef, { once: true, margin: "-50px" });
@@ -49,36 +54,35 @@ const StatCard = ({ stat, index }: StatCardProps) => {
   );
 };
 
-const Header = () => {
+const Header = ({ headerContent }: { headerContent: HeaderContent }) => {
   const headingRef = useRef(null);
   const isHeadingInView = useInView(headingRef, { once: true, margin: "-50px" });
 
   return (
-    <motion.div
-      ref={headingRef}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isHeadingInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ duration: 0.6 }}
-      className="text-center mb-12"
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="text-center mb-16"
     >
       <motion.h2 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={isHeadingInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
+        ref={headingRef}
+        initial={{ y: 20, opacity: 0 }}
+        animate={isHeadingInView ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
+        transition={{ duration: 0.6 }}
         className="text-3xl md:text-4xl font-bold mb-4"
       >
         <span className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
-          Trusted by Health Professionals Worldwide
+          {headerContent.heading}
         </span>
       </motion.h2>
       <motion.p 
-        initial={{ opacity: 0 }}
-        animate={isHeadingInView ? { opacity: 1 } : { opacity: 0 }}
+        initial={{ y: 20, opacity: 0 }}
+        animate={isHeadingInView ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
         className="text-gray-600 dark:text-gray-300 max-w-4xl mx-auto text-lg"
       >
-        Join thousands of nutritionists, dietitians, and health coaches who trust SmartSpoon+ to streamline their practice 
-        and deliver exceptional results to their clients. Our platform is designed to help you work smarter, not harder.
+        {headerContent.paragraph}
       </motion.p>
     </motion.div>
   );
@@ -86,45 +90,63 @@ const Header = () => {
 
 export default function Statistics() {
   const [statistics, setStatistics] = useState<Statistic[]>([])
+  const [headerContent, setHeaderContent] = useState<HeaderContent>({
+    heading: 'Our Impact in Numbers',
+    paragraph: 'See how we are making a difference in peoples lives through our nutrition platform.'
+  })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const supabase = createClientComponentClient()
 
   useEffect(() => {
-    // Check Supabase initialization
-    if (!supabase) {
-      console.error('Supabase client not initialized')
-      setError('Database connection error')
-      setIsLoading(false)
-      return
-    }
-
-    // Verify we can access the statistics table
-    const verifyAccess = async () => {
-      try {
-        const { error } = await supabase
-          .from('statistics')
-          .select('count')
-          .single()
-
-        if (error) {
-          console.error('Error accessing statistics table:', error)
-          setError('Error accessing statistics data')
-          setIsLoading(false)
-          return
-        }
-
-        // If we can access the table, fetch the statistics
-        fetchStatistics()
-      } catch (error) {
-        console.error('Error verifying database access:', error)
-        setError('Database access error')
-        setIsLoading(false)
-      }
-    }
-
-    verifyAccess()
+    checkDatabaseAccess()
   }, [])
+
+  const checkDatabaseAccess = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+
+      const { error: accessError } = await supabase
+        .from('statistics')
+        .select('count')
+        .single()
+
+      if (accessError) {
+        if (accessError.code === 'PGRST116') {
+          console.log('Table exists but is empty')
+        } else {
+          throw accessError
+        }
+      }
+
+      fetchStatistics()
+      fetchHeaderContent()
+    } catch (error) {
+      console.error('Error verifying database access:', error)
+      setError('Database access error')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const fetchHeaderContent = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('statistics_header')
+        .select('*')
+        .single()
+
+      if (error) throw error
+
+      if (data) {
+        setHeaderContent(data)
+      }
+    } catch (error) {
+      console.error('Error fetching header content:', error)
+      // Don't show error toast as this is not critical
+    }
+  }
 
   const fetchStatistics = async () => {
     try {
@@ -183,15 +205,27 @@ export default function Statistics() {
     console.log('Statistics state updated:', statistics)
   }, [statistics])
 
-  return (
-    <section className="relative py-20 overflow-hidden">
-      {/* Background gradients */}
-      <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/50 to-white dark:from-emerald-950/30 dark:to-gray-900"></div>
-      
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header is now a separate component */}
-        <Header />
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+    </div>
+  }
 
+  if (error) {
+    return (
+      <div className="text-center text-red-600 dark:text-red-400">
+        {error}
+      </div>
+    )
+  }
+
+  return (
+    <section className="py-24 sm:py-32 bg-white dark:bg-gray-900">
+      {/* Header with dynamic content */}
+      <Header headerContent={headerContent} />
+      
+      {/* Keep existing statistics section */}
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
         {error ? (
           <div className="text-center text-red-600 dark:text-red-400 mb-8">
             {error}

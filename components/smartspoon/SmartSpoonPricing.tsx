@@ -14,6 +14,7 @@ interface Package {
   gradient: string;
   order_number: number;
   duration_type: 'day' | 'week' | 'month' | 'year';
+  show_price: boolean;
 }
 
 export default function SmartSpoonPricing() {
@@ -31,7 +32,7 @@ export default function SmartSpoonPricing() {
       const { data, error } = await supabase
         .from('smartspoon_packages')
         .select('*')
-        .order('price');
+        .order('order_number');
 
       if (error) {
         console.error('Error fetching packages:', error);
@@ -100,11 +101,12 @@ export default function SmartSpoonPricing() {
                 )}
                 
                 <div className="relative p-8">
-                  {/* Plan name and price */}
-                  <div className="space-y-4 mb-8">
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                      {plan.name}
-                    </h3>
+                  {/* Plan name */}
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                    {plan.name}
+                  </h3>
+                  {/* Price */}
+                  {plan.show_price && (
                     <div className="flex items-baseline space-x-1">
                       <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                         KES {plan.price.toLocaleString()}
@@ -113,7 +115,7 @@ export default function SmartSpoonPricing() {
                         /{plan.duration_type}
                       </span>
                     </div>
-                  </div>
+                  )}
                   
                   {/* Features list */}
                   <ul className="space-y-4 mb-8">
