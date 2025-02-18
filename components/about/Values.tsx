@@ -18,6 +18,39 @@ interface Value {
   display_order: number;
 }
 
+// Helper function to render text with hyperlinks
+const renderTextWithLinks = (text: string) => {
+  const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = linkPattern.exec(text)) !== null) {
+    // Add text before the link
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    // Add the link
+    parts.push(
+      <a
+        key={match.index}
+        href={match[2]}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline"
+      >
+        {match[1]}
+      </a>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
+};
+
 export default function Values() {
   const [vision, setVision] = useState<Vision | null>(null);
   const [values, setValues] = useState<Value[]>([]);
@@ -80,7 +113,7 @@ export default function Values() {
                   </span>
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                  {vision.description}
+                  {renderTextWithLinks(vision.description)}
                 </p>
                 <ul className="space-y-4">
                   {vision.bullet_points.map((item, index) => (
@@ -93,7 +126,7 @@ export default function Values() {
                       className="flex items-center space-x-3 text-gray-600 dark:text-gray-300"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                      <span>{item}</span>
+                      <span>{renderTextWithLinks(item)}</span>
                     </motion.li>
                   ))}
                 </ul>

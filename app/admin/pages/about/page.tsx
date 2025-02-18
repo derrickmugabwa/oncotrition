@@ -8,6 +8,7 @@ import ModulesTab from '@/components/admin/about/ModulesTab';
 import TeamTab from '@/components/admin/about/TeamTab';
 import ValuesTab from '@/components/admin/about/ValuesTab';
 import WhyChooseUsTab from '@/components/admin/about/WhyChooseUsTab';
+import ComponentsTab from '@/components/admin/about/ComponentsTab';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -15,6 +16,7 @@ function classNames(...classes: string[]) {
 
 export default function AboutPage() {
   const tabs = [
+    { name: 'Components', component: <ComponentsTab /> },
     { name: 'Mission', component: <MissionTab /> },
     { name: 'Modules', component: <ModulesTab /> },
     { name: 'Team', component: <TeamTab /> },
@@ -44,7 +46,7 @@ export default function AboutPage() {
           transition={{ delay: 0.3 }}
           className="text-gray-600 dark:text-gray-300"
         >
-          Customize your about page content through these sections.
+          Manage your about page components and their content through these sections.
         </motion.p>
       </div>
 

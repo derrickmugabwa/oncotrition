@@ -7,14 +7,19 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { HiPlus, HiTrash } from 'react-icons/hi'
 import { FiSave } from 'react-icons/fi'
 import { toast } from 'react-hot-toast'
+import Image from 'next/image'
+import { PhotoIcon } from '@heroicons/react/24/outline'
 
 interface FooterSettings {
   id?: number;
+  logo: string;
+  description: string;
+  copyright: string;
   social_links: {
-    facebook: string;
-    twitter: string;
-    instagram: string;
-    linkedin: string;
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+    linkedin?: string;
   };
   contact_info: {
     email: string;
@@ -38,9 +43,14 @@ interface FooterSettings {
     description: string;
   };
   copyright_text: string;
+  promo_image?: string;
+  promo_url?: string;
 }
 
 const defaultSettings: FooterSettings = {
+  logo: '',
+  description: '',
+  copyright: '',
   social_links: {
     facebook: '',
     twitter: '',
@@ -65,7 +75,9 @@ const defaultSettings: FooterSettings = {
   brand: {
     description: 'Empowering your journey to better health through personalized nutrition guidance.'
   },
-  copyright_text: `  ${new Date().getFullYear()} Oncotrition. All rights reserved.`
+  copyright_text: `  ${new Date().getFullYear()} Oncotrition. All rights reserved.`,
+  promo_image: '',
+  promo_url: ''
 };
 
 const Section = ({ children, title }: { children: React.ReactNode; title: string }) => (
@@ -131,7 +143,9 @@ export default function FooterTab() {
           quick_links: data.quick_links || defaultSettings.quick_links,
           legal_links: { ...defaultSettings.legal_links, ...data.legal_links },
           newsletter: { ...defaultSettings.newsletter, ...data.newsletter },
-          brand: { ...defaultSettings.brand, ...data.brand }
+          brand: { ...defaultSettings.brand, ...data.brand },
+          promo_image: data.promo_image || defaultSettings.promo_image,
+          promo_url: data.promo_url || defaultSettings.promo_url
         })
       }
     } catch (error: any) {
@@ -241,6 +255,33 @@ export default function FooterTab() {
       }
     }))
   }
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `footer/promo-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('site-assets')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('site-assets')
+        .getPublicUrl(filePath);
+
+      setSettings(prev => ({
+        ...prev,
+        promo_image: publicUrl
+      }));
+
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+    }
+  };
 
   if (isLoading) {
     return <div className="p-4">Loading...</div>
@@ -417,6 +458,62 @@ export default function FooterTab() {
             </div>
           </div>
         ))}
+      </Section>
+
+      <Section title="Promotional Content">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Image
+            </label>
+            <div className="flex items-center gap-4">
+              {settings.promo_image && (
+                <div className="relative w-40 h-24">
+                  <Image
+                    src={settings.promo_image}
+                    alt="Promotional"
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+              )}
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleImageUpload(file);
+                  }}
+                  className="hidden"
+                  id="promo-image-upload"
+                />
+                <label
+                  htmlFor="promo-image-upload"
+                  className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none"
+                >
+                  <PhotoIcon className="w-5 h-5 mr-2" />
+                  Upload Image
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              URL
+            </label>
+            <input
+              type="url"
+              value={settings.promo_url || ''}
+              onChange={(e) => setSettings(prev => ({
+                ...prev,
+                promo_url: e.target.value
+              }))}
+              placeholder="Enter URL for the promotional image"
+              className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+            />
+          </div>
+        </div>
       </Section>
 
       <Section title="Copyright Text">

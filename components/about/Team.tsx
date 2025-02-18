@@ -102,29 +102,53 @@ const TeamMember = ({ name, position, image_src, bio, linkedin_url, twitter_url,
 export default function Team() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sectionContent, setSectionContent] = useState({
+    heading: 'Meet Our Team',
+    description: 'Dedicated experts committed to transforming your nutrition journey'
+  });
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    async function fetchTeamMembers() {
-      const { data, error } = await supabase
-        .from('team_members')
-        .select('*')
-        .order('display_order');
-      
-      if (error) {
-        console.error('Error fetching team members:', error);
-        return;
-      }
+    async function fetchData() {
+      try {
+        // Fetch team members
+        const { data: membersData, error: membersError } = await supabase
+          .from('team_members')
+          .select('*')
+          .order('display_order');
+        
+        if (membersError) throw membersError;
+        setTeamMembers(membersData || []);
 
-      setTeamMembers(data || []);
-      setLoading(false);
+        // Fetch section content
+        const { data: sectionData, error: sectionError } = await supabase
+          .from('page_sections')
+          .select('*')
+          .eq('section_id', 'team')
+          .single();
+
+        if (!sectionError && sectionData) {
+          setSectionContent({
+            heading: sectionData.heading,
+            description: sectionData.description
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    fetchTeamMembers();
+    fetchData();
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="py-24 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   return (
@@ -143,11 +167,11 @@ export default function Team() {
         >
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Meet Our Team
+              {sectionContent.heading}
             </span>
           </h2>
           <p className="text-gray-600 dark:text-gray-300 text-lg max-w-3xl mx-auto">
-            Dedicated experts committed to transforming your nutrition journey
+            {sectionContent.description}
           </p>
         </motion.div>
 
