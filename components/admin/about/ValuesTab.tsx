@@ -214,48 +214,50 @@ export default function ValuesTab() {
             <div className="space-y-4">
               <input
                 type="text"
-                value={visionForm.title || ''}
-                onChange={(e) => setVisionForm({ ...visionForm, title: e.target.value })}
-                className="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Title"
+                value={visionForm.title || vision?.title || ''}
+                onChange={(e) => setVisionForm({ ...visionForm, title: e.target.value })}
+                className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
               />
-              <textarea
-                value={visionForm.description || ''}
-                onChange={(e) => setVisionForm({ ...visionForm, description: e.target.value })}
-                rows={3}
-                className="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Description"
-              />
-              <div className="space-y-2">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newBulletPoint}
-                    onChange={(e) => setNewBulletPoint(e.target.value)}
-                    className="flex-1 px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="New bullet point"
-                  />
-                  <button
-                    onClick={addBulletPoint}
-                    className="px-3 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
-                  >
-                    Add
-                  </button>
-                </div>
-                <ul className="space-y-2">
-                  {(visionForm.bullet_points || []).map((point, index) => (
-                    <li key={index} className="flex items-center justify-between gap-2">
-                      <span className="text-sm">{point}</span>
-                      <button
-                        onClick={() => removeBulletPoint(index)}
-                        className="p-1 text-red-400 hover:text-red-600"
-                      >
-                        <TrashIcon className="w-4 h-4" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+              <div>
+                <textarea
+                  placeholder="Description"
+                  value={visionForm.description || vision?.description || ''}
+                  onChange={(e) => setVisionForm({ ...visionForm, description: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
+                  rows={4}
+                />
+                <p className="mt-1 text-sm text-gray-500">
+                  To add links, use the format: [link text](url)
+                  <br />
+                  Example: We focus on [healthy nutrition](https://example.com/nutrition)
+                </p>
               </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="New Bullet Point"
+                  value={newBulletPoint}
+                  onChange={(e) => setNewBulletPoint(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
+                />
+                <p className="mt-1 text-sm text-gray-500">
+                  You can also add links in bullet points using [text](url)
+                </p>
+              </div>
+              <ul className="space-y-2">
+                {(visionForm.bullet_points || []).map((point, index) => (
+                  <li key={index} className="flex items-center justify-between gap-2">
+                    <span className="text-sm">{point}</span>
+                    <button
+                      onClick={() => removeBulletPoint(index)}
+                      className="p-1 text-red-400 hover:text-red-600"
+                    >
+                      <TrashIcon className="w-4 h-4" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
           ) : (
             <div className="space-y-4">

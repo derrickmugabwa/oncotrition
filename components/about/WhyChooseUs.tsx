@@ -66,21 +66,47 @@ const FeatureCard = ({ title, description, icon, delay }: FeatureCardProps) => (
 
 export default function WhyChooseUs() {
   const [features, setFeatures] = useState<Feature[]>([]);
+  const [sectionContent, setSectionContent] = useState({
+    heading: 'Why Choose Us',
+    description: 'Experience excellence in nutrition management with our comprehensive platform'
+  });
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    const fetchFeatures = async () => {
-      const { data, error } = await supabase
-        .from('why_choose_us_features')
-        .select('*')
-        .order('display_order');
-      
-      if (!error && data) {
-        setFeatures(data);
+    const fetchData = async () => {
+      try {
+        // Fetch features
+        const { data: featuresData, error: featuresError } = await supabase
+          .from('why_choose_us_features')
+          .select('*')
+          .order('display_order');
+        
+        if (featuresError) throw featuresError;
+        if (featuresData) {
+          setFeatures(featuresData);
+        }
+
+        // Fetch section content
+        const { data: sectionData, error: sectionError } = await supabase
+          .from('page_sections')
+          .select('*')
+          .eq('section_id', 'why_choose_us')
+          .single();
+
+        if (sectionError) {
+          console.error('Error fetching section content:', sectionError);
+        } else if (sectionData) {
+          setSectionContent({
+            heading: sectionData.heading,
+            description: sectionData.description
+          });
+        }
+      } catch (error) {
+        console.error('Error:', error);
       }
     };
 
-    fetchFeatures();
+    fetchData();
   }, []);
 
   const renderIcon = (path: string) => (
@@ -97,12 +123,24 @@ export default function WhyChooseUs() {
       
       <div className="container mx-auto px-4 relative">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-            Why Choose Us
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            Experience excellence in nutrition management with our comprehensive platform
-          </p>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600"
+          >
+            {sectionContent.heading}
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-lg text-gray-600 dark:text-gray-300"
+          >
+            {sectionContent.description}
+          </motion.p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">

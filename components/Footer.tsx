@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import Image from 'next/image';
 
 interface FooterSettings {
   social_links: {
@@ -34,6 +35,8 @@ interface FooterSettings {
     description: string;
   };
   copyright_text: string;
+  promo_image: string;
+  promo_url: string;
 }
 
 const defaultSettings: FooterSettings = {
@@ -68,7 +71,9 @@ const defaultSettings: FooterSettings = {
   brand: {
     description: 'Empowering your journey to better health through personalized nutrition guidance.'
   },
-  copyright_text: `© ${new Date().getFullYear()} Oncotrition. All rights reserved.`
+  copyright_text: ` ${new Date().getFullYear()} Oncotrition. All rights reserved.`,
+  promo_image: '',
+  promo_url: ''
 };
 
 const Footer = () => {
@@ -100,7 +105,9 @@ const Footer = () => {
             quick_links: data.quick_links || defaultSettings.quick_links,
             legal_links: { ...defaultSettings.legal_links, ...data.legal_links },
             newsletter: { ...defaultSettings.newsletter, ...data.newsletter },
-            brand: { ...defaultSettings.brand, ...data.brand }
+            brand: { ...defaultSettings.brand, ...data.brand },
+            promo_image: data.promo_image || defaultSettings.promo_image,
+            promo_url: data.promo_url || defaultSettings.promo_url
           });
         }
       } catch (error) {
@@ -171,18 +178,18 @@ const Footer = () => {
             <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Oncotrition
             </h3>
-            <p className="text-gray-400 leading-relaxed">
+            <p className="text-gray-400">
               {settings.brand.description}
             </p>
-            <div className="flex space-x-4 pt-4">
-              {Object.entries(settings.social_links).map(([platform, url]) => 
+            <div className="flex space-x-4">
+              {Object.entries(settings.social_links).map(([platform, url]) =>
                 url ? (
                   <a
                     key={platform}
                     href={url}
-                    className="text-gray-400 hover:text-primary transition-colors duration-300"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-primary transition-colors duration-300"
                   >
                     {socialIcons[platform as keyof typeof socialIcons]}
                   </a>
@@ -201,14 +208,12 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-6 text-white">Quick Links</h4>
             <ul className="space-y-3">
               {settings.quick_links.map((link) => (
-                <li key={link.name}>
-                  <Link 
+                <li key={link.href}>
+                  <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-primary transition-colors duration-300 flex items-center group"
+                    className="text-gray-400 hover:text-primary transition-colors duration-300"
                   >
-                    <span className="transform translate-x-0 group-hover:translate-x-1 transition-transform duration-300">
-                      {link.name}
-                    </span>
+                    {link.name}
                   </Link>
                 </li>
               ))}
@@ -235,33 +240,56 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* Newsletter */}
-          {settings.newsletter.enabled && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <h4 className="text-lg font-semibold mb-6 text-white">Newsletter</h4>
-              <p className="text-gray-400 mb-4">
-                {settings.newsletter.description}
-              </p>
-              <form className="space-y-3">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-gray-300 focus:outline-none focus:border-primary transition-colors duration-300"
+          {/* Promotional Image and Newsletter Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            {settings.promo_image && (
+              <motion.a
+                href={settings.promo_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block relative w-full h-32 rounded-lg overflow-hidden"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <Image
+                  src={settings.promo_image}
+                  alt="Promotional content"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 20vw"
                 />
-                <button
-                  type="submit"
-                  className="w-full px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-colors duration-300"
-                >
-                  Subscribe
-                </button>
-              </form>
-            </motion.div>
-          )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </motion.a>
+            )}
+
+            {settings.newsletter.enabled && (
+              <div>
+                <h4 className="text-lg font-semibold mb-6 text-white">Newsletter</h4>
+                <p className="text-gray-400 mb-4">
+                  {settings.newsletter.description}
+                </p>
+                <form className="space-y-3">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-gray-300 focus:outline-none focus:border-primary transition-colors duration-300"
+                  />
+                  <button
+                    type="submit"
+                    className="w-full px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-colors duration-300"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+              </div>
+            )}
+          </motion.div>
         </div>
 
         {/* Divider */}
