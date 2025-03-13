@@ -10,6 +10,9 @@ import SliderSettingsTab from '@/components/admin/SliderSettingsTab';
 import StatisticsTab from '@/components/admin/StatisticsTab';
 import TestimonialsTab from '@/components/admin/TestimonialsTab';
 import PluginsTab from '@/components/admin/home/PluginsTab';
+import HomepageSmartspoonTab from '@/components/admin/HomepageSmartspoonTab';
+import BrandsTab from '@/components/admin/home/BrandsTab';
+import ComponentsTab from '@/components/admin/home/ComponentsTab';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -17,6 +20,10 @@ function classNames(...classes: string[]) {
 
 export default function HomeAdminPage() {
   const tabs = [
+    { 
+      name: 'Components',
+      component: <ComponentsTab />
+    },
     { 
       name: 'Site Logo',
       component: <SiteLogoTab />
@@ -30,6 +37,10 @@ export default function HomeAdminPage() {
       component: <HomepageFeaturesTab />
     },
     { 
+      name: 'Smart Spoon',
+      component: <HomepageSmartspoonTab />
+    },
+    { 
       name: 'Statistics',
       component: <StatisticsTab />
     },
@@ -40,6 +51,10 @@ export default function HomeAdminPage() {
     { 
       name: 'Mentorship',
       component: <HomepageMentorshipTab />
+    },
+    { 
+      name: 'Brands',
+      component: <BrandsTab />
     },
     { 
       name: 'Plugins',

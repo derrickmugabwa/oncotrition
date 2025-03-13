@@ -346,7 +346,7 @@ export default function Features() {
             >
               <a
                 href={headerContent.button_url}
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark transition-colors duration-200"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 transition-colors duration-200 backdrop-blur-sm"
               >
                 {headerContent.button_text}
                 <svg

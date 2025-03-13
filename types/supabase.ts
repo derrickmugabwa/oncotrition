@@ -6,6 +6,13 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+interface Service {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -280,6 +287,67 @@ export interface Database {
           icon_name?: string
           gradient?: string
           display_order?: number
+        }
+      }
+      homepage_components: {
+        Row: {
+          id: string
+          name: string
+          component_key: string
+          is_visible: boolean
+          display_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          component_key: string
+          is_visible?: boolean
+          display_order: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          component_key?: string
+          is_visible?: boolean
+          display_order?: number
+          created_at?: string
+        }
+      }
+      homepage_smartspoon: {
+        Row: {
+          id: string
+          title: string
+          description: string
+          button_text: string
+          button_link: string
+          image_url: string
+          services: Service[]
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description: string
+          button_text?: string
+          button_link?: string
+          image_url?: string
+          services?: Service[]
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string
+          button_text?: string
+          button_link?: string
+          image_url?: string
+          services?: Service[]
+          created_at?: string
+          updated_at?: string
         }
       }
     }
