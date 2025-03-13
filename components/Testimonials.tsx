@@ -134,7 +134,42 @@ const Testimonials: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [title, setTitle] = useState('What Our Clients Say');
   const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch testimonials
+        const { data: testimonialsData, error: testimonialsError } = await supabase
+          .from('testimonials')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (testimonialsError) throw testimonialsError;
+        if (testimonialsData && testimonialsData.length > 0) {
+          setTestimonials(testimonialsData);
+        }
+
+        // Fetch title
+        const { data: contentData, error: contentError } = await supabase
+          .from('testimonials_content')
+          .select('title')
+          .single();
+
+        if (contentError) throw contentError;
+        if (contentData?.title) {
+          setTitle(contentData.title);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [supabase]);
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -176,28 +211,6 @@ const Testimonials: React.FC = () => {
     return () => clearInterval(autoPlay);
   }, [testimonials.length]);
 
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('testimonials')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        if (data && data.length > 0) {
-          setTestimonials(data);
-        }
-      } catch (error) {
-        console.error('Error fetching testimonials:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTestimonials();
-  }, [supabase]);
-
   const getVisibleTestimonials = () => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     if (isMobile) {
@@ -232,7 +245,7 @@ const Testimonials: React.FC = () => {
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              What Our Users Say
+              {title}
             </span>
           </h2>
           <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">

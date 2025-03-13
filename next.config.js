@@ -8,6 +8,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'jmp.sh',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   async headers() {
