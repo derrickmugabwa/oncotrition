@@ -29,10 +29,13 @@ type ComponentKey = keyof typeof componentMap;
 export default function Home() {
   usePageLoading();
   const [components, setComponents] = useState<ComponentSetting[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const supabase = createClientComponentClient<Database>();
 
   useEffect(() => {
     const fetchComponents = async () => {
+      setIsLoading(true);
+      
       const { data, error } = await supabase
         .from('homepage_components')
         .select('*')
@@ -40,10 +43,11 @@ export default function Home() {
       
       if (error) {
         console.error('Error fetching components:', error);
-        return;
+      } else {
+        setComponents(data || []);
       }
       
-      setComponents(data || []);
+      setIsLoading(false);
     };
 
     fetchComponents();
@@ -68,6 +72,10 @@ export default function Home() {
       supabase.removeChannel(channel);
     };
   }, [supabase]);
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   return (
     <main>

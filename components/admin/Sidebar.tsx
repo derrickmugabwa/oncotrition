@@ -29,6 +29,7 @@ const menuItems = [
   { name: 'Navigation Bar', href: '/admin/pages/navbar', icon: Bars3Icon },
   { name: 'Footer', href: '/admin/pages/footer', icon: NewspaperIcon },
   { name: 'Documents', href: '/admin/pages/documents', icon: DocumentIcon },
+  { name: 'Site Settings', href: '/admin/settings', icon: Cog6ToothIcon },
 ]
 
 export default function Sidebar() {
@@ -95,15 +96,7 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      {/* Settings Button */}
-      <div className="p-4">
-        <button
-          className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-200"
-        >
-          <Cog6ToothIcon className="mr-3 h-5 w-5 text-gray-400" />
-          Settings
-        </button>
-      </div>
+      {/* Settings Button - Removed as it's now in the menu */}
     </div>
   )
 }
