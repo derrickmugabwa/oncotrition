@@ -141,7 +141,7 @@ export default function MentorshipCards() {
                     className="relative"
                   >
                     <Link
-                      href="#events-section"
+                      href="https://www.nutripreneurship.com/auth/signup"
                       onClick={(e) => {
                         e.preventDefault();
                         document.getElementById('events-section')?.scrollIntoView({
@@ -155,7 +155,7 @@ export default function MentorshipCards() {
                           : 'bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 text-gray-900 dark:text-white hover:shadow-lg dark:hover:shadow-gray-900/25'
                         }`}
                     >
-                      Book Now
+                      Register
                     </Link>
                   </motion.div>
                 </div>
