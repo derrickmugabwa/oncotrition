@@ -35,8 +35,11 @@ interface FooterSettings {
     description: string;
   };
   copyright_text: string;
-  promo_image: string;
-  promo_url: string;
+  promo_images: Array<{
+    image_url: string;
+    link_url: string;
+  }>;
+  promo_title: string;
 }
 
 const defaultSettings: FooterSettings = {
@@ -72,8 +75,8 @@ const defaultSettings: FooterSettings = {
     description: 'Empowering your journey to better health through personalized nutrition guidance.'
   },
   copyright_text: ` ${new Date().getFullYear()} Oncotrition. All rights reserved.`,
-  promo_image: '',
-  promo_url: ''
+  promo_images: [],
+  promo_title: 'Featured Content'
 };
 
 const Footer = () => {
@@ -106,8 +109,8 @@ const Footer = () => {
             legal_links: { ...defaultSettings.legal_links, ...data.legal_links },
             newsletter: { ...defaultSettings.newsletter, ...data.newsletter },
             brand: { ...defaultSettings.brand, ...data.brand },
-            promo_image: data.promo_image || defaultSettings.promo_image,
-            promo_url: data.promo_url || defaultSettings.promo_url
+            promo_images: data.promo_images || defaultSettings.promo_images,
+            promo_title: data.promo_title || defaultSettings.promo_title
           });
         }
       } catch (error) {
@@ -240,7 +243,7 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* Promotional Image and Newsletter Section */}
+          {/* Promotional Images Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -248,24 +251,32 @@ const Footer = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            {settings.promo_image && (
-              <motion.a
-                href={settings.promo_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative w-full h-32 rounded-lg overflow-hidden"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              >
-                <Image
-                  src={settings.promo_image}
-                  alt="Promotional content"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 20vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </motion.a>
+            {settings.promo_images.length > 0 && (
+              <div>
+                <h4 className="text-lg font-semibold mb-6 text-white">{settings.promo_title}</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {settings.promo_images.map((promo, index) => (
+                    <motion.a
+                      key={index}
+                      href={promo.link_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block relative w-full h-32 rounded-lg overflow-hidden"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    >
+                      <Image
+                        src={promo.image_url}
+                        alt="Promotional content"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 20vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
             )}
 
             {settings.newsletter.enabled && (

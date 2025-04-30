@@ -137,19 +137,19 @@ export default function HomepageMentorship() {
           {/* Content Section */}
           <div className="relative">
             <motion.span
-              className="inline-block px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 text-sm font-medium mb-6"
+              className="inline-block px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 text-xl font-medium mb-6"
             >
               {mentorshipData.subtitle}
             </motion.span>
 
             <motion.h2
-              className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
+              className="text-2xl lg:text-3xl font-bold mb-6 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
             >
               {mentorshipData.title}
             </motion.h2>
 
             <motion.p
-              className="text-gray-600 dark:text-gray-300 text-lg mb-8 leading-relaxed"
+              className="text-gray-600 dark:text-gray-300 text-sm mb-8 leading-relaxed"
             >
               {mentorshipData.description}
             </motion.p>

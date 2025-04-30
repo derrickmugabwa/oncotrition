@@ -43,8 +43,11 @@ interface FooterSettings {
     description: string;
   };
   copyright_text: string;
-  promo_image?: string;
-  promo_url?: string;
+  promo_images: Array<{
+    image_url: string;
+    link_url: string;
+  }>;
+  promo_title: string;
 }
 
 const defaultSettings: FooterSettings = {
@@ -76,8 +79,8 @@ const defaultSettings: FooterSettings = {
     description: 'Empowering your journey to better health through personalized nutrition guidance.'
   },
   copyright_text: `  ${new Date().getFullYear()} Oncotrition. All rights reserved.`,
-  promo_image: '',
-  promo_url: ''
+  promo_images: [],
+  promo_title: 'Featured Content'
 };
 
 const Section = ({ children, title }: { children: React.ReactNode; title: string }) => (
@@ -144,8 +147,8 @@ export default function FooterTab() {
           legal_links: { ...defaultSettings.legal_links, ...data.legal_links },
           newsletter: { ...defaultSettings.newsletter, ...data.newsletter },
           brand: { ...defaultSettings.brand, ...data.brand },
-          promo_image: data.promo_image || defaultSettings.promo_image,
-          promo_url: data.promo_url || defaultSettings.promo_url
+          promo_images: data.promo_images || defaultSettings.promo_images,
+          promo_title: data.promo_title || defaultSettings.promo_title
         })
       }
     } catch (error: any) {
@@ -256,7 +259,7 @@ export default function FooterTab() {
     }))
   }
 
-  const handleImageUpload = async (file: File) => {
+  const handleImageUpload = async (file: File, index: number) => {
     try {
       const fileExt = file.name.split('.').pop();
       const filePath = `footer/promo-${Date.now()}.${fileExt}`;
@@ -273,7 +276,7 @@ export default function FooterTab() {
 
       setSettings(prev => ({
         ...prev,
-        promo_image: publicUrl
+        promo_images: prev.promo_images.map((image, i) => i === index ? { ...image, image_url: publicUrl } : image)
       }));
 
       toast.success('Image uploaded successfully');
@@ -282,6 +285,31 @@ export default function FooterTab() {
       toast.error('Failed to upload image');
     }
   };
+
+  const addPromoImage = () => {
+    setSettings(prev => ({
+      ...prev,
+      promo_images: [...prev.promo_images, { image_url: '', link_url: '' }]
+    }))
+  }
+
+  const removePromoImage = (index: number) => {
+    setSettings(prev => ({
+      ...prev,
+      promo_images: prev.promo_images.filter((_, i) => i !== index)
+    }))
+  }
+
+  const updatePromoImageLink = (index: number, value: string) => {
+    setSettings(prev => ({
+      ...prev,
+      promo_images: prev.promo_images.map((image, i) => i === index ? { ...image, link_url: value } : image)
+    }))
+  }
+
+  const updatePromoTitle = (value: string) => {
+    setSettings(prev => ({ ...prev, promo_title: value }))
+  }
 
   if (isLoading) {
     return <div className="p-4">Loading...</div>
@@ -462,57 +490,72 @@ export default function FooterTab() {
 
       <Section title="Promotional Content">
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Image
-            </label>
-            <div className="flex items-center gap-4">
-              {settings.promo_image && (
-                <div className="relative w-40 h-24">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Promotional Title
+          </label>
+          <Input
+            value={settings.promo_title}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePromoTitle(e.target.value)}
+            placeholder="Enter promotional title"
+            className="mt-2"
+          />
+          {settings.promo_images.map((image, index) => (
+            <div key={index} className="flex items-start space-x-4">
+              <div className="relative w-40 h-24">
+                {image.image_url && (
                   <Image
-                    src={settings.promo_image}
+                    src={image.image_url}
                     alt="Promotional"
                     fill
                     className="object-cover rounded-lg"
                   />
+                )}
+              </div>
+              <div className="flex-1 space-y-4">
+                <div className="flex space-x-4">
+                  <div className="flex-1">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleImageUpload(file, index);
+                      }}
+                      className="hidden"
+                      id={`promo-image-upload-${index}`}
+                    />
+                    <label
+                      htmlFor={`promo-image-upload-${index}`}
+                      className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none"
+                    >
+                      <PhotoIcon className="w-5 h-5 mr-2" />
+                      Upload Image
+                    </label>
+                  </div>
+                  <div className="flex-1">
+                    <Input
+                      value={image.link_url}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePromoImageLink(index, e.target.value)}
+                      placeholder="Enter link URL"
+                    />
+                  </div>
+                  <button
+                    onClick={() => removePromoImage(index)}
+                    className="p-2 text-red-500 hover:text-red-600 transition-colors duration-300"
+                  >
+                    <HiTrash className="w-5 h-5" />
+                  </button>
                 </div>
-              )}
-              <div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleImageUpload(file);
-                  }}
-                  className="hidden"
-                  id="promo-image-upload"
-                />
-                <label
-                  htmlFor="promo-image-upload"
-                  className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none"
-                >
-                  <PhotoIcon className="w-5 h-5 mr-2" />
-                  Upload Image
-                </label>
               </div>
             </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              URL
-            </label>
-            <input
-              type="url"
-              value={settings.promo_url || ''}
-              onChange={(e) => setSettings(prev => ({
-                ...prev,
-                promo_url: e.target.value
-              }))}
-              placeholder="Enter URL for the promotional image"
-              className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
-            />
-          </div>
+          ))}
+          <button
+            onClick={addPromoImage}
+            className="flex items-center space-x-2 text-primary hover:text-primary/90 transition-colors duration-300"
+          >
+            <HiPlus className="w-5 h-5" />
+            <span>Add Promotional Image</span>
+          </button>
         </div>
       </Section>
 

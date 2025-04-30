@@ -237,30 +237,20 @@ export default function HomepageSmartspoon() {
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 z-10">
         {/* Title and Description */}
-        <motion.div
-          ref={containerRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-12 relative"
+        <div
+          className="text-center max-w-4xl mx-auto mb-12 relative z-20"
         >
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          <h2 
             className="text-4xl font-bold mb-6 text-emerald-600 dark:text-emerald-400"
           >
-            {title}
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-gray-800 dark:text-gray-200 text-lg max-w-2xl mx-auto"
+            {title || 'Smart Spoon Technology'}
+          </h2>
+          <p 
+            className="text-gray-800 dark:text-gray-200 text-lg mx-auto"
           >
-            {description}
-          </motion.p>
-        </motion.div>
+            {description || 'Experience the future of nutrition tracking with our innovative smart spoon that helps you make informed dietary decisions in real-time.'}
+          </p>
+        </div>
 
         {/* Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
