@@ -14,6 +14,8 @@ interface Package {
   gradient: string;
   order_number: number;
   duration_type: string;
+  url: string;
+  show_price: boolean;
 }
 
 export default function MentorshipCards() {
@@ -107,12 +109,16 @@ export default function MentorshipCards() {
                   
                   {/* Price and duration */}
                   <div className="mt-8 flex items-baseline justify-center gap-x-2">
-                    <span className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      KES {plan.price.toLocaleString()}
-                    </span>
-                    <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600 dark:text-gray-400">
-                      /{plan.duration_type}
-                    </span>
+                    {plan.show_price && (
+                      <>
+                        <span className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+                          KES {plan.price.toLocaleString()}
+                        </span>
+                        <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600 dark:text-gray-400">
+                          /{plan.duration_type}
+                        </span>
+                      </>
+                    )}
                   </div>
                   
                   {/* Features list */}
@@ -141,13 +147,17 @@ export default function MentorshipCards() {
                     className="relative"
                   >
                     <Link
-                      href="https://www.nutripreneurship.com/auth/signup"
+                      href={plan.url || "https://www.nutripreneurship.com/auth/signup"}
+                      target={plan.url ? "_blank" : undefined}
+                      rel={plan.url ? "noopener noreferrer" : undefined}
                       onClick={(e) => {
-                        e.preventDefault();
-                        document.getElementById('events-section')?.scrollIntoView({
-                          behavior: 'smooth',
-                          block: 'start'
-                        });
+                        if (!plan.url) {
+                          e.preventDefault();
+                          document.getElementById('events-section')?.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                          });
+                        }
                       }}
                       className={`inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-xl transition duration-300 ease-in-out ${
                         plan.recommended

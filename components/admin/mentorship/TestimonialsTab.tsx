@@ -279,7 +279,7 @@ export default function TestimonialsTab() {
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Manage Testimonials</h3>
           <button
             onClick={handleAddTestimonial}
-            className="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-primary/50 shadow-md hover:shadow-lg"
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-emerald-500/50 shadow-md hover:shadow-lg"
           >
             Add Testimonial
           </button>
@@ -300,7 +300,7 @@ export default function TestimonialsTab() {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => handleSaveTestimonial(testimonial.id)}
-                      className="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-primary/50 shadow-md hover:shadow-lg"
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-emerald-500/50 shadow-md hover:shadow-lg"
                     >
                       Save Changes
                     </button>
@@ -399,8 +399,8 @@ export default function TestimonialsTab() {
                           file:mr-4 file:py-2 file:px-4
                           file:rounded-full file:border-0
                           file:text-sm file:font-semibold
-                          file:bg-primary file:text-white
-                          hover:file:bg-primary/90
+                          file:bg-emerald-600 file:text-white
+                          hover:file:bg-emerald-700
                           file:transition-colors
                           file:cursor-pointer"
                         />

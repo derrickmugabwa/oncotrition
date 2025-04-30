@@ -79,7 +79,7 @@ export default function TawkToSettings() {
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Tawk.to Chat Settings</h2>
         <button
           onClick={() => setEditing(true)}
-          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
         >
           Edit Settings
         </button>
@@ -178,7 +178,7 @@ export default function TawkToSettings() {
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
               >
                 Save Changes
               </button>
