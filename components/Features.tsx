@@ -314,76 +314,75 @@ export default function Features() {
       </div>
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left side content */}
-          <motion.div
-            ref={containerRef}
+        {/* Header content - full width */}
+        <motion.div
+          ref={containerRef}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-4xl font-bold text-gray-900 dark:text-white mb-6"
           >
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-4xl font-bold text-gray-900 dark:text-white mb-6"
+            {headerContent.heading}
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-lg text-gray-600 dark:text-gray-300 mb-8 w-full px-4 sm:px-6 lg:px-8"
+          >
+            {headerContent.paragraph}
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            {/* <a
+              href={headerContent.button_url}
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 transition-colors duration-200 backdrop-blur-sm"
             >
-              {headerContent.heading}
-            </motion.h2>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-lg text-gray-600 dark:text-gray-300 mb-8"
-            >
-              {headerContent.paragraph}
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-            >
-              <a
-                href={headerContent.button_url}
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 transition-colors duration-200 backdrop-blur-sm"
+              {headerContent.button_text}
+              <svg
+                className="ml-2 -mr-1 w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                {headerContent.button_text}
-                <svg
-                  className="ml-2 -mr-1 w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </a>
-            </motion.div>
+                <path
+                  fillRule="evenodd"
+                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </a> */}
           </motion.div>
+        </motion.div>
 
-          {/* Right side features */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {features.map((feature, index) => {
-              // Validate icon_name is a valid icon
-              const icon_name = (feature.icon_name as IconName) in featureIcons 
-                ? (feature.icon_name as IconName) 
-                : 'scale';
-              
-              return (
+        {/* Feature cards - horizontal layout */}
+        <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto">
+          {features.map((feature, index) => {
+            // Validate icon_name is a valid icon
+            const icon_name = (feature.icon_name as IconName) in featureIcons 
+              ? (feature.icon_name as IconName) 
+              : 'scale';
+            
+            return (
+              <div key={feature.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] flex justify-center">
                 <FeatureCard
-                  key={feature.id}
                   title={feature.title}
                   description={feature.description}
                   icon_name={icon_name}
                   index={index}
                 />
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

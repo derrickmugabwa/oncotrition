@@ -153,42 +153,6 @@ export default function Header() {
   );
 
   const renderNavLink = (item: NavItem, isMobile = false) => {
-    if (item.href === '/smartspoon') {
-      return (
-        <Link
-          key={item.id}
-          href={item.href}
-          target={item.open_in_new_tab ? "_blank" : undefined}
-          rel={item.open_in_new_tab ? "noopener noreferrer" : undefined}
-          className={`relative group ${
-            isMobile
-              ? 'block w-full text-center'
-              : 'inline-flex items-center'
-          } px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg`}
-        >
-          <span className="relative z-10">
-            {item.name}
-            <span className="absolute inset-x-0 -bottom-px h-px bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-          </span>
-          {!isMobile && (
-            <motion.span
-              className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              initial={{ x: -10, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-            >
-              +
-            </motion.span>
-          )}
-          <motion.div
-            className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-            initial={false}
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
-          />
-        </Link>
-      );
-    }
-
     if (!isMobile) {
       switch (item.type) {
         case 'dropdown':
