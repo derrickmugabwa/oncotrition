@@ -40,6 +40,12 @@ export default function Header() {
             >
               Get Started
             </Link>
+            <Link
+              href="/admin"
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Admin
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -89,6 +95,13 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Get Started
+              </Link>
+              <Link
+                href="/admin"
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-center"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Admin
               </Link>
             </div>
           </motion.div>

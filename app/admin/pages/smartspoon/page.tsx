@@ -5,6 +5,8 @@ import { Tab } from '@headlessui/react'
 import { motion } from 'framer-motion'
 import StepsTab from '@/components/admin/smartspoon/StepsTab'
 import PackagesTab from '@/components/admin/smartspoon/PackagesTab'
+import HeroSectionTab from '@/components/admin/smartspoon/HeroSectionTab'
+import UsersTab from '@/components/admin/smartspoon/UsersTab'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -12,6 +14,8 @@ function classNames(...classes: string[]) {
 
 export default function SmartSpoonAdminPage() {
   const tabs = [
+    { name: 'Hero Section', component: <HeroSectionTab /> },
+    { name: 'Users Section', component: <UsersTab /> },
     { name: 'Steps Section', component: <StepsTab /> },
     { name: 'SmartSpoon Packages', component: <PackagesTab /> },
   ]

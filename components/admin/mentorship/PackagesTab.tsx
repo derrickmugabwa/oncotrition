@@ -14,6 +14,8 @@ interface Package {
   gradient: string;
   order_number: number;
   duration_type: string;
+  url: string;
+  show_price: boolean;
 }
 
 export default function PackagesTab() {
@@ -28,6 +30,8 @@ export default function PackagesTab() {
     gradient: string;
     order_number: number;
     duration_type: string;
+    url: string;
+    show_price: boolean;
   }>({
     name: '',
     price: 0,
@@ -35,7 +39,9 @@ export default function PackagesTab() {
     recommended: false,
     gradient: '',
     order_number: 0,
-    duration_type: 'month'
+    duration_type: 'month',
+    url: '',
+    show_price: true
   });
   const [isCustomDuration, setIsCustomDuration] = useState(false);
   const supabase = createClientComponentClient();
@@ -54,6 +60,8 @@ export default function PackagesTab() {
         gradient: editingPackage.gradient,
         order_number: editingPackage.order_number,
         duration_type: editingPackage.duration_type,
+        url: editingPackage.url,
+        show_price: editingPackage.show_price,
       });
     }
   }, [editingPackage]);
@@ -94,7 +102,9 @@ export default function PackagesTab() {
         recommended: false,
         gradient: 'from-blue-400/20 to-indigo-400/20',
         order_number: 0,
-        duration_type: 'month'
+        duration_type: 'month',
+        url: '',
+        show_price: true
       };
 
       const { data, error } = await supabase
@@ -158,6 +168,8 @@ export default function PackagesTab() {
           gradient: editForm.gradient,
           order_number: editForm.order_number,
           duration_type: editForm.duration_type,
+          url: editForm.url,
+          show_price: editForm.show_price,
         })
         .eq('id', editingPackage.id);
 
@@ -245,7 +257,7 @@ export default function PackagesTab() {
                     {pkg.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    KES {pkg.price.toLocaleString()}/{pkg.duration_type}
+                    {pkg.show_price ? `KES ${pkg.price.toLocaleString()}/${pkg.duration_type}` : 'N/A'}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                     {pkg.features.length} features
@@ -450,6 +462,47 @@ export default function PackagesTab() {
                       className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
                       placeholder="e.g., from-blue-500/20 to-indigo-500/20"
                     />
+                  </div>
+                </div>
+
+                {/* URL */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Package URL
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.url}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, url: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                    placeholder="Enter package URL"
+                  />
+                </div>
+
+                {/* Show Price */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Show Price
+                  </label>
+                  <div 
+                    onClick={() => setEditForm(prev => ({ ...prev, show_price: !prev.show_price }))}
+                    className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all
+                      ${editForm.show_price 
+                        ? 'border-primary bg-primary/5 dark:bg-primary/10' 
+                        : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'}`}
+                  >
+                    <span className="text-sm text-gray-900 dark:text-white">
+                      Show Price
+                    </span>
+                    <div className="relative">
+                      <div className={`w-11 h-6 rounded-full transition-colors duration-200 ease-in-out ${
+                        editForm.show_price ? 'bg-primary' : 'bg-gray-200 dark:bg-gray-600'
+                      }`}>
+                        <div className={`absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ease-in-out ${
+                          editForm.show_price ? 'translate-x-5' : 'translate-x-0'
+                        }`} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
