@@ -4,59 +4,107 @@ import { useState, useEffect } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { PlusIcon, TrashIcon, PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-hot-toast';
+import FloatingImageUploader from './components/FloatingImageUploader';
+
+interface VisionSection {
+  title: string;
+  description: string;
+}
 
 interface Vision {
   id: number;
   title: string;
-  description: string;
-  bullet_points: string[];
+  sections: VisionSection[];
 }
 
-interface Value {
+interface ValuesImage {
   id: number;
   title: string;
   description: string;
-  display_order: number;
+  image_url: string;
+  floating_image_url?: string;
 }
 
 export default function ValuesTab() {
   const [isLoading, setIsLoading] = useState(false);
   const [vision, setVision] = useState<Vision | null>(null);
-  const [values, setValues] = useState<Value[]>([]);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editForm, setEditForm] = useState<Partial<Value>>({});
+  const [valuesImage, setValuesImage] = useState<ValuesImage | null>(null);
   const [editingVision, setEditingVision] = useState(false);
+  const [editingValues, setEditingValues] = useState(false);
   const [visionForm, setVisionForm] = useState<Partial<Vision>>({});
-  const [newBulletPoint, setNewBulletPoint] = useState('');
+  const [valuesForm, setValuesForm] = useState<Partial<ValuesImage>>({});
+  const [newSection, setNewSection] = useState<VisionSection>({ title: '', description: '' });
+  const [editingSectionIndex, setEditingSectionIndex] = useState<number | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [floatingImageFile, setFloatingImageFile] = useState<File | null>(null);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
     fetchContent();
+    
+    // Load any locally stored data
+    // 1. Vision sections
+    const storedSections = localStorage.getItem('vision_sections');
+    if (storedSections && vision) {
+      try {
+        const parsedSections = JSON.parse(storedSections);
+        setVision(prev => prev ? {...prev, sections: parsedSections} : prev);
+      } catch (e) {
+        console.error('Error parsing stored sections:', e);
+      }
+    }
+    
+    // 2. Values image
+    const storedValuesImage = localStorage.getItem('values_image');
+    if (storedValuesImage) {
+      try {
+        const parsedValuesImage = JSON.parse(storedValuesImage);
+        setValuesImage(parsedValuesImage);
+      } catch (e) {
+        console.error('Error parsing stored values image:', e);
+      }
+    }
   }, []);
 
   const fetchContent = async () => {
     try {
       setIsLoading(true);
       // Fetch vision content
-      const { data: visionData, error: visionError } = await supabase
-        .from('values_vision')
-        .select('*')
-        .single();
+      try {
+        const { data: visionData, error: visionError } = await supabase
+          .from('values_vision')
+          .select('*')
+          .single();
 
-      if (visionError) throw visionError;
-      setVision(visionData);
+        if (!visionError) {
+          setVision(visionData);
+        } else {
+          console.warn('Error fetching vision data:', visionError);
+        }
+      } catch (visionErr) {
+        console.warn('Failed to fetch vision data:', visionErr);
+      }
 
-      // Fetch values list
-      const { data: valuesData, error: valuesError } = await supabase
-        .from('values_list')
-        .select('*')
-        .order('display_order');
+      // Fetch values image
+      try {
+        const { data: valuesImageData, error: valuesImageError } = await supabase
+          .from('values_image')
+          .select('*')
+          .single();
 
-      if (valuesError) throw valuesError;
-      setValues(valuesData || []);
+        if (!valuesImageError) {
+          setValuesImage(valuesImageData);
+          // If we successfully got data from the database, clear localStorage
+          localStorage.removeItem('values_image');
+        } else {
+          console.warn('Error fetching values image data:', valuesImageError);
+          // If the table doesn't exist yet, we'll rely on localStorage
+        }
+      } catch (valuesErr) {
+        console.warn('Failed to fetch values image data:', valuesErr);
+      }
     } catch (error) {
-      toast.error('Failed to fetch content');
-      console.error('Error:', error);
+      console.error('Error in fetchContent:', error);
     } finally {
       setIsLoading(false);
     }
@@ -66,107 +114,236 @@ export default function ValuesTab() {
     if (!vision?.id || !visionForm) return;
 
     try {
-      const { error } = await supabase
+      // Create a simplified update object with only the title
+      // This avoids issues with the sections field if it doesn't exist yet
+      const basicUpdate = {
+        title: visionForm.title || vision.title
+      };
+
+      // First update just the basic fields
+      const { error: basicError } = await supabase
         .from('values_vision')
-        .update(visionForm)
+        .update(basicUpdate)
         .eq('id', vision.id);
 
-      if (error) throw error;
+      if (basicError) throw basicError;
 
-      setVision({ ...vision, ...visionForm });
+      // Try to update with sections if they exist in the form
+      if (visionForm.sections) {
+        try {
+          const { error: sectionsError } = await supabase
+            .from('values_vision')
+            .update({
+              sections: visionForm.sections
+            })
+            .eq('id', vision.id);
+
+          // If there's an error with sections, it might not exist in the schema yet
+          if (sectionsError) {
+            console.warn('Could not update sections in database, storing locally:', sectionsError);
+            // Store sections in localStorage as a fallback
+            localStorage.setItem('vision_sections', JSON.stringify(visionForm.sections));
+            toast.success('Vision updated successfully (sections stored locally until database is ready)');
+          } else {
+            // If sections were successfully saved to the database, we can clear localStorage
+            localStorage.removeItem('vision_sections');
+            toast.success('Vision updated successfully');
+          }
+        } catch (sectionsErr) {
+          console.warn('Error updating sections:', sectionsErr);
+          // Store sections in localStorage as a fallback
+          localStorage.setItem('vision_sections', JSON.stringify(visionForm.sections));
+          toast.success('Vision updated successfully (sections stored locally until database is ready)');
+        }
+      } else {
+        toast.success('Vision updated successfully');
+      }
+
+      // Update the local state with what we know worked
+      setVision({
+        ...vision,
+        title: basicUpdate.title,
+        // Keep existing sections if the update might have failed
+        sections: visionForm.sections || vision.sections || []
+      });
+      
       setEditingVision(false);
       setVisionForm({});
-      toast.success('Vision updated successfully');
     } catch (error) {
       toast.error('Failed to update vision');
       console.error('Error:', error);
     }
   };
 
-  const addBulletPoint = () => {
-    if (!newBulletPoint.trim() || !vision) return;
 
-    const updatedBulletPoints = [...(visionForm.bullet_points || vision.bullet_points), newBulletPoint];
-    setVisionForm({ ...visionForm, bullet_points: updatedBulletPoints });
-    setNewBulletPoint('');
-  };
-
-  const removeBulletPoint = (index: number) => {
-    if (!vision) return;
-
-    const updatedBulletPoints = (visionForm.bullet_points || vision.bullet_points).filter((_, i) => i !== index);
-    setVisionForm({ ...visionForm, bullet_points: updatedBulletPoints });
-  };
-
-  const addValue = async () => {
-    try {
-      setIsLoading(true);
-      const newOrder = values.length;
-      const { data, error } = await supabase
-        .from('values_list')
-        .insert([{
-          title: 'New Value',
-          description: 'Value description',
-          display_order: newOrder,
-        }])
-        .select();
-
-      if (error) throw error;
-      
-      if (data) {
-        setValues([...values, ...data]);
-        setEditingId(data[0].id);
-        setEditForm(data[0]);
-        toast.success('Value added successfully');
-      }
-    } catch (error) {
-      toast.error('Failed to add value');
-      console.error('Error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updateValue = async () => {
-    if (!editingId || !editForm) return;
+  
+  const addSection = () => {
+    if (!newSection.title.trim() || !vision) return;
     
-    try {
-      const { error } = await supabase
-        .from('values_list')
-        .update(editForm)
-        .eq('id', editingId);
-
-      if (error) throw error;
-      
-      setValues(values.map(value => 
-        value.id === editingId ? { ...value, ...editForm } : value
-      ));
-      setEditingId(null);
-      setEditForm({});
-      toast.success('Value updated successfully');
-    } catch (error) {
-      toast.error('Failed to update value');
-      console.error('Error:', error);
+    const updatedSections = [...(visionForm.sections || vision.sections || []), { ...newSection }];
+    setVisionForm({ ...visionForm, sections: updatedSections });
+    setNewSection({ title: '', description: '' });
+    
+    // Also update localStorage as a backup
+    localStorage.setItem('vision_sections', JSON.stringify(updatedSections));
+  };
+  
+  const updateSection = (index: number) => {
+    if (!vision) return;
+    
+    const updatedSections = [...(visionForm.sections || vision.sections || [])];
+    updatedSections[index] = newSection;
+    
+    setVisionForm({ ...visionForm, sections: updatedSections });
+    setNewSection({ title: '', description: '' });
+    setEditingSectionIndex(null);
+    
+    // Also update localStorage as a backup
+    localStorage.setItem('vision_sections', JSON.stringify(updatedSections));
+  };
+  
+  const editSection = (index: number) => {
+    if (!vision) return;
+    
+    const sections = visionForm.sections || vision.sections || [];
+    setNewSection({ ...sections[index] });
+    setEditingSectionIndex(index);
+  };
+  
+  const removeSection = (index: number) => {
+    if (!vision) return;
+    
+    const updatedSections = (visionForm.sections || vision.sections || []).filter((_, i) => i !== index);
+    setVisionForm({ ...visionForm, sections: updatedSections });
+    
+    if (editingSectionIndex === index) {
+      setEditingSectionIndex(null);
+      setNewSection({ title: '', description: '' });
     }
+    
+    // Also update localStorage as a backup
+    localStorage.setItem('vision_sections', JSON.stringify(updatedSections));
   };
 
-  const deleteValue = async (id: number) => {
+  const updateValuesImage = async () => {
     try {
       setIsLoading(true);
-      const { error } = await supabase
-        .from('values_list')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
       
-      setValues(values.filter(value => value.id !== id));
-      toast.success('Value deleted successfully');
+      // Upload main image if selected
+      let imageUrl = valuesForm.image_url || valuesImage?.image_url;
+      
+      if (imageFile) {
+        try {
+          const fileExt = imageFile.name.split('.').pop();
+          const filePath = `values-images/${Date.now()}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('images')
+            .upload(filePath, imageFile);
+            
+          if (uploadError) throw uploadError;
+          
+          const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+          imageUrl = data.publicUrl;
+        } catch (uploadErr) {
+          console.warn('Error uploading image:', uploadErr);
+          toast.error('Failed to upload image. Using previous image if available.');
+          // Continue with the existing image URL if upload fails
+        }
+      }
+      
+      // Use the existing floating image URL if no new one is provided
+      let floatingImageUrl = valuesForm.floating_image_url || valuesImage?.floating_image_url;
+      
+      // Upload floating image if selected
+      if (floatingImageFile) {
+        try {
+          const fileExt = floatingImageFile.name.split('.').pop();
+          const filePath = `floating-images/${Date.now()}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('images')
+            .upload(filePath, floatingImageFile);
+            
+          if (uploadError) throw uploadError;
+          
+          const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+          floatingImageUrl = data.publicUrl;
+        } catch (uploadErr) {
+          console.warn('Error uploading floating image:', uploadErr);
+          toast.error('Failed to upload floating image. Using previous image if available.');
+          // Continue with the existing floating image URL if upload fails
+        }
+      }
+      
+      const updatedValues: ValuesImage = {
+        id: valuesImage?.id || 1, // Default ID if none exists
+        title: valuesForm.title || valuesImage?.title || 'Our Values',
+        description: valuesForm.description || valuesImage?.description || '',
+        image_url: imageUrl || '',
+        floating_image_url: floatingImageUrl
+      };
+      
+      // Try to update in the database
+      try {
+        if (valuesImage?.id) {
+          // Update existing record
+          const { error } = await supabase
+            .from('values_image')
+            .update(updatedValues)
+            .eq('id', valuesImage.id);
+            
+          if (!error) {
+            // Database update successful
+            localStorage.removeItem('values_image');
+            toast.success('Values image updated successfully');
+          } else {
+            // Database update failed, use localStorage
+            console.warn('Error updating values_image in database:', error);
+            localStorage.setItem('values_image', JSON.stringify(updatedValues));
+            toast.success('Values image saved locally (database not ready yet)');
+          }
+        } else {
+          // Try to insert new record
+          const { data, error } = await supabase
+            .from('values_image')
+            .insert([updatedValues])
+            .select();
+            
+          if (!error && data) {
+            // Database insert successful
+            localStorage.removeItem('values_image');
+            toast.success('Values image created successfully');
+          } else {
+            // Database insert failed, use localStorage
+            console.warn('Error inserting values_image in database:', error);
+            localStorage.setItem('values_image', JSON.stringify(updatedValues));
+            toast.success('Values image saved locally (database not ready yet)');
+          }
+        }
+      } catch (dbError) {
+        console.warn('Database operation failed:', dbError);
+        // Fallback to localStorage
+        localStorage.setItem('values_image', JSON.stringify(updatedValues));
+        toast.success('Values image saved locally (database not ready yet)');
+      }
+      
+      // Update local state regardless of database success
+      setValuesImage(updatedValues);
+      setEditingValues(false);
+      setValuesForm({});
+      setImageFile(null);
     } catch (error) {
-      toast.error('Failed to delete value');
+      toast.error('Failed to update values image');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
     }
   };
 
@@ -214,153 +391,230 @@ export default function ValuesTab() {
             <div className="space-y-4">
               <input
                 type="text"
-                placeholder="Title"
+                placeholder="Vision Title"
                 value={visionForm.title || vision?.title || ''}
                 onChange={(e) => setVisionForm({ ...visionForm, title: e.target.value })}
                 className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
               />
-              <div>
-                <textarea
-                  placeholder="Description"
-                  value={visionForm.description || vision?.description || ''}
-                  onChange={(e) => setVisionForm({ ...visionForm, description: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                  rows={4}
-                />
-                <p className="mt-1 text-sm text-gray-500">
-                  To add links, use the format: [link text](url)
-                  <br />
-                  Example: We focus on [healthy nutrition](https://example.com/nutrition)
-                </p>
+              <p className="mt-1 text-sm text-gray-500">
+                This is the main title for the Vision section. Add sections below to complete the content.
+              </p>
+              {/* Sections */}
+              <div className="pt-4 mt-4">
+                <h4 className="font-medium mb-3">Vision Sections</h4>
+                <div className="space-y-4 mb-4">
+                  {(visionForm.sections || []).map((section, index) => (
+                    <div key={index} className="flex items-start justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-md">
+                      <div className="flex-1">
+                        <h5 className="font-medium text-sm">{section.title}</h5>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{section.description}</p>
+                      </div>
+                      <div className="flex gap-2 ml-2">
+                        <button
+                          onClick={() => editSection(index)}
+                          className="p-1 text-gray-400 hover:text-gray-600"
+                        >
+                          <PencilIcon className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => removeSection(index)}
+                          className="p-1 text-red-400 hover:text-red-600"
+                        >
+                          <TrashIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
+                  <h5 className="font-medium text-sm mb-2">
+                    {editingSectionIndex !== null ? 'Edit Section' : 'Add New Section'}
+                  </h5>
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      placeholder="Section Title"
+                      value={newSection.title}
+                      onChange={(e) => setNewSection({ ...newSection, title: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-md text-sm dark:bg-gray-800 dark:border-gray-700"
+                    />
+                    <textarea
+                      placeholder="Section Description"
+                      value={newSection.description}
+                      onChange={(e) => setNewSection({ ...newSection, description: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-md text-sm dark:bg-gray-800 dark:border-gray-700"
+                      rows={3}
+                    />
+                    <div className="flex justify-end gap-2">
+                      {editingSectionIndex !== null && (
+                        <button
+                          onClick={() => {
+                            setEditingSectionIndex(null);
+                            setNewSection({ title: '', description: '' });
+                          }}
+                          className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                      <button
+                        onClick={editingSectionIndex !== null ? () => updateSection(editingSectionIndex) : addSection}
+                        className="px-3 py-1 text-xs text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                      >
+                        {editingSectionIndex !== null ? 'Update Section' : 'Add Section'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder="New Bullet Point"
-                  value={newBulletPoint}
-                  onChange={(e) => setNewBulletPoint(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
-                />
-                <p className="mt-1 text-sm text-gray-500">
-                  You can also add links in bullet points using [text](url)
-                </p>
-              </div>
-              <ul className="space-y-2">
-                {(visionForm.bullet_points || []).map((point, index) => (
-                  <li key={index} className="flex items-center justify-between gap-2">
-                    <span className="text-sm">{point}</span>
-                    <button
-                      onClick={() => removeBulletPoint(index)}
-                      className="p-1 text-red-400 hover:text-red-600"
-                    >
-                      <TrashIcon className="w-4 h-4" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              
+
             </div>
           ) : (
             <div className="space-y-4">
               <h4 className="font-medium">{vision.title}</h4>
-              <p className="text-sm text-gray-600">{vision.description}</p>
-              <ul className="space-y-2">
-                {vision.bullet_points.map((point, index) => (
-                  <li key={index} className="text-sm text-gray-600 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                    {point}
-                  </li>
-                ))}
-              </ul>
+              
+              {/* Display Sections */}
+              {vision.sections && vision.sections.length > 0 && (
+                <div className="space-y-3 mt-4">
+                  <div className="space-y-2">
+                    {vision.sections.map((section, index) => (
+                      <div key={index} className="p-3 bg-gray-50 dark:bg-gray-700 rounded-md">
+                        <h6 className="font-medium text-sm">{section.title}</h6>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{section.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
 
-      {/* Values Section */}
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold">Values</h3>
-          <button
-            onClick={addValue}
-            disabled={isLoading}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 text-sm"
-          >
-            <PlusIcon className="w-4 h-4" />
-            Add Value
-          </button>
-        </div>
+      {/* Values Image Section */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        <div className="p-4">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Values Image</h3>
+            {!editingValues ? (
+              <button
+                onClick={() => {
+                  setEditingValues(true);
+                  setValuesForm(valuesImage || {});
+                }}
+                className="p-1 text-gray-400 hover:text-gray-600"
+              >
+                <PencilIcon className="w-4 h-4" />
+              </button>
+            ) : (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setEditingValues(false);
+                    setValuesForm({});
+                    setImageFile(null);
+                  }}
+                  className="p-1 text-gray-400 hover:text-gray-600"
+                >
+                  <XMarkIcon className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={updateValuesImage}
+                  className="p-1 text-blue-600 hover:text-blue-700"
+                >
+                  <CheckIcon className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
 
-        <div className="grid gap-4">
-          {values.map((value) => (
-            <div
-              key={value.id}
-              className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden"
-            >
-              {editingId === value.id ? (
-                <div className="p-4 space-y-4">
-                  <input
-                    type="text"
-                    value={editForm.title || ''}
-                    onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Title"
-                  />
-                  <textarea
-                    value={editForm.description || ''}
-                    onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                    rows={2}
-                    className="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Description"
-                  />
-                  <div className="flex justify-end gap-2">
-                    <button
-                      onClick={() => {
-                        setEditingId(null);
-                        setEditForm({});
-                      }}
-                      className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800"
-                    >
-                      <XMarkIcon className="w-4 h-4" />
-                      Cancel
-                    </button>
-                    <button
-                      onClick={updateValue}
-                      className="flex items-center gap-1 px-3 py-1.5 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
-                    >
-                      <CheckIcon className="w-4 h-4" />
-                      Save
-                    </button>
+          {editingValues ? (
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Title"
+                value={valuesForm.title || valuesImage?.title || ''}
+                onChange={(e) => setValuesForm({ ...valuesForm, title: e.target.value })}
+                className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
+              />
+              <div>
+                <textarea
+                  placeholder="Description"
+                  value={valuesForm.description || valuesImage?.description || ''}
+                  onChange={(e) => setValuesForm({ ...valuesForm, description: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
+                  rows={3}
+                />
+                <p className="mt-1 text-sm text-gray-500">
+                  To add links, use the format: [link text](url)
+                </p>
+              </div>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">Main Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-md file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100"
+                />
+                {imageFile && (
+                  <p className="text-sm text-gray-500">
+                    Selected file: {imageFile.name}
+                  </p>
+                )}
+                {!imageFile && valuesImage?.image_url && (
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500 mb-2">Current image:</p>
+                    <img 
+                      src={valuesImage.image_url} 
+                      alt="Current values image" 
+                      className="w-full max-h-40 object-cover rounded-md"
+                    />
                   </div>
+                )}
+              </div>
+              
+              {/* Floating Image Uploader */}
+              <FloatingImageUploader
+                currentImageUrl={valuesImage?.floating_image_url || ''}
+                onImageUploaded={(url) => {
+                  setValuesForm({
+                    ...valuesForm,
+                    floating_image_url: url
+                  });
+                }}
+                title="Floating Accent Image"
+                description="This small image will appear overlapping with the main image on the Values page."
+              />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <h4 className="font-medium">{valuesImage?.title || 'Our Values'}</h4>
+              {valuesImage?.description && (
+                <p className="text-sm text-gray-600">{valuesImage.description}</p>
+              )}
+              {valuesImage?.image_url ? (
+                <div className="mt-4">
+                  <img 
+                    src={valuesImage.image_url} 
+                    alt="Values" 
+                    className="w-full max-h-40 object-cover rounded-md"
+                  />
                 </div>
               ) : (
-                <div className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1 flex-1">
-                      <h4 className="font-medium">{value.title}</h4>
-                      <p className="text-sm text-gray-600">{value.description}</p>
-                    </div>
-                    <div className="flex gap-2 ml-4">
-                      <button
-                        onClick={() => {
-                          setEditingId(value.id);
-                          setEditForm(value);
-                        }}
-                        className="p-1 text-gray-400 hover:text-gray-600"
-                      >
-                        <PencilIcon className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => deleteValue(value.id)}
-                        className="p-1 text-gray-400 hover:text-red-600"
-                      >
-                        <TrashIcon className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
+                <div className="mt-4 p-8 bg-gray-50 rounded-md text-center text-gray-400">
+                  No image uploaded
                 </div>
               )}
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

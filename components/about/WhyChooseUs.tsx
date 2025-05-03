@@ -1,15 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-
-interface FeatureCardProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  delay: number;
-}
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 interface Feature {
   id: number;
@@ -19,58 +13,54 @@ interface Feature {
   display_order: number;
 }
 
-const FeatureCard = ({ title, description, icon, delay }: FeatureCardProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay }}
-    viewport={{ once: true }}
-    className="group relative bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
-  >
-    <motion.div 
-      className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-indigo-600/5 rounded-2xl"
-      initial={{ opacity: 0 }}
-      whileHover={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    />
-    <motion.div
-      className="relative"
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    >
-      <motion.div 
-        className="w-14 h-14 mb-6 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white"
-        whileHover={{ scale: 1.1, rotate: 5 }}
-        transition={{ type: "spring", stiffness: 400, damping: 17 }}
-      >
-        {icon}
-      </motion.div>
-      <motion.h3 
-        className="text-xl font-semibold mb-3 text-gray-800 dark:text-white"
-        whileHover={{ scale: 1.05, x: 5 }}
-        transition={{ type: "spring", stiffness: 400, damping: 17 }}
-      >
-        {title}
-      </motion.h3>
-      <motion.p 
-        className="text-gray-600 dark:text-gray-300"
-        initial={{ opacity: 0.8 }}
-        whileHover={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-      >
-        {description}
-      </motion.p>
-    </motion.div>
-  </motion.div>
-);
+interface SectionContent {
+  heading: string;
+  description: string;
+  background_image?: string;
+}
 
 export default function WhyChooseUs() {
   const [features, setFeatures] = useState<Feature[]>([]);
-  const [sectionContent, setSectionContent] = useState({
+  const [sectionContent, setSectionContent] = useState<SectionContent>({
     heading: 'Why Choose Us',
-    description: 'Experience excellence in nutrition management with our comprehensive platform'
+    description: 'Experience excellence in nutrition management with our comprehensive platform',
+    background_image: ''
   });
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
   const supabase = createClientComponentClient();
+
+  // Function to go to the next slide
+  const nextSlide = useCallback(() => {
+    if (features.length === 0) return;
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % features.length);
+  }, [features.length]);
+
+  // Function to go to the previous slide
+  const prevSlide = useCallback(() => {
+    if (features.length === 0) return;
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + features.length) % features.length);
+  }, [features.length]);
+
+  // Auto-play functionality
+  useEffect(() => {
+    if (isAutoPlaying && features.length > 1) {
+      autoPlayRef.current = setInterval(() => {
+        nextSlide();
+      }, 5000); // Change slide every 5 seconds
+    }
+
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+      }
+    };
+  }, [isAutoPlaying, features.length, nextSlide]);
+
+  // Pause auto-play on hover
+  const pauseAutoPlay = () => setIsAutoPlaying(false);
+  const resumeAutoPlay = () => setIsAutoPlaying(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,7 +88,8 @@ export default function WhyChooseUs() {
         } else if (sectionData) {
           setSectionContent({
             heading: sectionData.heading,
-            description: sectionData.description
+            description: sectionData.description,
+            background_image: sectionData.background_image || ''
           });
         }
       } catch (error) {
@@ -116,19 +107,27 @@ export default function WhyChooseUs() {
   );
 
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-blue-50/50 dark:from-gray-950 dark:to-blue-950/30"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.1),transparent_50%)]"></div>
+    <section 
+      className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-32 md:py-40"
+      style={{
+        backgroundImage: sectionContent.background_image 
+          ? `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${sectionContent.background_image})` 
+          : 'linear-gradient(to right, #1e3a8a, #3b82f6)'
+      }}
+      onMouseEnter={pauseAutoPlay}
+      onMouseLeave={resumeAutoPlay}
+    >
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/40"></div>
       
-      <div className="container mx-auto px-4 relative">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-12">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600"
+            className="text-4xl font-bold mb-4 text-white"
           >
             {sectionContent.heading}
           </motion.h2>
@@ -137,22 +136,74 @@ export default function WhyChooseUs() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-lg text-gray-600 dark:text-gray-300"
+            className="text-lg text-gray-200"
           >
             {sectionContent.description}
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
-          {features.map((feature, index) => (
-            <FeatureCard
-              key={feature.id}
-              title={feature.title}
-              description={feature.description}
-              icon={renderIcon(feature.icon_path)}
-              delay={index * 0.2}
-            />
-          ))}
+        {/* Slider Container */}
+        <div className="max-w-4xl mx-auto relative">
+          {/* Feature Slides */}
+          <div className="relative overflow-hidden rounded-xl bg-white/10 backdrop-blur-sm p-1">
+            <div className="h-[340px] md:h-[300px] relative overflow-hidden rounded-lg">
+              <AnimatePresence mode="wait">
+                {features.length > 0 && (
+                  <motion.div
+                    key={currentIndex}
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0 p-8 flex flex-col items-center text-center"
+                  >
+                    <div className="w-16 h-16 mb-6 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white">
+                      {renderIcon(features[currentIndex].icon_path)}
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 text-white">
+                      {features[currentIndex].title}
+                    </h3>
+                    <p className="text-gray-200 max-w-2xl">
+                      {features[currentIndex].description}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Navigation Controls */}
+          {features.length > 1 && (
+            <div className="flex justify-center items-center mt-8 gap-8">
+              <button 
+                onClick={prevSlide}
+                className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors duration-200"
+                aria-label="Previous slide"
+              >
+                <ChevronLeftIcon className="w-6 h-6" />
+              </button>
+              
+              {/* Dots Indicator */}
+              <div className="flex space-x-2">
+                {features.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-white scale-110' : 'bg-white/40 hover:bg-white/60'}`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+              
+              <button 
+                onClick={nextSlide}
+                className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors duration-200"
+                aria-label="Next slide"
+              >
+                <ChevronRightIcon className="w-6 h-6" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>
