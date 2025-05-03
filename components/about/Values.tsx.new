@@ -3,19 +3,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import FloatingImage from './FloatingImage';
-
-interface VisionSection {
-  title: string;
-  description: string;
-}
 
 interface Vision {
   id: number;
   title: string;
   description: string;
   bullet_points: string[];
-  sections?: VisionSection[];
 }
 
 interface ValuesImage {
@@ -23,7 +16,6 @@ interface ValuesImage {
   title: string;
   description: string;
   image_url: string;
-  floating_image_url?: string;
 }
 
 // Helper function to render text with hyperlinks
@@ -111,8 +103,10 @@ export default function Values() {
   if (!vision) return null;
 
   return (
-    <section className="py-24 relative overflow-hidden bg-white dark:bg-gray-900">
-      {/* Background removed for clean white look */}
+    <section className="py-24 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50/80 to-blue-50/30 dark:from-gray-950 dark:to-blue-950/20"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(59,130,246,0.1),transparent_50%)]"></div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
@@ -131,11 +125,10 @@ export default function Values() {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                <h3 className="relative inline-block mb-6">
-                  <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
+                <h3 className="text-3xl font-bold mb-6">
+                  <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                     {valuesImage?.title || 'Our Values'}
                   </span>
-                  <div className="absolute -bottom-1 left-0 w-1/3 h-1 bg-emerald-500 rounded-full"></div>
                 </h3>
                 
                 {valuesImage?.description && (
@@ -146,7 +139,7 @@ export default function Values() {
                 
                 {valuesImage?.image_url && (
                   <motion.div 
-                    className="relative w-full aspect-[16/12] rounded-xl shadow-lg mt-6"
+                    className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg mt-6"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
@@ -157,20 +150,6 @@ export default function Values() {
                       alt="Our Values" 
                       className="w-full h-full object-cover"
                     />
-                    
-                    {/* Floating image at bottom right - only show if we have a floating image URL */}
-                    {valuesImage.floating_image_url && (
-                      <div className="absolute bottom-[-20px] right-[-80px] z-30">
-                        <FloatingImage
-                          position="relative"
-                          imageUrl={valuesImage.floating_image_url}
-                          altText="Healthy ingredients"
-                          borderTrailColor="bg-emerald-500"
-                        />
-                      </div>
-                    )}
-                    
-
                   </motion.div>
                 )}
               </motion.div>
@@ -192,16 +171,15 @@ export default function Values() {
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                <h3 className="relative inline-block mb-8">
-                  <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
+                <h3 className="text-3xl font-bold mb-8">
+                  <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                     {vision.title}
                   </span>
-                  <div className="absolute -bottom-1 left-0 w-1/3 h-1 bg-emerald-500 rounded-full"></div>
                 </h3>
                 
                 {/* Vision Sections */}
                 <div className="space-y-6">
-                  {(vision.sections || []).map((section, idx: number) => (
+                  {(vision.sections || []).map((section, idx) => (
                     <motion.div 
                       key={idx}
                       initial={{ opacity: 0, y: 10 }}
@@ -210,7 +188,7 @@ export default function Values() {
                       viewport={{ once: true }}
                       className="p-5 bg-white/70 dark:bg-gray-800/50 rounded-xl border border-gray-100/50 dark:border-gray-700/50 shadow-sm"
                     >
-                      <h4 className="text-lg font-semibold mb-3 text-emerald-600 dark:text-emerald-400">
+                      <h4 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">
                         {section.title}
                       </h4>
                       <p className="text-gray-600 dark:text-gray-300 leading-relaxed">

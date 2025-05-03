@@ -7,6 +7,8 @@ import ThemeToggle from './ThemeToggle';
 import Logo from './Logo';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useOnClickOutside } from '@/hooks/use-click-outside';
+import MegaMenu from './navigation/MegaMenu';
+import DropdownMenu from './navigation/DropdownMenu';
 
 interface NavSection {
   id: string;
@@ -82,74 +84,23 @@ export default function Header() {
   };
 
   const renderDropdownMenu = (item: NavItem) => (
-    <div className="relative group">
-      <Link
-        href={item.href}
-        className={`nav-link text-sm font-medium transition-colors duration-200 ${
-          isScrolled
-            ? 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
-            : 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
-        }`}
-      >
-        {item.name}
-      </Link>
-      
-      <div className="absolute left-0 mt-2 w-48 rounded-xl bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-        <div className="py-1">
-          {sections
-            .filter(section => section.nav_item_id === item.id)
-            .map(section => (
-              <Link
-                key={section.id}
-                href={section.url || `${item.href}#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
-                className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                {section.title}
-              </Link>
-            ))}
-        </div>
-      </div>
-    </div>
+    <DropdownMenu
+      item={item}
+      sections={sections}
+      isScrolled={isScrolled}
+      activeDropdown={activeDropdown}
+      setActiveDropdown={setActiveDropdown}
+    />
   );
 
   const renderMegaMenu = (item: NavItem) => (
-    <div className="relative group">
-      <Link
-        href={item.href}
-        className={`nav-link text-sm font-medium transition-colors duration-200 ${
-          isScrolled
-            ? 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
-            : 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
-        }`}
-      >
-        {item.name}
-      </Link>
-      
-      <div className="absolute left-0 mt-2 w-screen max-w-screen-lg -translate-x-1/2 transform px-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-        <div className="overflow-hidden rounded-xl bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5">
-          <div className="relative grid grid-cols-2 gap-6 px-6 py-6 sm:gap-8 sm:p-8 lg:grid-cols-4">
-            {Array.from(new Set(sections.filter(s => s.nav_item_id === item.id).map(s => s.column_index))).map((columnIndex) => (
-              <div key={columnIndex} className="space-y-4">
-                {sections
-                  .filter(section => section.nav_item_id === item.id && section.column_index === columnIndex)
-                  .map(section => (
-                    <Link
-                      key={section.id}
-                      href={section.url || `${item.href}#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-                    >
-                      <p className="font-medium text-gray-900 dark:text-gray-100">{section.title}</p>
-                      {item.description && (
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{item.description}</p>
-                      )}
-                    </Link>
-                  ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    <MegaMenu
+      item={item}
+      sections={sections}
+      isScrolled={isScrolled}
+      activeDropdown={activeDropdown}
+      setActiveDropdown={setActiveDropdown}
+    />
   );
 
   const renderNavLink = (item: NavItem, isMobile = false) => {
