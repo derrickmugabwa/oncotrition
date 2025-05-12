@@ -41,10 +41,18 @@ const itemVariants = {
   }
 };
 
+interface SurveyImage {
+  id?: string;
+  image_url?: string;
+}
+
 export default function NutritionSurvey() {
   const supabase = createClientComponentClient();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
+  const [surveyImage, setSurveyImage] = useState<SurveyImage>({
+    image_url: '/images/nutrition-survey-default.jpg'
+  });
   const [content, setContent] = useState<SurveyContent>({
     id: '',
     title: 'Nutrition Assessment Questions',
@@ -54,6 +62,7 @@ export default function NutritionSurvey() {
   useEffect(() => {
     fetchContent();
     fetchQuestions();
+    fetchSurveyImage();
   }, []);
 
   const fetchContent = async () => {
@@ -70,6 +79,25 @@ export default function NutritionSurvey() {
       }
     } catch (error) {
       console.error('Error fetching survey content:', error);
+    }
+  };
+
+  const fetchSurveyImage = async () => {
+    try {
+      const { data: imageData, error } = await supabase
+        .from('nutrition_survey_image')
+        .select('*')
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
+        throw error;
+      }
+
+      if (imageData) {
+        setSurveyImage(imageData);
+      }
+    } catch (error) {
+      console.error('Error fetching survey image:', error);
     }
   };
 
@@ -115,19 +143,23 @@ export default function NutritionSurvey() {
     );
   }
 
+  // Split questions into left and right columns
+  const leftQuestions = questions.filter((_, idx) => idx % 2 === 0);
+  const rightQuestions = questions.filter((_, idx) => idx % 2 === 1);
+
   return (
     <section className="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-12"
+            className="text-center mb-4"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#009688]">
               {content.title}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 text-lg">
@@ -135,36 +167,134 @@ export default function NutritionSurvey() {
             </p>
           </motion.div>
 
-          {/* Questions List */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="space-y-4"
-          >
-            {questions.map((q) => (
-              <motion.div
-                key={q.id}
-                variants={itemVariants}
-                whileHover={{ 
-                  scale: 1.02,
-                  transition: { duration: 0.2 }
-                }}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex items-start gap-4 transform-gpu hover:shadow-md transition-all duration-300 cursor-pointer"
-              >
-                <motion.div
-                  whileHover={{ rotate: 180 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <ListChecks className="w-6 h-6 text-purple-500 flex-shrink-0 mt-1" />
-                </motion.div>
-                <h3 className="text-xl text-gray-800 dark:text-white">
-                  {q.question}
-                </h3>
-              </motion.div>
-            ))}
-          </motion.div>
+          {/* Questions with Center Image Layout */}
+          <div className="relative min-h-[600px] flex justify-center items-center">
+            {/* Center Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative z-10 w-full max-w-xl mx-auto"
+            >
+              <div className="relative">
+                <img 
+                  src={surveyImage.image_url} 
+                  alt="Nutrition Survey" 
+                  className="w-80 h-80 md:w-[450px] md:h-[450px] mx-auto object-cover rounded-full border-4 border-white dark:border-gray-700 shadow-xl"
+                />
+                <div className="absolute inset-0 rounded-full border-4 border-purple-500 border-opacity-50 animate-pulse"></div>
+              
+                {/* Left Side Questions */}
+                {leftQuestions.map((q, index) => {
+                  // Calculate position with all cards on same horizontal line
+                  const totalCards = leftQuestions.length;
+                  const containerHeight = 90; // Use 90% of the container height
+                  const verticalSpacing = containerHeight / totalCards;
+                  const topPosition = 5 + (index * verticalSpacing); // Start at 5% from top
+                  
+                  // Use the same horizontal position for all left cards
+                  const horizontalOffset = -60; // Fixed horizontal position for all left cards
+                  
+                  return (
+                    <motion.div
+                      key={q.id}
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={{ 
+                        opacity: 1, 
+                        x: 0,
+                        y: [0, -5, 0, 5, 0], // Subtle floating animation
+                      }}
+                      transition={{ 
+                        duration: 0.5, 
+                        delay: 0.1 * index,
+                        y: {
+                          duration: 4 + (index % 3),
+                          repeat: Infinity,
+                          repeatType: "reverse",
+                          ease: "easeInOut"
+                        }
+                      }}
+                      style={{ 
+                        position: 'absolute',
+                        top: `${topPosition}%`,
+                        left: `${horizontalOffset}%`,
+                        zIndex: 20,
+                        maxWidth: '400px',
+                        width: 'auto'
+                      }}
+                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-3 flex items-center gap-3 transform-gpu hover:shadow-xl transition-all duration-300 pointer-events-auto"
+                    >
+                      <motion.div
+                        whileHover={{ rotate: 180 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex-shrink-0"
+                      >
+                        <ListChecks className="w-4 h-4 text-purple-500" />
+                      </motion.div>
+                      <h3 className="text-xs text-gray-800 dark:text-white break-normal" title={q.question}>
+                        {q.question}
+                      </h3>
+                    </motion.div>
+                  );
+                })}
+                
+                {/* Right Side Questions */}
+                {rightQuestions.map((q, index) => {
+                  // Calculate position with all cards on same horizontal line
+                  const totalCards = rightQuestions.length;
+                  const containerHeight = 90; // Use 90% of the container height
+                  const verticalSpacing = containerHeight / totalCards;
+                  const topPosition = 5 + (index * verticalSpacing); // Start at 5% from top
+                  
+                  // Use the same horizontal position for all right cards
+                  const horizontalOffset = -60; // Fixed horizontal position for all right cards
+                  
+                  return (
+                    <motion.div
+                      key={q.id}
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ 
+                        opacity: 1, 
+                        x: 0,
+                        y: [0, 5, 0, -5, 0], // Subtle floating animation (opposite phase)
+                      }}
+                      transition={{ 
+                        duration: 0.5, 
+                        delay: 0.1 * index + 0.2,
+                        y: {
+                          duration: 4 + (index % 3),
+                          repeat: Infinity,
+                          repeatType: "reverse",
+                          ease: "easeInOut"
+                        }
+                      }}
+                      style={{ 
+                        position: 'absolute',
+                        top: `${topPosition}%`,
+                        right: `${horizontalOffset}%`,
+                        zIndex: 20,
+                        maxWidth: '400px',
+                        width: 'auto'
+                      }}
+                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-3 flex items-center gap-3 transform-gpu hover:shadow-xl transition-all duration-300 pointer-events-auto"
+                    >
+                      <motion.div
+                        whileHover={{ rotate: 180 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex-shrink-0"
+                      >
+                        <ListChecks className="w-4 h-4 text-purple-500" />
+                      </motion.div>
+                      <h3 className="text-xs text-gray-800 dark:text-white break-normal" title={q.question}>
+                        {q.question}
+                      </h3>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
