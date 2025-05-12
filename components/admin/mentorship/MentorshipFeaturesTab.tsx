@@ -16,6 +16,12 @@ interface Feature {
   display_order: number;
 }
 
+interface SectionContent {
+  id: string;
+  title: string;
+  description: string;
+}
+
 const AVAILABLE_ICONS = [
   { name: 'FaUserGraduate', label: 'Graduate' },
   { name: 'FaChalkboardTeacher', label: 'Teacher' },
@@ -174,14 +180,21 @@ function FeatureCard({ feature, onUpdate, onDelete }: {
 
 export default function MentorshipFeaturesTab() {
   const [features, setFeatures] = useState<Feature[]>([]);
+  const [sectionContent, setSectionContent] = useState<SectionContent>({
+    id: '',
+    title: '',
+    description: ''
+  });
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [editingContent, setEditingContent] = useState(false);
 
-  const fetchFeatures = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
       const supabase = createClient();
       
+      // Fetch features
       console.log('Fetching features...');
       const { data, error } = await supabase
         .from('mentorship_features')
@@ -196,17 +209,76 @@ export default function MentorshipFeaturesTab() {
 
       console.log('Features fetched successfully:', data);
       setFeatures(data || []);
+      
+      // Fetch section content from the API endpoint
+      try {
+        const response = await fetch('/api/mentorship/features-content');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || response.statusText);
+        }
+        
+        const contentData = await response.json();
+        console.log('Section content fetched successfully:', contentData);
+        
+        setSectionContent({
+          id: contentData.id || '',
+          title: contentData.title,
+          description: contentData.description
+        });
+      } catch (error: any) {
+        console.error('Error fetching section content:', error);
+        toast.error(`Error fetching section content: ${error.message}`);
+      }
     } catch (error: any) {
-      console.error('Error in fetchFeatures:', error);
-      toast.error(`Error fetching features: ${error.message}`);
+      console.error('Error in fetchData:', error);
+      toast.error(`Error fetching data: ${error.message}`);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchFeatures();
+    fetchData();
   }, []);
+  
+  const handleUpdateSectionContent = async () => {
+    try {
+      setUpdating(true);
+      
+      // Save to database via API endpoint
+      const response = await fetch('/api/mentorship/features-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: sectionContent.title,
+          description: sectionContent.description
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || response.statusText);
+      }
+      
+      const updatedContent = await response.json();
+      setSectionContent({
+        id: updatedContent.id,
+        title: updatedContent.title,
+        description: updatedContent.description
+      });
+      
+      setEditingContent(false);
+      toast.success('Section content updated successfully');
+    } catch (error: any) {
+      console.error('Error in handleUpdateSectionContent:', error);
+      toast.error(`Error updating section content: ${error.message}`);
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   const handleUpdateFeature = async (feature: Feature) => {
     try {
@@ -241,7 +313,7 @@ export default function MentorshipFeaturesTab() {
       console.log('Feature updated successfully:', data);
       
       // Refresh the features list to ensure we have the latest data
-      await fetchFeatures();
+      await fetchData();
       
       toast.success('Feature updated successfully');
     } catch (error: any) {
@@ -301,7 +373,7 @@ export default function MentorshipFeaturesTab() {
       }
 
       console.log('Feature added successfully:', data);
-      await fetchFeatures();
+      await fetchData();
       toast.success('Feature added successfully');
     } catch (error: any) {
       console.error('Error in handleAddFeature:', error);
@@ -326,7 +398,7 @@ export default function MentorshipFeaturesTab() {
         });
       }
 
-      await fetchFeatures();
+      await fetchData();
     } catch (error: any) {
       console.error('Error reordering features:', error);
       toast.error(error.message || 'Failed to reorder features');
@@ -339,6 +411,78 @@ export default function MentorshipFeaturesTab() {
       animate={{ opacity: 1 }}
       className="space-y-8 p-6"
     >
+      {/* Section Content Editor */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Section Content
+            </h2>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Edit the title and description for the mentorship features section
+            </p>
+          </div>
+          <button
+            onClick={() => setEditingContent(!editingContent)}
+            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-primary border border-primary hover:bg-primary/10 rounded-md transition-colors"
+          >
+            <FaEdit className="w-4 h-4" />
+            {editingContent ? 'Cancel' : 'Edit Content'}
+          </button>
+        </div>
+        
+        {editingContent ? (
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="sectionTitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Section Title
+              </label>
+              <input
+                id="sectionTitle"
+                type="text"
+                value={sectionContent.title}
+                onChange={(e) => setSectionContent(prev => ({ ...prev, title: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <div>
+              <label htmlFor="sectionDescription" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Section Description
+              </label>
+              <textarea
+                id="sectionDescription"
+                value={sectionContent.description}
+                onChange={(e) => setSectionContent(prev => ({ ...prev, description: e.target.value }))}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={handleUpdateSectionContent}
+                disabled={updating}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {updating ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>Save Changes</>
+                )}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-4">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{sectionContent.title}</h3>
+            <p className="text-gray-600 dark:text-gray-300">{sectionContent.description}</p>
+          </div>
+        )}
+      </div>
+      
+      {/* Features Management */}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">

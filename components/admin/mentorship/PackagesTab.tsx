@@ -9,6 +9,9 @@ interface Package {
   id: number;
   name: string;
   price: number;
+  international_price: number;
+  title: string;
+  description: string;
   features: string[];
   recommended: boolean;
   gradient: string;
@@ -22,9 +25,17 @@ export default function PackagesTab() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingPackage, setEditingPackage] = useState<Package | null>(null);
+  const [showSectionSettings, setShowSectionSettings] = useState(false);
+  const [sectionSettings, setSectionSettings] = useState({
+    title: 'Our Mentorship Packages',
+    description: 'Choose the perfect mentorship package tailored to your needs and goals.'
+  });
   const [editForm, setEditForm] = useState<{
     name: string;
     price: number;
+    international_price: number;
+    title: string;
+    description: string;
     features: string[];
     recommended: boolean;
     gradient: string;
@@ -35,6 +46,9 @@ export default function PackagesTab() {
   }>({
     name: '',
     price: 0,
+    international_price: 0,
+    title: '',
+    description: '',
     features: [],
     recommended: false,
     gradient: '',
@@ -55,6 +69,9 @@ export default function PackagesTab() {
       setEditForm({
         name: editingPackage.name,
         price: editingPackage.price,
+        international_price: editingPackage.international_price || editingPackage.price,
+        title: editingPackage.title || '',
+        description: editingPackage.description || '',
         features: [...editingPackage.features],
         recommended: editingPackage.recommended,
         gradient: editingPackage.gradient,
@@ -76,8 +93,24 @@ export default function PackagesTab() {
 
       if (error) throw error;
 
-      if (data) {
+      if (data && data.length > 0) {
         setPackages(data);
+        
+        // Look for section title and description in the first package
+        // These are used as section-wide settings
+        if (data[0].title) {
+          setSectionSettings(prev => ({
+            ...prev,
+            title: data[0].title
+          }));
+        }
+        
+        if (data[0].description) {
+          setSectionSettings(prev => ({
+            ...prev,
+            description: data[0].description
+          }));
+        }
       }
     } catch (error: any) {
       console.error('Error fetching packages:', error);
@@ -98,6 +131,9 @@ export default function PackagesTab() {
       const newPackage = {
         name: 'New Package',
         price: 0,
+        international_price: 0,
+        title: 'Our Mentorship Packages',
+        description: 'Choose the perfect mentorship package tailored to your needs and goals.',
         features: ['Feature 1'],
         recommended: false,
         gradient: 'from-blue-400/20 to-indigo-400/20',
@@ -163,6 +199,9 @@ export default function PackagesTab() {
         .update({
           name: editForm.name,
           price: editForm.price,
+          international_price: editForm.international_price,
+          title: editForm.title,
+          description: editForm.description,
           features: editForm.features,
           recommended: editForm.recommended,
           gradient: editForm.gradient,
@@ -181,6 +220,44 @@ export default function PackagesTab() {
     } catch (error: any) {
       console.error('Error updating package:', error);
       toast.error(error.message || 'Failed to update package');
+    }
+  };
+  
+  const handleUpdateSectionSettings = async () => {
+    try {
+      const { data: { session }, error: authError } = await supabase.auth.getSession();
+      if (authError) throw authError;
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+      
+      // Find the first package to update with section settings
+      if (packages.length === 0) {
+        toast.error('No packages found to update section settings');
+        return;
+      }
+      
+      const firstPackage = packages[0];
+      
+      // Update the first package with the new title and description
+      const { error } = await supabase
+        .from('mentorship_packages')
+        .update({
+          title: sectionSettings.title,
+          description: sectionSettings.description
+        })
+        .eq('id', firstPackage.id);
+
+      if (error) throw error;
+      
+      // Refresh the packages data
+      await fetchPackages();
+      
+      setShowSectionSettings(false);
+      toast.success('Section settings updated successfully');
+    } catch (error: any) {
+      console.error('Error updating section settings:', error);
+      toast.error(error.message || 'Failed to update section settings');
     }
   };
 
@@ -215,15 +292,27 @@ export default function PackagesTab() {
             Manage your mentorship packages and pricing
           </p>
         </div>
-        <button
-          onClick={handleAddPackage}
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-        >
-          <FaPlus className="mr-2 h-4 w-4" />
-          Add Package
-        </button>
+        <div className="flex space-x-4">
+          <button
+            onClick={() => setShowSectionSettings(true)}
+            className="inline-flex items-center px-4 py-2 rounded-md bg-amber-500 hover:bg-amber-600 text-white font-medium transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+            </svg>
+            Section Settings
+          </button>
+          
+          <button
+            onClick={handleAddPackage}
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          >
+            <FaPlus className="mr-2 h-4 w-4" />
+            Add Package
+          </button>
+        </div>
       </div>
-
+      
       {loading ? (
         <div className="flex justify-center items-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -286,7 +375,86 @@ export default function PackagesTab() {
         </div>
       )}
 
-      {/* Edit Modal */}
+      {/* Section Settings Modal */}
+      {showSectionSettings && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-xl transform transition-all">
+            <div className="p-8">
+              {/* Header */}
+              <div className="flex justify-between items-center mb-8">
+                <div>
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">
+                    Mentorship Section Settings
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    Update the title and description for the entire mentorship section
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowSectionSettings(false)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+                >
+                  <FaTimes className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                </button>
+              </div>
+              
+              <div className="space-y-8">
+                {/* Title */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Section Title
+                  </label>
+                  <input
+                    type="text"
+                    value={sectionSettings.title}
+                    onChange={(e) => setSectionSettings(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                    placeholder="Enter section title"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    This title will be displayed at the top of the mentorship packages section.
+                  </p>
+                </div>
+                
+                {/* Description */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Section Description
+                  </label>
+                  <textarea
+                    value={sectionSettings.description}
+                    onChange={(e) => setSectionSettings(prev => ({ ...prev, description: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                    placeholder="Enter section description"
+                    rows={3}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    This description will appear below the title in the mentorship packages section.
+                  </p>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-4 mt-8">
+                  <button
+                    onClick={() => setShowSectionSettings(false)}
+                    className="px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUpdateSectionSettings}
+                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-medium hover:from-amber-600 hover:to-amber-700 transition-colors"
+                  >
+                    Save Settings
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Edit Package Modal */}
       {editingPackage && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl transform transition-all">
@@ -310,6 +478,43 @@ export default function PackagesTab() {
               </div>
 
               <div className="space-y-8">
+                {/* Title & Description */}
+                <div className="space-y-6">
+                  {/* Title */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Section Title <span className="text-xs text-amber-600 font-normal">(applies to all packages)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.title}
+                      onChange={(e) => setEditForm(prev => ({ ...prev, title: e.target.value }))}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                      placeholder="Enter section title"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      This title will be displayed at the top of the mentorship packages section.
+                    </p>
+                  </div>
+                  
+                  {/* Description */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Section Description <span className="text-xs text-amber-600 font-normal">(applies to all packages)</span>
+                    </label>
+                    <textarea
+                      value={editForm.description}
+                      onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                      placeholder="Enter section description"
+                      rows={3}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      This description will appear below the title in the mentorship packages section.
+                    </p>
+                  </div>
+                </div>
+                
                 {/* Name & Price Group */}
                 <div className="grid grid-cols-2 gap-6">
                   {/* Name */}
@@ -343,6 +548,26 @@ export default function PackagesTab() {
                         className="w-full pl-14 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
                         placeholder="0.00"
                       />
+                    </div>
+                    
+                    {/* International Price */}
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        International Price (KES)
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                          KES
+                        </span>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={editForm.international_price}
+                          onChange={(e) => setEditForm(prev => ({ ...prev, international_price: parseFloat(e.target.value) }))}
+                          className="w-full pl-14 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                          placeholder="0.00"
+                        />
+                      </div>
                     </div>
                     <div className="mt-4">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

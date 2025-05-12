@@ -78,47 +78,79 @@ function ErrorState() {
   );
 }
 
+interface SectionContent {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export default function MentorshipFeatures() {
   const [features, setFeatures] = useState<Feature[]>([]);
+  const [content, setContent] = useState<SectionContent>({
+    id: '',
+    title: '',
+    description: ''
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchFeatures = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
         
         const supabase = createClient();
-        console.log('Fetching features...');
         
-        const { data, error } = await supabase
+        // Fetch features
+        const { data: featuresData, error: featuresError } = await supabase
           .from('mentorship_features')
           .select('*')
           .order('display_order');
 
-        if (error) {
-          console.error('Supabase error:', error);
-          throw error;
+        if (featuresError) {
+          console.error('Supabase error fetching features:', featuresError);
+          throw featuresError;
         }
 
-        if (!data) {
+        if (featuresData) {
+          console.log('Features fetched successfully:', featuresData);
+          setFeatures(featuresData);
+        } else {
           console.log('No features found');
           setFeatures([]);
-          return;
         }
-
-        console.log('Features fetched successfully:', data);
-        setFeatures(data);
+        
+        // Fetch section content from the API endpoint
+        try {
+          const response = await fetch('/api/mentorship/features-content');
+          if (!response.ok) {
+            throw new Error(`Error fetching content: ${response.statusText}`);
+          }
+          
+          const contentData = await response.json();
+          if (contentData) {
+            console.log('Content fetched successfully:', contentData);
+            setContent({
+              id: contentData.id || '',
+              title: contentData.title,
+              description: contentData.description
+            });
+          }
+        } catch (contentError) {
+          console.error('Error fetching section content:', contentError);
+          // Use default values if API fails
+          console.log('Using default content values');
+        }
       } catch (error: any) {
-        console.error('Error fetching features:', error);
+        console.error('Error fetching data:', error);
         setError(error.message || 'Failed to load mentorship features');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFeatures();
+    fetchData();
   }, []);
 
   return (
@@ -131,11 +163,11 @@ export default function MentorshipFeatures() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-            Why Choose Our Mentorship?
+          <h2 className="text-4xl font-bold mb-4 text-[#009688]">
+            {content.title}
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Transform your nutrition journey with expert guidance and personalized support
+            {content.description}
           </p>
         </motion.div>
 

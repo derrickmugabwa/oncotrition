@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { toast } from 'react-hot-toast';
-import { ListChecks, Save, Plus, Trash2, MoveUp, MoveDown, Edit, X } from 'lucide-react';
+import { ListChecks, Save, Plus, Trash2, MoveUp, MoveDown, Edit, X, Upload, Image } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SurveyQuestion {
@@ -18,16 +18,27 @@ interface SurveyContent {
   description: string;
 }
 
+interface SurveyImage {
+  id?: string;
+  image_url?: string;
+}
+
 export default function NutritionSurveyTab() {
   const supabase = createClientComponentClient();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
+  const [surveyImage, setSurveyImage] = useState<SurveyImage>({
+    id: '',
+    image_url: ''
+  });
   const [content, setContent] = useState<SurveyContent>({
     id: '',
     title: '',
     description: ''
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [newQuestion, setNewQuestion] = useState('');
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
   const [editingQuestion, setEditingQuestion] = useState('');
@@ -35,6 +46,7 @@ export default function NutritionSurveyTab() {
   useEffect(() => {
     fetchContent();
     fetchQuestions();
+    fetchSurveyImage();
   }, []);
 
   const fetchContent = async () => {
@@ -52,6 +64,25 @@ export default function NutritionSurveyTab() {
     } catch (error) {
       console.error('Error fetching survey content:', error);
       toast.error('Failed to load survey content');
+    }
+  };
+
+  const fetchSurveyImage = async () => {
+    try {
+      const { data: imageData, error } = await supabase
+        .from('nutrition_survey_image')
+        .select('*')
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
+        throw error;
+      }
+
+      if (imageData) {
+        setSurveyImage(imageData);
+      }
+    } catch (error) {
+      console.error('Error fetching survey image:', error);
     }
   };
 
@@ -224,6 +255,61 @@ export default function NutritionSurveyTab() {
     );
   }
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    const fileExt = file.name.split('.').pop();
+    const fileName = `nutrition-survey-${Date.now()}.${fileExt}`;
+    const filePath = `nutrition-survey/${fileName}`;
+
+    setUploadingImage(true);
+    try {
+      // Upload image to storage
+      const { error: uploadError } = await supabase.storage
+        .from('images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath);
+
+      if (!publicUrlData.publicUrl) throw new Error('Failed to get public URL');
+
+      // Save to database
+      const { error: dbError } = await supabase
+        .from('nutrition_survey_image')
+        .upsert({
+          id: surveyImage.id || undefined,
+          image_url: publicUrlData.publicUrl
+        })
+        .select()
+        .single();
+
+      if (dbError) throw dbError;
+
+      // Update state
+      setSurveyImage({
+        ...surveyImage,
+        image_url: publicUrlData.publicUrl
+      });
+
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Section Content Management */}
@@ -259,6 +345,56 @@ export default function NutritionSurveyTab() {
             <Save className="w-4 h-4" />
             Save Content
           </button>
+        </div>
+      </div>
+      
+      {/* Center Image Management */}
+      <div className="bg-white p-6 rounded-lg shadow-sm border">
+        <h3 className="text-lg font-semibold mb-4">Center Image</h3>
+        <div className="space-y-4">
+          {surveyImage.image_url && (
+            <div className="flex justify-center mb-4">
+              <div className="relative w-40 h-40 rounded-full overflow-hidden border-2 border-purple-200">
+                <img 
+                  src={surveyImage.image_url} 
+                  alt="Survey center image" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          )}
+          
+          <div className="flex flex-col items-center">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+              disabled={uploadingImage}
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingImage}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 w-full max-w-xs justify-center",
+                uploadingImage && "opacity-50 cursor-not-allowed"
+              )}
+            >
+              {uploadingImage ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Uploading...</span>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-4 h-4" />
+                  <span>{surveyImage.image_url ? 'Change Image' : 'Upload Image'}</span>
+                </>
+              )}
+            </button>
+            <p className="text-xs text-gray-500 mt-2">Recommended: Square image, at least 500x500px</p>
+          </div>
         </div>
       </div>
 
