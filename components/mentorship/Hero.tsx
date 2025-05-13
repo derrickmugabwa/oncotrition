@@ -26,9 +26,9 @@ const floatingAnimation = {
 export default function Hero() {
   const supabase = createClientComponentClient();
   const [content, setContent] = useState<HeroContent>({
-    title: 'Choose Your Plan',
-    subtitle: 'Get started with Oncotrition today and transform your nutrition journey',
-    tagline: 'Simple & Transparent Pricing',
+    title: '',
+    subtitle: '',
+    tagline: '',
     background_image: '/images/mentorship-hero-bg.jpg'
   });
 

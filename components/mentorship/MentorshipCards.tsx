@@ -160,7 +160,7 @@ export default function MentorshipCards() {
                     </span>
                   </CardTitle>
                   <CardDescription className={index === 1 ? 'text-white/80' : ''}>
-                    {plan.features[0] || 'Our goal is to provide the best mentorship experience for you.'}
+                    Our goal is to provide the best mentorship experience for you.
                   </CardDescription>
                 </CardHeader>
                 
@@ -175,19 +175,19 @@ export default function MentorshipCards() {
                         transition={{ duration: 0.3 }}
                         className="text-3xl font-bold"
                       >
-                        KES {isInternational 
-                          ? (plan.international_price || plan.price).toLocaleString() 
-                          : plan.price.toLocaleString()}
+                        {isInternational 
+                          ? `USD ${(plan.international_price || plan.price).toLocaleString()}` 
+                          : `KES ${plan.price.toLocaleString()}`}
                       </motion.span>
                       <span className={`text-sm ${index === 1 ? 'text-white/70' : 'text-muted-foreground'}`}>
                         / {plan.duration_type}
                       </span>
                     </p>
                     
-                    <div className="flex flex-col gap-4 justify-start">
-                      {plan.features.slice(1).map((feature, featureIndex) => (
-                        <div key={featureIndex} className="flex flex-row gap-4">
-                          <Check className={`w-4 h-4 mt-2 ${index === 1 ? 'text-white' : 'text-primary'}`} />
+                    <div className="flex flex-col justify-start -space-y-1">
+                      {plan.features.map((feature, featureIndex) => (
+                        <div key={featureIndex} className="flex flex-row items-start">
+                          <Check className={`w-4 h-4 mt-1 mr-1 ${index === 1 ? 'text-white' : 'text-primary'}`} />
                           <div className="flex flex-col">
                             <p>{feature.split(':')[0] || feature}</p>
                             {feature.includes(':') && (
