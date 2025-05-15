@@ -1,105 +1,148 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { toast } from 'react-hot-toast';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { toast, Toaster } from 'react-hot-toast';
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Image as ImageIcon, Type, Text, Save } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface HeroContent {
-  id?: string;
+interface SlideContent {
+  id?: number;
   title: string;
   subtitle: string;
-  tagline: string;
   background_image: string;
+  cta_text?: string;
+  cta_url?: string;
+  order?: number;
 }
+
+interface SlideForm {
+  title: string;
+  subtitle: string;
+  cta_text: string;
+  cta_url: string;
+}
+
+const MAX_SLIDES = 5;
 
 export default function HeroSectionTab() {
   const supabase = createClientComponentClient();
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [formData, setFormData] = useState<HeroContent>({
-    title: '',
-    subtitle: '',
-    tagline: '',
-    background_image: ''
-  });
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sliderImages, setSliderImages] = useState<SlideContent[]>([]);
+  const [forms, setForms] = useState<SlideForm[]>([
+    { title: '', subtitle: '', cta_text: '', cta_url: '' }
+  ]);
 
   useEffect(() => {
-    fetchHeroContent();
-  }, []);
+    fetchSlides();
+  }, [supabase]);
 
-  const fetchHeroContent = async () => {
+  const fetchSlides = async () => {
     try {
-      const { data: heroContent, error } = await supabase
-        .from('smartspoon_hero')
+      const { data, error } = await supabase
+        .from('smartspoon_slides')
         .select('*')
-        .single();
+        .order('order');
 
       if (error) throw error;
-
-      if (heroContent) {
-        setFormData({
-          id: heroContent.id,
-          title: heroContent.title,
-          subtitle: heroContent.subtitle,
-          tagline: heroContent.tagline,
-          background_image: heroContent.background_image
-        });
+      
+      if (data && data.length > 0) {
+        setSliderImages(data);
+        const initialForms = data.map(slide => ({
+          title: slide.title,
+          subtitle: slide.subtitle || '',
+          cta_text: slide.cta_text || '',
+          cta_url: slide.cta_url || ''
+        }));
+        setForms(initialForms);
       }
-    } catch (error) {
-      console.error('Error fetching hero content:', error);
-      toast.error('Failed to load hero content');
+    } catch (error: any) {
+      console.error('Error fetching smartspoon slides:', error);
+      setError(error.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
+  const validateImage = (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      img.src = URL.createObjectURL(file);
+      
+      img.onload = () => {
+        URL.revokeObjectURL(img.src);
+        
+        // Check dimensions
+        const minWidth = 1280;
+        const minHeight = 720;
+        const maxWidth = 3840;
+        const maxHeight = 2160;
+        const maxFileSize = 2 * 1024 * 1024; // 2MB
 
-    // Validate required fields
-    if (!formData.title || !formData.subtitle || !formData.tagline || !formData.background_image) {
-      toast.error('All fields are required');
-      setSaving(false);
-      return;
-    }
+        if (file.size > maxFileSize) {
+          toast.error('Image file size should be less than 2MB');
+          resolve(false);
+          return;
+        }
 
-    try {
-      const response = await fetch('/api/admin/smartspoon/hero', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+        if (img.width < minWidth || img.height < minHeight) {
+          toast.error(`Image resolution is too low. Minimum recommended resolution is ${minWidth}x${minHeight}px`);
+          resolve(false);
+          return;
+        }
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(errorData || 'Failed to update hero section');
-      }
+        if (img.width > maxWidth || img.height > maxHeight) {
+          toast.error(`Image resolution is too high. Maximum allowed resolution is ${maxWidth}x${maxHeight}px`);
+          resolve(false);
+          return;
+        }
 
-      const data = await response.json();
-      toast.success('Hero section updated successfully');
-    } catch (error) {
-      console.error('Error updating hero section:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to update hero section');
-    } finally {
-      setSaving(false);
-    }
+        resolve(true);
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src);
+        toast.error('Invalid image file');
+        resolve(false);
+      };
+    });
   };
 
-  const handleImageUpload = async (file: File) => {
+  const handleFileUpload = async (file: File, index: number) => {
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
+      setIsLoading(true);
+      setError(null);
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Please upload an image file');
+      }
+
+      // Validate image dimensions and size
+      const isValid = await validateImage(file);
+      if (!isValid) {
+        setIsLoading(false);
+        return;
+      }
+
+      const fileExt = file.name.split('.').pop()?.toLowerCase() || '';
+      const fileName = `smartspoon-slider-${Date.now()}-${index}.${fileExt}`;
       const filePath = `smartspoon/${fileName}`;
+
+      toast.loading('Uploading image...', { id: 'uploadToast' });
 
       const { error: uploadError } = await supabase.storage
         .from('images')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
 
       if (uploadError) throw uploadError;
 
@@ -107,15 +150,108 @@ export default function HeroSectionTab() {
         .from('images')
         .getPublicUrl(filePath);
 
-      setFormData({ ...formData, background_image: publicUrl });
-      toast.success('Image uploaded successfully');
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      toast.error('Failed to upload image');
+      const newSliderImages = [...sliderImages];
+      if (newSliderImages[index]) {
+        newSliderImages[index].background_image = publicUrl;
+      } else {
+        newSliderImages[index] = {
+          id: index + 1,
+          background_image: publicUrl,
+          order: index,
+          title: forms[index].title,
+          subtitle: forms[index].subtitle,
+          cta_text: forms[index].cta_text,
+          cta_url: forms[index].cta_url
+        };
+      }
+      setSliderImages(newSliderImages);
+      toast.success('Image uploaded successfully', { id: 'uploadToast' });
+    } catch (error: any) {
+      console.error('Error uploading slider image:', error);
+      setError(error.message);
+      toast.error(error.message, { id: 'uploadToast' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (loading) {
+  const handleSave = async () => {
+    const toastId = toast.loading('Saving changes...');
+    try {
+      setIsSaving(true);
+      setError(null);
+
+      // Validate required fields
+      const missingFields = forms.some((form, index) => {
+        if (!form.title) {
+          toast.error(`Slide ${index + 1}: Title is required`, { id: toastId });
+          return true;
+        }
+        if (!sliderImages[index]?.background_image) {
+          toast.error(`Slide ${index + 1}: Image is required`, { id: toastId });
+          return true;
+        }
+        return false;
+      });
+
+      if (missingFields) {
+        setIsSaving(false);
+        return;
+      }
+
+      const updatedSlides = forms.map((form, index) => ({
+        id: sliderImages[index]?.id,
+        title: form.title,
+        subtitle: form.subtitle,
+        cta_text: form.cta_text,
+        cta_url: form.cta_url,
+        background_image: sliderImages[index]?.background_image,
+        order: index
+      }));
+
+      const { error } = await supabase
+        .from('smartspoon_slides')
+        .upsert(updatedSlides);
+
+      if (error) throw error;
+
+      toast.success('Changes saved successfully', { id: toastId });
+      router.refresh();
+    } catch (error: any) {
+      console.error('Error saving slider settings:', error);
+      setError(error.message);
+      toast.error('Failed to save changes: ' + error.message, { id: toastId });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleFormChange = (index: number, field: keyof SlideForm, value: string) => {
+    const newForms = [...forms];
+    newForms[index] = { ...newForms[index], [field]: value };
+    setForms(newForms);
+  };
+
+  const addSlide = () => {
+    if (forms.length >= MAX_SLIDES) {
+      toast.error(`Maximum ${MAX_SLIDES} slides allowed`);
+      return;
+    }
+    setForms([...forms, { title: '', subtitle: '', cta_text: '', cta_url: '' }]);
+    toast.success('New slide added');
+  };
+
+  const removeSlide = (index: number) => {
+    const newForms = forms.filter((_, i) => i !== index);
+    const newSliderImages = sliderImages.filter((_, i) => i !== index);
+    setForms(newForms);
+    setSliderImages(newSliderImages);
+    toast.success(`Slide ${index + 1} removed`);
+  };
+
+
+
+  if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
         {[1, 2, 3].map((i) => (
@@ -129,124 +265,192 @@ export default function HeroSectionTab() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">Hero Section Content</h2>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          {/* Preview */}
-          <div className="mb-8">
-            <h3 className="text-sm font-medium text-gray-700 mb-4">Preview</h3>
-            <div className="bg-gray-50 p-6 rounded-lg border">
-              <div className="max-w-md mx-auto space-y-4">
-                <div className="inline-block px-3 py-1 rounded-full bg-gray-100 text-sm">
-                  {formData.tagline || 'Tagline'}
-                </div>
-                <div className="text-2xl font-bold">
-                  {formData.title || 'Title'}
-                </div>
-                <div className="text-sm text-center">
-                  {formData.subtitle || 'Subtitle'}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Form Fields */}
-          <div className="grid gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                <div className="flex items-center gap-2">
-                  <Text className="w-4 h-4" />
-                  Tagline
-                </div>
-              </label>
-              <input
-                type="text"
-                value={formData.tagline}
-                onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
-                placeholder="Enter the tagline text"
-                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                disabled={saving}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                <div className="flex items-center gap-2">
-                  <Type className="w-4 h-4" />
-                  Title
-                </div>
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Enter the main title"
-                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                disabled={saving}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                <div className="flex items-center gap-2">
-                  <Text className="w-4 h-4" />
-                  Subtitle
-                </div>
-              </label>
-              <textarea
-                value={formData.subtitle}
-                onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                placeholder="Enter the subtitle text"
-                rows={3}
-                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                disabled={saving}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                <div className="flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4" />
-                  Background Image
-                </div>
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])}
-                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                disabled={saving}
-              />
-              {formData.background_image && (
-                <p className="mt-1 text-sm text-gray-500">
-                  Current image: {formData.background_image.split('/').pop()}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-6 flex justify-end">
+    <div className="space-y-4">
+      <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-medium text-gray-900">Smart Spoon Hero Slider</h3>
+          <div className="flex gap-2">
             <button
-              type="submit"
-              disabled={saving}
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2",
-                saving && "opacity-50 cursor-not-allowed"
-              )}
+              onClick={handleSave}
+              disabled={isSaving || isLoading}
+              className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
             >
-              <Save className="w-4 h-4" />
-              {saving ? 'Saving...' : 'Save Changes'}
+              {isSaving ? (
+                <>
+                  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                  <span>Save Changes</span>
+                </>
+              )}
+            </button>
+            <button
+              onClick={addSlide}
+              disabled={forms.length >= MAX_SLIDES}
+              className="px-3 py-1.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+            >
+              <PlusIcon className="w-4 h-4" />
+              Add Slide
             </button>
           </div>
         </div>
-      </form>
+        
+        {error && (
+          <div className="mb-3 p-2 text-sm text-red-700 bg-red-100 rounded-lg flex items-center gap-2">
+            <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            {error}
+          </div>
+        )}
+        
+        <div className="space-y-4 mb-8">
+          <h3 className="text-lg font-medium text-gray-900">Image Requirements:</h3>
+          <ul className="list-disc pl-5 space-y-2 text-gray-600">
+            <li>Recommended resolution: 1920x1080 pixels (16:9 aspect ratio)</li>
+            <li>Minimum resolution: 1280x720 pixels</li>
+            <li>Maximum resolution: 3840x2160 pixels</li>
+            <li>Maximum file size: 2MB</li>
+            <li>Supported formats: JPG, PNG, WebP</li>
+            <li>For best results, use high-quality images with good contrast</li>
+          </ul>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {forms.map((form, index) => (
+            <div key={index} className="relative p-3 border border-gray-200 rounded-lg space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-medium text-gray-700">
+                  Slide {index + 1}
+                </h4>
+                <div className="flex items-center gap-2">
+                  {forms.length > 1 && (
+                    <button
+                      onClick={() => removeSlide(index)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <TrashIcon className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="relative aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden">
+                {sliderImages[index]?.background_image ? (
+                  <>
+                    <Image
+                      src={sliderImages[index].background_image}
+                      alt={`Slide ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                    <label className="absolute bottom-2 right-2 px-2 py-1 bg-black/50 text-white text-xs rounded cursor-pointer hover:bg-black/70">
+                      Change
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) handleFileUpload(file, index)
+                        }}
+                        disabled={isLoading}
+                        className="hidden"
+                      />
+                    </label>
+                  </>
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <label className="px-3 py-1.5 bg-blue-50 text-blue-600 text-sm rounded-lg cursor-pointer hover:bg-blue-100 transition-colors">
+                      Upload Image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) handleFileUpload(file, index)
+                        }}
+                        disabled={isLoading}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={form.title}
+                  onChange={(e) => handleFormChange(index, 'title', e.target.value)}
+                  placeholder="Slide Title"
+                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+
+                <textarea
+                  value={form.subtitle}
+                  onChange={(e) => handleFormChange(index, 'subtitle', e.target.value)}
+                  placeholder="Slide Description"
+                  rows={2}
+                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+
+                <input
+                  type="text"
+                  value={form.cta_text}
+                  onChange={(e) => handleFormChange(index, 'cta_text', e.target.value)}
+                  placeholder="Button Text"
+                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+
+                <input
+                  type="text"
+                  value={form.cta_url}
+                  onChange={(e) => handleFormChange(index, 'cta_url', e.target.value)}
+                  placeholder="Button URL"
+                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="fixed bottom-4 right-4 z-50">
+        <div className="toaster-container">
+          <Toaster 
+            position="bottom-right"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: '#333',
+                color: '#fff',
+                fontSize: '14px',
+                borderRadius: '8px',
+                padding: '12px 20px',
+              },
+              success: {
+                iconTheme: {
+                  primary: '#22c55e',
+                  secondary: '#fff',
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: '#ef4444',
+                  secondary: '#fff',
+                },
+              },
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

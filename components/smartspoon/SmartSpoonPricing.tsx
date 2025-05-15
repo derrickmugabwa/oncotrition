@@ -17,14 +17,49 @@ interface Package {
   show_price: boolean;
 }
 
+interface PackagesSettings {
+  id?: number;
+  title?: string;
+  subtitle?: string;
+  description?: string;
+}
+
 export default function SmartSpoonPricing() {
   const [packages, setPackages] = useState<Package[]>([]);
+  const [settings, setSettings] = useState<PackagesSettings>({});
   const [loading, setLoading] = useState(true);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
     fetchPackages();
+    fetchSettings();
   }, []);
+  
+  const fetchSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('smartspoon_packages_settings')
+        .select('*')
+        .order('id', { ascending: false })
+        .limit(1);
+
+      console.log('Fetch settings response:', { data, error });
+      
+      if (error) {
+        console.error('Error fetching settings:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        console.log('Settings loaded:', data[0]);
+        setSettings(data[0]);
+      } else {
+        console.log('No settings found');
+      }
+    } catch (error) {
+      console.error('Error fetching packages settings:', error);
+    }
+  };
 
   const fetchPackages = async () => {
     try {
@@ -71,7 +106,31 @@ export default function SmartSpoonPricing() {
 
       {/* Content */}
       <div className="relative container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-4"
+          >
+            {settings.title || 'Choose the Right Plan for Your Practice'}
+          </motion.h2>
+          {settings.description && (
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-lg text-gray-600 dark:text-gray-300"
+            >
+              {settings.description}
+            </motion.p>
+          )}
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {packages.map((plan, index) => (
             <motion.div
               key={plan.id}
@@ -100,25 +159,25 @@ export default function SmartSpoonPricing() {
                   </div>
                 )}
                 
-                <div className="relative p-8">
+                <div className="relative p-6 lg:p-5 xl:p-6">
                   {/* Plan name */}
-                  <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                  <h3 className="text-xl lg:text-lg xl:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
                     {plan.name}
                   </h3>
                   {/* Price */}
                   {plan.show_price && (
                     <div className="flex items-baseline space-x-1">
-                      <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                      <span className="text-4xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                         KES {plan.price.toLocaleString()}
                       </span>
-                      <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600 dark:text-gray-400">
+                      <span className="text-xs lg:text-xs xl:text-sm font-semibold leading-6 tracking-wide text-gray-600 dark:text-gray-400">
                         /{plan.duration_type}
                       </span>
                     </div>
                   )}
                   
                   {/* Features list */}
-                  <ul className="space-y-4 mb-8">
+                  <ul className="space-y-3 my-4 min-h-[180px] lg:min-h-[200px]">
                     {plan.features.map((feature, featureIndex) => (
                       <motion.li
                         key={featureIndex}
@@ -126,9 +185,9 @@ export default function SmartSpoonPricing() {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3, delay: index * 0.1 + featureIndex * 0.1 }}
                         viewport={{ once: true }}
-                        className="flex items-center text-gray-700 dark:text-gray-300"
+                        className="flex items-start text-sm lg:text-xs xl:text-sm text-gray-700 dark:text-gray-300"
                       >
-                        <svg className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         <span>{feature}</span>
@@ -140,11 +199,11 @@ export default function SmartSpoonPricing() {
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="relative"
+                    className="relative mt-auto"
                   >
                     <Link
                       href="https://smartspoonplus.com/professionals/account/login"
-                      className={`block w-full py-3 px-6 text-center rounded-xl font-medium transition-all duration-300
+                      className={`block w-full py-2 lg:py-2 xl:py-2.5 px-4 text-center text-sm lg:text-xs xl:text-sm rounded-xl font-medium transition-all duration-300
                         ${plan.recommended
                           ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:shadow-lg hover:shadow-blue-500/25'
                           : 'bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 text-gray-900 dark:text-white hover:shadow-lg dark:hover:shadow-gray-900/25'

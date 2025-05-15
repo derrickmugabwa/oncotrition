@@ -16,6 +16,14 @@ interface Step {
   order_number: number
 }
 
+interface StepsSettings {
+  id?: number
+  background_image?: string
+  title?: string
+  subtitle?: string
+  description?: string
+}
+
 const iconMap = {
   // User & Profile Icons
   FiUser,
@@ -88,12 +96,149 @@ const defaultSteps = [
 
 export default function StepsTab() {
   const [steps, setSteps] = useState<Step[]>([])
+  const [settings, setSettings] = useState<StepsSettings>({})
   const [loading, setLoading] = useState(true)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const supabase = createClientComponentClient()
 
   useEffect(() => {
     fetchSteps()
+    fetchSettings()
   }, [])
+  
+  const fetchSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('smartspoon_steps_settings')
+        .select('*')
+        .single()
+
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 is the error code for no rows returned
+        throw error
+      }
+
+      if (data) {
+        setSettings(data)
+      }
+    } catch (error) {
+      console.error('Error fetching steps settings:', error)
+    }
+  }
+  
+  const validateImage = async (file: File): Promise<boolean> => {
+    // Check file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Image must be less than 2MB')
+      return false
+    }
+    
+    // Check dimensions
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.onload = () => {
+        URL.revokeObjectURL(img.src)
+        // Minimum dimensions check (at least 1000px wide for good quality)
+        if (img.width < 1000) {
+          toast.error('Image should be at least 1000px wide')
+          resolve(false)
+          return
+        }
+        resolve(true)
+      }
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src)
+        toast.error('Invalid image file')
+        resolve(false)
+      }
+      img.src = URL.createObjectURL(file)
+    })
+  }
+  
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    
+    try {
+      setUploadingImage(true)
+      
+      // Validate image
+      const isValid = await validateImage(file)
+      if (!isValid) {
+        setUploadingImage(false)
+        return
+      }
+      
+      // Generate a unique file name
+      const fileExt = file.name.split('.').pop()
+      const fileName = `steps-bg-${Date.now()}.${fileExt}`
+      const filePath = `steps/${fileName}`
+      
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('images')
+        .upload(filePath, file)
+      
+      if (uploadError) throw uploadError
+      
+      // Get public URL
+      const { data } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath)
+      
+      if (!data.publicUrl) throw new Error('Failed to get public URL')
+      
+      // Update settings in the database
+      await updateSettings({ background_image: data.publicUrl })
+      
+      toast.success('Background image uploaded successfully')
+    } catch (error) {
+      console.error('Error uploading image:', error)
+      toast.error('Failed to upload image')
+    } finally {
+      setUploadingImage(false)
+      // Reset the file input
+      e.target.value = ''
+    }
+  }
+  
+  const updateSettings = async (updates: Partial<StepsSettings>) => {
+    try {
+      // Check if settings already exist
+      if (settings.id) {
+        // Update existing settings
+        const { error } = await supabase
+          .from('smartspoon_steps_settings')
+          .update(updates)
+          .eq('id', settings.id)
+        
+        if (error) throw error
+      } else {
+        // Create new settings
+        const { error } = await supabase
+          .from('smartspoon_steps_settings')
+          .insert(updates)
+        
+        if (error) throw error
+      }
+      
+      // Refresh settings
+      await fetchSettings()
+    } catch (error) {
+      console.error('Error updating settings:', error)
+      toast.error('Failed to update settings')
+    }
+  }
+  
+  const removeBackgroundImage = async () => {
+    try {
+      await updateSettings({ background_image: undefined })
+      toast.success('Background image removed')
+    } catch (error) {
+      console.error('Error removing background image:', error)
+      toast.error('Failed to remove background image')
+    }
+  }
 
   const fetchSteps = async () => {
     try {
@@ -236,6 +381,118 @@ export default function StepsTab() {
           <FiPlus className="w-5 h-5" />
           Add Step
         </button>
+      </div>
+      
+      {/* Section Settings */}
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          Section Content
+        </h3>
+        <div className="space-y-4">
+          {/* Title */}
+          <div>
+            <label htmlFor="section-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Title
+            </label>
+            <input
+              id="section-title"
+              type="text"
+              value={settings.title || 'Step by step to get started'}
+              onChange={(e) => updateSettings({ title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white"
+              placeholder="Enter section title"
+            />
+          </div>
+          
+          {/* Subtitle */}
+          <div>
+            <label htmlFor="section-subtitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Subtitle
+            </label>
+            <input
+              id="section-subtitle"
+              type="text"
+              value={settings.subtitle || 'FAST SOLUTION'}
+              onChange={(e) => updateSettings({ subtitle: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white"
+              placeholder="Enter section subtitle"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              This appears above the title in uppercase.
+            </p>
+          </div>
+          
+          {/* Description */}
+          <div>
+            <label htmlFor="section-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Description
+            </label>
+            <textarea
+              id="section-description"
+              value={settings.description || "Get started with our easy-to-follow process. We've simplified nutrition management into four straightforward steps to help you achieve your health goals."}
+              onChange={(e) => updateSettings({ description: e.target.value })}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white"
+              placeholder="Enter section description"
+            />
+          </div>
+        </div>
+      </div>
+      
+      {/* Background Image Section */}
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          Background Image
+        </h3>
+        <div className="space-y-4">
+          {settings.background_image ? (
+            <div className="relative">
+              <img 
+                src={settings.background_image} 
+                alt="Steps Background" 
+                className="w-full h-48 object-cover rounded-lg" 
+              />
+              <button
+                onClick={removeBackgroundImage}
+                className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition-colors"
+                title="Remove background image"
+              >
+                <FiTrash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-8 text-center">
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
+                No background image set. Upload an image to enhance the steps section.
+              </p>
+            </div>
+          )}
+          
+          <div className="mt-4">
+            <label className="relative flex items-center justify-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors cursor-pointer">
+              {uploadingImage ? (
+                <>
+                  <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  {settings.background_image ? 'Change Background Image' : 'Upload Background Image'}
+                </>
+              )}
+              <input 
+                type="file" 
+                accept="image/*" 
+                className="hidden" 
+                onChange={handleImageUpload}
+                disabled={uploadingImage}
+              />
+            </label>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              Recommended: High-quality image at least 1000px wide. Maximum size: 2MB.
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4">

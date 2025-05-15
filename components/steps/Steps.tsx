@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, useScroll, useTransform, useInView, useSpring, useMotionValueEvent } from 'framer-motion';
 import { FiUser, FiUsers, FiClipboard, FiBarChart2, FiHeart, FiActivity, FiCreditCard, FiCalendar, FiMessageCircle, FiTarget, FiAward, FiShoppingBag, FiBookOpen, FiCoffee, FiGift, FiPieChart, FiThumbsUp, FiTrendingUp } from 'react-icons/fi';
 import { GiWeightScale, GiMeal, GiFruitBowl, GiCook, GiMedicines, GiSportMedal } from 'react-icons/gi';
 import { MdOutlineFoodBank, MdOutlineLocalGroceryStore, MdOutlineHealthAndSafety } from 'react-icons/md';
@@ -58,6 +58,13 @@ interface Step {
   order_number: number;
 }
 
+interface StepsSettings {
+  background_image?: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
+}
+
 const fadeInUp = {
   initial: { opacity: 0, y: 50 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
@@ -106,18 +113,107 @@ const iconHover = {
   },
 };
 
+// New scroll animation variants
+const scrollFadeIn = {
+  hidden: { opacity: 0, y: 100 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.5,
+      ease: [0.1, 0.25, 0.3, 1],
+    },
+  }),
+};
+
+const floatingAnimation = {
+  initial: { y: 0 },
+  animate: {
+    y: [0, -10, 0],
+    transition: {
+      duration: 4,
+      repeat: Infinity,
+      repeatType: "mirror" as const,
+      ease: "easeInOut",
+    },
+  },
+};
+
+const connectingLineAnimation = {
+  hidden: { width: 0, opacity: 0 },
+  visible: {
+    width: '100%',
+    opacity: 1,
+    transition: {
+      delay: 0.5,
+      duration: 0.8,
+      ease: "easeInOut",
+    },
+  },
+};
+
 export default function Steps() {
   const [steps, setSteps] = useState<Step[]>([]);
+  const [settings, setSettings] = useState<StepsSettings>({});
   const [loading, setLoading] = useState(true);
+  const [activeStep, setActiveStep] = useState(0);
   const supabase = createClientComponentClient();
+  
+  // Refs for scroll animations
+  const sectionRef = useRef<HTMLElement>(null);
+  const stepsContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Scroll progress indicator
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const scrollProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
   useEffect(() => {
     fetchSteps();
+    fetchSettings();
 
     // Add CSS variable for primary color RGB values
     const style = document.documentElement.style;
     style.setProperty('--primary-rgb', '79, 70, 229'); // Indigo-600 RGB values
   }, []);
+  
+  // Track scroll progress and update active step
+  useMotionValueEvent(scrollProgress, "change", (latest) => {
+    // Calculate which step should be active based on scroll position
+    if (steps.length > 0) {
+      const stepIndex = Math.min(
+        Math.floor(latest * steps.length * 1.5),
+        steps.length - 1
+      );
+      if (stepIndex >= 0 && stepIndex !== activeStep) {
+        setActiveStep(stepIndex);
+      }
+    }
+  });
+  
+  const fetchSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('smartspoon_steps_settings')
+        .select('*')
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 is the error code for no rows returned
+        throw error;
+      }
+
+      if (data) {
+        setSettings(data);
+      }
+    } catch (error) {
+      console.error('Error fetching steps settings:', error);
+    }
+  };
 
   const fetchSteps = async () => {
     try {
@@ -144,8 +240,27 @@ export default function Steps() {
   }
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section 
+      ref={sectionRef}
+      className={`py-16 md:py-24 overflow-hidden relative ${!settings.background_image ? 'bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800' : ''}`}
+      style={{
+        backgroundImage: settings.background_image ? `url(${settings.background_image})` : 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      {/* Overlay for better text readability when background image is present */}
+      {settings.background_image && (
+        <div className="absolute inset-0 bg-black/70 dark:bg-black/80 backdrop-blur-[2px] z-0"></div>
+      )}
+      {/* Scroll Progress Indicator */}
+      <motion.div 
+        className="fixed left-0 top-0 h-1 bg-primary z-50"
+        style={{ scaleX: scrollProgress, transformOrigin: "0% 50%" }}
+      />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial="initial"
           whileInView="animate"
@@ -155,54 +270,81 @@ export default function Steps() {
         >
           <motion.p
             variants={fadeInUp}
-            className="text-sm font-semibold tracking-wide text-primary uppercase mb-3"
+            className={`text-sm font-semibold tracking-wide uppercase mb-3 ${
+              settings.background_image 
+                ? 'text-primary-300 drop-shadow-[0_2px_3px_rgba(0,0,0,0.8)]' 
+                : 'text-primary'
+            }`}
           >
-            FAST SOLUTION
+            {settings.subtitle || 'FAST SOLUTION'}
           </motion.p>
           <motion.h2
             variants={fadeInUp}
-            className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300"
+            className={`text-4xl md:text-5xl font-bold ${
+              settings.background_image
+                ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]'
+                : 'bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300'
+            }`}
           >
-            Step by step to get started
+            {settings.title || 'Step by step to get started'}
           </motion.h2>
           <motion.p
             variants={fadeInUp}
-            className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+            className={`mt-4 text-lg max-w-2xl mx-auto ${
+              settings.background_image
+                ? 'text-gray-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]'
+                : 'text-gray-600 dark:text-gray-300'
+            }`}
           >
-            Get started with our easy-to-follow process. We've simplified nutrition management
-            into four straightforward steps to help you achieve your health goals.
+            {settings.description || "Get started with our easy-to-follow process. We've simplified nutrition management into four straightforward steps to help you achieve your health goals."}
           </motion.p>
         </motion.div>
 
         <motion.div
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+          ref={stepsContainerRef}
           className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 relative"
         >
           {/* Background decoration */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,theme(colors.primary.DEFAULT/0.05),transparent_70%)] pointer-events-none" />
           
+          {/* Scroll Progress Path */}
+          <div className="absolute hidden lg:block top-1/2 left-0 right-0 h-px bg-primary/10 transform -translate-y-1/2 z-0" />
+          
           {steps.map((step, index) => {
             const IconComponent = iconMap[step.icon as keyof typeof iconMap];
+            const isActive = index <= activeStep;
             
             return (
               <motion.div
                 key={step.id}
-                variants={fadeInUp}
-                initial="rest"
+                custom={index}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px 0px" }}
+                variants={scrollFadeIn}
                 whileHover="hover"
                 className="relative group"
               >
                 <motion.div
                   variants={cardHover}
-                  className="h-full p-8 bg-white dark:bg-gray-800/80 rounded-2xl shadow-xl dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-100 dark:border-gray-700/50 relative z-10"
+                  animate={isActive ? "animate" : "initial"}
+                  initial="initial"
+                  className={`h-full p-8 bg-white dark:bg-gray-800/80 rounded-2xl shadow-xl dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-100 dark:border-gray-700/50 relative z-10 transition-all duration-500 ${
+                    isActive ? "border-primary/30" : ""
+                  }`}
                 >
-                  <div className="relative flex flex-col items-center">
+                  <motion.div 
+                    variants={floatingAnimation}
+                    animate={isActive ? "animate" : "initial"}
+                    className="relative flex flex-col items-center"
+                  >
                     {/* Step Number */}
-                    <div className="absolute -top-4 left-0 bg-primary/10 rounded-full px-3 py-1">
-                      <span className="text-sm font-semibold text-primary">
+                    <div className={`absolute -top-4 left-0 rounded-full px-3 py-1 transition-colors duration-500 ${
+                      isActive ? "bg-primary text-white" : "bg-primary/10"
+                    }`}>
+                      <span className={`text-sm font-semibold ${
+                        isActive ? "text-white" : "text-primary"
+                      }`}>
                         Step {index + 1}
                       </span>
                     </div>
@@ -210,7 +352,11 @@ export default function Steps() {
                     {/* Icon */}
                     <motion.div
                       variants={iconHover}
-                      className="relative mb-5 w-16 h-16 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300 shadow-lg shadow-primary/5 group-hover:shadow-primary/10 overflow-hidden"
+                      className={`relative mb-5 w-16 h-16 rounded-xl bg-gradient-to-br flex items-center justify-center transition-all duration-500 shadow-lg overflow-hidden ${
+                        isActive 
+                          ? "from-primary/40 to-primary/20 shadow-primary/20" 
+                          : "from-primary/20 to-primary/10 shadow-primary/5"
+                      }`}
                     >
                       {/* Background glow effect */}
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-50" />
@@ -226,7 +372,7 @@ export default function Steps() {
                               width: '100%',
                               height: '100%',
                               color: 'rgb(var(--primary-rgb))',
-                              opacity: 0.9
+                              opacity: isActive ? 1 : 0.7
                             }
                           })}
                         </div>
@@ -234,7 +380,9 @@ export default function Steps() {
                     </motion.div>
 
                     {/* Content */}
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white text-center mb-3 group-hover:text-primary transition-colors duration-300">
+                    <h3 className={`text-xl font-bold text-center mb-3 transition-colors duration-500 ${
+                      isActive ? "text-primary" : "text-gray-900 dark:text-white"
+                    }`}>
                       {step.title}
                     </h3>
                     <p className="text-gray-600 dark:text-gray-300 text-center text-sm leading-relaxed">
@@ -242,13 +390,20 @@ export default function Steps() {
                     </p>
 
                     {/* Decorative Elements */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
+                    <div className={`absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/2 to-transparent rounded-2xl pointer-events-none transition-opacity duration-500 ${
+                      isActive ? "opacity-100" : "opacity-0"
+                    }`} />
 
                     {/* Connecting Lines (only for non-last items) */}
                     {index < steps.length - 1 && (
-                      <div className="hidden lg:block absolute top-1/2 -right-12 w-24 h-px bg-gradient-to-r from-primary/30 to-transparent transform -translate-y-1/2" />
+                      <motion.div
+                        initial="hidden"
+                        animate={isActive ? "visible" : "hidden"}
+                        variants={connectingLineAnimation}
+                        className="hidden lg:block absolute top-1/2 -right-12 w-24 h-px bg-gradient-to-r from-primary to-transparent transform -translate-y-1/2 z-10"
+                      />
                     )}
-                  </div>
+                  </motion.div>
                 </motion.div>
               </motion.div>
             );
