@@ -17,6 +17,13 @@ interface Package {
   show_price: boolean;
 }
 
+interface PackagesSettings {
+  id?: number;
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
 const defaultPackages = [
   {
     name: 'Basic Plan',
@@ -70,7 +77,13 @@ const defaultPackages = [
 
 export default function PackagesTab() {
   const [packages, setPackages] = useState<Package[]>([]);
+  const [settings, setSettings] = useState<PackagesSettings>({
+    title: 'Choose the Right Plan for Your Practice',
+    subtitle: 'PRICING PLANS',
+    description: 'Select from our range of flexible pricing options designed to meet the needs of nutrition professionals at every stage of their practice.'
+  });
   const [loading, setLoading] = useState(true);
+  const [settingsLoading, setSettingsLoading] = useState(false);
   const [editingPackage, setEditingPackage] = useState<Package | null>(null);
   const [editForm, setEditForm] = useState<{
     name: string;
@@ -96,7 +109,110 @@ export default function PackagesTab() {
 
   useEffect(() => {
     fetchPackages();
+    fetchSettings();
   }, []);
+  
+  const fetchSettings = async () => {
+    try {
+      setSettingsLoading(true);
+      
+      // Add proper headers to avoid 406 error
+      const { data, error } = await supabase
+        .from('smartspoon_packages_settings')
+        .select('*')
+        .order('id', { ascending: false })
+        .limit(1);
+
+      console.log('Fetch settings response:', { data, error });
+      
+      if (error) {
+        throw error;
+      }
+
+      if (data && data.length > 0) {
+        setSettings(data[0]);
+        console.log('Settings loaded:', data[0]);
+      } else {
+        // If no settings exist, create default settings
+        console.log('No settings found, initializing defaults');
+        await initializeDefaultSettings();
+      }
+    } catch (error: any) {
+      console.error('Error fetching settings:', error);
+      toast.error(error.message || 'Failed to load settings');
+    } finally {
+      setSettingsLoading(false);
+    }
+  };
+  
+  const initializeDefaultSettings = async () => {
+    try {
+      const { error } = await supabase
+        .from('smartspoon_packages_settings')
+        .insert([{
+          title: settings.title,
+          subtitle: settings.subtitle,
+          description: settings.description
+        }]);
+
+      if (error) throw error;
+      await fetchSettings();
+    } catch (error: any) {
+      console.error('Error:', error);
+      toast.error(error.message || 'Failed to initialize settings');
+      setSettingsLoading(false);
+    }
+  };
+  
+  const updateSettings = async (updates: Partial<PackagesSettings>) => {
+    try {
+      // Check if settings already exist
+      if (settings.id) {
+        const { error } = await supabase
+          .from('smartspoon_packages_settings')
+          .update(updates)
+          .eq('id', settings.id);
+        
+        if (error) throw error;
+      } else {
+        // Create new settings if they don't exist
+        const { error } = await supabase
+          .from('smartspoon_packages_settings')
+          .insert([{
+            ...settings,
+            ...updates
+          }]);
+        
+        if (error) throw error;
+      }
+      
+      // Update local state
+      setSettings(prev => ({
+        ...prev,
+        ...updates
+      }));
+      
+      return true;
+    } catch (error: any) {
+      console.error('Error updating settings:', error);
+      toast.error(error.message || 'Failed to update settings');
+      return false;
+    }
+  };
+  
+  const handleSaveSettings = async () => {
+    try {
+      setSettingsLoading(true);
+      const success = await updateSettings(settings);
+      if (success) {
+        toast.success('Settings updated successfully');
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+    } finally {
+      setSettingsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (editingPackage) {
@@ -306,23 +422,155 @@ export default function PackagesTab() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-            SmartSpoon Packages
-          </h2>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Manage your nutrition packages and pricing
-          </p>
-        </div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Packages Configuration
+        </h2>
         <button
           onClick={handleAddPackage}
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
         >
-          <FaPlus className="mr-2 h-4 w-4" />
+          <FaPlus className="w-4 h-4" />
           Add Package
         </button>
+      </div>
+      
+      {/* Section Settings */}
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          Section Content
+        </h3>
+        <div className="space-y-4">
+          {/* Subtitle */}
+          <div>
+            <label htmlFor="section-subtitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Subtitle
+            </label>
+            <input
+              id="section-subtitle"
+              type="text"
+              value={settings.subtitle || ''}
+              onChange={(e) => {
+                setSettings(prev => ({...prev, subtitle: e.target.value}));
+              }}
+              onBlur={(e) => updateSettings({ subtitle: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white"
+              placeholder="Enter section subtitle"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              This appears above the title in uppercase.
+            </p>
+          </div>
+          
+          {/* Title */}
+          <div>
+            <label htmlFor="section-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Title
+            </label>
+            <input
+              id="section-title"
+              type="text"
+              value={settings.title || ''}
+              onChange={(e) => {
+                setSettings(prev => ({...prev, title: e.target.value}));
+              }}
+              onBlur={(e) => updateSettings({ title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white"
+              placeholder="Enter section title"
+            />
+          </div>
+          
+          {/* Description */}
+          <div>
+            <label htmlFor="section-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Description
+            </label>
+            <textarea
+              id="section-description"
+              value={settings.description || ''}
+              onChange={(e) => {
+                setSettings(prev => ({...prev, description: e.target.value}));
+              }}
+              onBlur={(e) => updateSettings({ description: e.target.value })}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white"
+              placeholder="Enter section description"
+            />
+          </div>
+          
+          {/* Save Button */}
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={async () => {
+                console.log('Save button clicked');
+                console.log('Current settings:', settings);
+                
+                try {
+                  // Create settings if they don't exist yet
+                  if (!settings.id) {
+                    console.log('Creating new settings...');
+                    const { data, error } = await supabase
+                      .from('smartspoon_packages_settings')
+                      .insert([{
+                        title: settings.title,
+                        subtitle: settings.subtitle,
+                        description: settings.description
+                      }])
+                      .select();
+                      
+                    if (error) {
+                      console.error('Error creating settings:', error);
+                      toast.error('Failed to create settings');
+                      return;
+                    }
+                    
+                    if (data && data[0]) {
+                      setSettings({...settings, id: data[0].id});
+                      toast.success('Settings created successfully');
+                    }
+                  } else {
+                    // Update existing settings
+                    console.log('Updating settings with ID:', settings.id);
+                    console.log('Data to update:', {
+                      title: settings.title,
+                      subtitle: settings.subtitle,
+                      description: settings.description
+                    });
+                    
+                    const { data, error } = await supabase
+                      .from('smartspoon_packages_settings')
+                      .update({
+                        title: settings.title || '',
+                        subtitle: settings.subtitle || '',
+                        description: settings.description || ''
+                      })
+                      .eq('id', settings.id)
+                      .select();
+                      
+                    if (error) {
+                      console.error('Error updating settings:', error);
+                      toast.error('Failed to update settings: ' + error.message);
+                      return;
+                    }
+                    
+                    console.log('Update response:', data);
+                    toast.success('Settings updated successfully');
+                    
+                    // Refresh settings from the database to ensure UI is in sync
+                    fetchSettings();
+                  }
+                } catch (err) {
+                  console.error('Unexpected error:', err);
+                  toast.error('An unexpected error occurred');
+                }
+              }}
+              className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md shadow-sm transition-colors"
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
       </div>
 
       {loading ? (
