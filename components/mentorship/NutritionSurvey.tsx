@@ -167,8 +167,8 @@ export default function NutritionSurvey() {
             </p>
           </motion.div>
 
-          {/* Questions with Center Image Layout */}
-          <div className="relative min-h-[600px] flex justify-center items-center">
+          {/* Questions with Center Image Layout - Desktop view hidden on mobile */}
+          <div className="relative min-h-[600px] hidden md:flex justify-center items-center">
             {/* Center Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -293,6 +293,51 @@ export default function NutritionSurvey() {
                   );
                 })}
               </div>
+            </motion.div>
+          </div>
+          
+          {/* Mobile-friendly stacked layout - visible only on mobile */}
+          <div className="md:hidden mt-8">
+            {/* Mobile Center Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-8"
+            >
+              <div className="relative w-48 h-48 mx-auto">
+                <img 
+                  src={surveyImage.image_url} 
+                  alt="Nutrition Survey" 
+                  className="w-full h-full object-cover rounded-full border-4 border-white dark:border-gray-700 shadow-xl"
+                />
+                <div className="absolute inset-0 rounded-full border-4 border-purple-500 border-opacity-50 animate-pulse"></div>
+              </div>
+            </motion.div>
+            
+            {/* Mobile Questions List */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="space-y-3 px-2"
+            >
+              {questions.map((q, index) => (
+                <motion.div
+                  key={q.id}
+                  variants={itemVariants}
+                  className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-4 flex items-start gap-3"
+                >
+                  <div className="flex-shrink-0 mt-0.5">
+                    <ListChecks className="w-5 h-5 text-purple-500" />
+                  </div>
+                  <p className="text-sm text-gray-800 dark:text-white">
+                    {q.question}
+                  </p>
+                </motion.div>
+              ))}
             </motion.div>
           </div>
         </div>
