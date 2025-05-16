@@ -167,7 +167,7 @@ export default function SmartSpoonPricing() {
                   {/* Price */}
                   {plan.show_price && (
                     <div className="flex items-baseline space-x-1">
-                      <span className="text-4xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                      <span className="text-3xl lg:text-2xl xl:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                         KES {plan.price.toLocaleString()}
                       </span>
                       <span className="text-xs lg:text-xs xl:text-sm font-semibold leading-6 tracking-wide text-gray-600 dark:text-gray-400">

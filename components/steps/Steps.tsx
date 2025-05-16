@@ -302,7 +302,7 @@ export default function Steps() {
 
         <motion.div
           ref={stepsContainerRef}
-          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 relative"
+          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5 relative"
         >
           {/* Background decoration */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,theme(colors.primary.DEFAULT/0.05),transparent_70%)] pointer-events-none" />
@@ -380,12 +380,12 @@ export default function Steps() {
                     </motion.div>
 
                     {/* Content */}
-                    <h3 className={`text-xl font-bold text-center mb-3 transition-colors duration-500 ${
+                    <h3 className={`text-lg font-bold text-center mb-2 transition-colors duration-500 ${
                       isActive ? "text-primary" : "text-gray-900 dark:text-white"
                     }`}>
                       {step.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-center text-sm leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-300 text-center text-xs leading-relaxed">
                       {step.description}
                     </p>
 
@@ -400,7 +400,7 @@ export default function Steps() {
                         initial="hidden"
                         animate={isActive ? "visible" : "hidden"}
                         variants={connectingLineAnimation}
-                        className="hidden lg:block absolute top-1/2 -right-12 w-24 h-px bg-gradient-to-r from-primary to-transparent transform -translate-y-1/2 z-10"
+                        className="hidden lg:block absolute top-1/2 -right-8 w-16 h-px bg-gradient-to-r from-primary to-transparent transform -translate-y-1/2 z-10"
                       />
                     )}
                   </motion.div>
