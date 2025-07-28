@@ -65,7 +65,6 @@ const childVariants = {
 export default function HeroSlider() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides] = useState<SliderImage[]>(defaultSlides)
-  const [isLoading, setIsLoading] = useState(true)
   const supabase = createClientComponentClient()
   const router = useRouter()
 
@@ -84,8 +83,6 @@ export default function HeroSlider() {
         }
       } catch (error) {
         console.error('Error fetching slides:', error)
-      } finally {
-        setIsLoading(false)
       }
     }
 
@@ -124,15 +121,7 @@ export default function HeroSlider() {
     return () => clearInterval(timer)
   }, [slides.length])
 
-  if (isLoading) {
-    return (
-      <div className="relative w-full h-[600px] bg-gray-100 animate-pulse">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      </div>
-    )
-  }
+
 
   return (
     <div className="relative w-full h-[600px] overflow-hidden bg-gray-900">

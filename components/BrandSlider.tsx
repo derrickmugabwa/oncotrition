@@ -14,7 +14,7 @@ interface Brand {
 
 export function BrandSlider() {
   const [brands, setBrands] = useState<Brand[]>([]);
-  const [title, setTitle] = useState('Trusted by Leading Brands');
+  const [title, setTitle] = useState('Our partners and Compliance');
   const [loading, setLoading] = useState(true);
   const supabase = createClientComponentClient();
 

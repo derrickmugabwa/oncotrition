@@ -2,100 +2,112 @@
 
 import { useState, useEffect } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { FaUpload, FaTrash } from 'react-icons/fa';
+import { Database } from '@/types/supabase';
+import { FaSave, FaEdit } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
+// Function to format text content with proper line breaks and paragraphs
+const formatTextContent = (content: string): string => {
+  if (!content) return '';
+  
+  // If content already contains HTML tags, return as is
+  if (content.includes('<') && content.includes('>')) {
+    return content;
+  }
+  
+  // Convert plain text to HTML with proper formatting
+  return content
+    .split('\n\n') // Split by double line breaks (paragraphs)
+    .map(paragraph => paragraph.trim())
+    .filter(paragraph => paragraph.length > 0)
+    .map(paragraph => {
+      // Convert single line breaks within paragraphs to <br> tags
+      const formattedParagraph = paragraph.replace(/\n/g, '<br>');
+      return `<p class="mb-4">${formattedParagraph}</p>`;
+    })
+    .join('');
+};
+
 export default function DocumentsTab() {
-  const [termsFile, setTermsFile] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const supabase = createClientComponentClient();
+  const [termsContent, setTermsContent] = useState<string>('');
+  const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const supabase = createClientComponentClient<Database>();
 
   useEffect(() => {
-    fetchTermsDocument();
+    fetchTermsContent();
   }, []);
 
-  const fetchTermsDocument = async () => {
+  const fetchTermsContent = async () => {
     try {
       const { data, error } = await supabase
-        .from('documents')
-        .select('file_url')
-        .eq('type', 'terms')
+        .from('terms_and_conditions')
+        .select('content')
+        .eq('is_active', true)
         .single();
 
-      if (error) throw error;
+      if (error && error.code !== 'PGRST116') throw error;
       if (data) {
-        setTermsFile(data.file_url);
+        setTermsContent(data.content || '');
       }
     } catch (error: any) {
-      console.error('Error fetching terms document:', error);
+      console.error('Error fetching terms content:', error);
     }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSave = async () => {
     try {
-      const file = event.target.files?.[0];
-      if (!file) return;
+      setSaving(true);
 
-      // Validate file type
-      if (file.type !== 'application/pdf') {
-        toast.error('Please upload a PDF file');
-        return;
+      // Get current active terms
+      const { data: existingData, error: fetchError } = await supabase
+        .from('terms_and_conditions')
+        .select('id')
+        .eq('is_active', true)
+        .single();
+
+      if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
+
+      let updateOperation;
+      
+      if (existingData) {
+        // Update existing terms
+        updateOperation = supabase
+          .from('terms_and_conditions')
+          .update({
+            content: termsContent,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', existingData.id);
+      } else {
+        // Insert new terms
+        updateOperation = supabase
+          .from('terms_and_conditions')
+          .insert({
+            content: termsContent,
+            is_active: true,
+            title: 'Terms and Conditions',
+            version: '1.0'
+          });
       }
 
-      setUploading(true);
-
-      // Upload file to storage
-      const fileExt = file.name.split('.').pop();
-      const fileName = `terms-and-conditions-${Date.now()}.${fileExt}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('documents')
-        .upload(fileName, file);
-
-      if (uploadError) throw uploadError;
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('documents')
-        .getPublicUrl(fileName);
-
-      // Update or insert into documents table
-      const { error: dbError } = await supabase
-        .from('documents')
-        .upsert({
-          type: 'terms',
-          file_url: publicUrl,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'type'
-        });
-
+      const { error: dbError } = await updateOperation;
       if (dbError) throw dbError;
 
-      setTermsFile(publicUrl);
-      toast.success('Terms and conditions document uploaded successfully');
+      setEditing(false);
+      toast.success('Terms and conditions saved successfully');
     } catch (error: any) {
-      console.error('Error uploading document:', error);
-      toast.error(error.message || 'Failed to upload document');
+      console.error('Error saving terms:', error);
+      toast.error(error.message || 'Failed to save terms and conditions');
     } finally {
-      setUploading(false);
+      setSaving(false);
     }
   };
 
-  const handleDelete = async () => {
-    try {
-      // Delete from documents table
-      const { error: dbError } = await supabase
-        .from('documents')
-        .delete()
-        .eq('type', 'terms');
-
-      if (dbError) throw dbError;
-
-      setTermsFile(null);
-      toast.success('Document deleted successfully');
-    } catch (error: any) {
-      console.error('Error deleting document:', error);
-      toast.error(error.message || 'Failed to delete document');
+  const handleClear = async () => {
+    if (window.confirm('Are you sure you want to clear all content?')) {
+      setTermsContent('');
+      setEditing(true);
     }
   };
 
@@ -106,69 +118,80 @@ export default function DocumentsTab() {
 
         {/* Terms and Conditions Section */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
-          <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Terms and Conditions</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Terms and Conditions</h3>
+            <div className="flex items-center space-x-2">
+              {!editing ? (
+                <button
+                  onClick={() => setEditing(true)}
+                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <FaEdit className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                  >
+                    <FaSave className="w-4 h-4" />
+                    <span>{saving ? 'Saving...' : 'Save'}</span>
+                  </button>
+                  <button
+                    onClick={() => setEditing(false)}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleClear}
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    Clear
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
           
           <div className="space-y-4">
-            {/* Current Document Status */}
-            {termsFile && (
-              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div className="flex items-center space-x-4">
-                  <svg className="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
-                    <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
-                  </svg>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Current Document</p>
-                    <a 
-                      href={termsFile} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-sm text-blue-500 hover:text-blue-600 dark:text-blue-400"
-                    >
-                      View Document
-                    </a>
-                  </div>
+            {editing ? (
+              <div className="space-y-4">
+                <textarea
+                  value={termsContent}
+                  onChange={(e) => setTermsContent(e.target.value)}
+                  placeholder="Enter your terms and conditions content here..."
+                  className="w-full h-96 p-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                />
+                <div className="text-sm text-gray-500 dark:text-gray-400 space-y-2">
+                  <p><strong>Formatting Tips:</strong></p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>Use double line breaks (Enter twice) to create new paragraphs</li>
+                    <li>Use single line breaks (Enter once) for line breaks within a paragraph</li>
+                    <li>You can also use basic HTML tags like &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;li&gt;</li>
+                  </ul>
+                  <p className="mt-2">This content will be displayed at /terms</p>
                 </div>
-                <button
-                  onClick={handleDelete}
-                  className="p-2 text-red-500 hover:text-red-600 transition-colors"
-                >
-                  <FaTrash className="w-5 h-5" />
-                </button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {termsContent ? (
+                  <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg max-h-96 overflow-y-auto">
+                    <div 
+                      className="text-gray-900 dark:text-white prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ __html: formatTextContent(termsContent) }}
+                    />
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                    <p>No terms and conditions content available.</p>
+                    <p className="text-sm mt-2">Click "Edit" to add content.</p>
+                  </div>
+                )}
               </div>
             )}
-
-            {/* Upload Section */}
-            <div className="relative">
-              <input
-                type="file"
-                accept=".pdf"
-                onChange={handleFileUpload}
-                className="hidden"
-                id="terms-upload"
-                disabled={uploading}
-              />
-              <label
-                htmlFor="terms-upload"
-                className={`flex items-center justify-center px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer
-                  ${uploading 
-                    ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600' 
-                    : 'border-primary/50 hover:border-primary dark:border-primary/30 dark:hover:border-primary'
-                  }`}
-              >
-                <div className="flex items-center space-x-2">
-                  <FaUpload className={`w-5 h-5 ${uploading ? 'text-gray-400' : 'text-primary'}`} />
-                  <span className={`text-sm font-medium ${uploading ? 'text-gray-400' : 'text-gray-900 dark:text-white'}`}>
-                    {uploading ? 'Uploading...' : 'Upload PDF Document'}
-                  </span>
-                </div>
-              </label>
-            </div>
-
-            {/* Help Text */}
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Upload your terms and conditions document in PDF format. This will be accessible at /terms
-            </p>
           </div>
         </div>
       </div>

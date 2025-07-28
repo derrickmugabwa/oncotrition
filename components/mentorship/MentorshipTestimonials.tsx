@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
@@ -23,52 +23,15 @@ interface Testimonial {
   order_index: number;
 }
 
-const TESTIMONIALS_PER_PAGE = 6;
-
 export default function MentorshipTestimonials() {
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState<TestimonialsContent | null>(null);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(0);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const observerRef = useRef<IntersectionObserver>();
-  const lastTestimonialRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
   const supabase = createClientComponentClient();
+  const marqueeRef = useRef<HTMLDivElement>(null);
 
-  const loadMoreTestimonials = useCallback(async () => {
-    if (loadingMore || !hasMore) return;
 
-    setLoadingMore(true);
-    try {
-      const from = page * TESTIMONIALS_PER_PAGE;
-      const to = from + TESTIMONIALS_PER_PAGE - 1;
-
-      const { data, error } = await supabase
-        .from('mentorship_testimonials')
-        .select('*')
-        .order('order_index')
-        .range(from, to);
-
-      if (error) throw error;
-
-      if (data) {
-        if (data.length < TESTIMONIALS_PER_PAGE) {
-          setHasMore(false);
-        }
-        if (page === 0) {
-          setTestimonials(data);
-        } else {
-          setTestimonials(prev => [...prev, ...data]);
-        }
-        setPage(prev => prev + 1);
-      }
-    } catch (error) {
-      console.error('Error loading more testimonials:', error);
-    } finally {
-      setLoadingMore(false);
-    }
-  }, [page, loadingMore, hasMore, supabase]);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -82,13 +45,14 @@ export default function MentorshipTestimonials() {
         if (contentError) throw contentError;
         setContent(contentData);
 
-        // Reset pagination state
-        setPage(0);
-        setHasMore(true);
-        setTestimonials([]);
+        // Fetch all testimonials
+        const { data, error } = await supabase
+          .from('mentorship_testimonials')
+          .select('*')
+          .order('order_index');
 
-        // Fetch initial testimonials
-        await loadMoreTestimonials();
+        if (error) throw error;
+        setTestimonials(data || []);
       } catch (error) {
         console.error('Error fetching initial data:', error);
       } finally {
@@ -99,30 +63,7 @@ export default function MentorshipTestimonials() {
     fetchInitialData();
   }, []);
 
-  useEffect(() => {
-    if (loading) return;
 
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && hasMore && !loadingMore) {
-          loadMoreTestimonials();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (lastTestimonialRef.current) {
-      observer.observe(lastTestimonialRef.current);
-    }
-
-    observerRef.current = observer;
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, [loading, hasMore, loadingMore, loadMoreTestimonials]);
 
   if (loading) {
     return (
@@ -166,8 +107,64 @@ export default function MentorshipTestimonials() {
     );
   }
 
+  // Function to create a testimonial card
+  const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => (
+    <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-sm relative min-w-[350px] max-w-[350px] mx-4 flex-shrink-0">
+      {/* Quote marks */}
+      <div className="absolute top-6 right-8 text-gray-200 dark:text-gray-700">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9.5,3C4.8,3,1,6.8,1,11.5c0,2.8,1.3,5.2,3.4,6.8c-0.3,1.3-1.2,2.7-2.4,3.5c-0.2,0.1-0.3,0.4-0.2,0.6
+            c0.1,0.2,0.3,0.3,0.5,0.3c2.2-0.1,4.4-1.2,5.8-2.9c0.5,0.1,0.9,0.1,1.4,0.1c4.7,0,8.5-3.8,8.5-8.5C18,6.8,14.2,3,9.5,3z"/>
+        </svg>
+      </div>
+
+      {/* Rating */}
+      <div className="flex mb-4">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={`w-5 h-5 ${
+              i < testimonial.rating
+                ? 'text-yellow-400 fill-current'
+                : 'text-gray-300 dark:text-gray-600'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Content */}
+      <p className="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed h-[120px] overflow-hidden">
+        {testimonial.content}
+      </p>
+
+      {/* Author */}
+      <div className="flex items-center">
+        <img
+          src={testimonial.image}
+          alt={testimonial.name}
+          className="w-10 h-10 rounded-full object-cover mr-4"
+        />
+        <div>
+          <h4 className="font-semibold text-gray-900 dark:text-white">
+            {testimonial.name}
+          </h4>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {testimonial.role} @ {testimonial.company}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  // For the marquee effect, we need enough items to create a continuous scroll
+  // We'll duplicate just enough to make the marquee work
+  const createMarqueeItems = () => {
+    if (testimonials.length === 0) return [];
+    return [...testimonials];
+  };
+
   return (
-    <section className="py-16 bg-white dark:bg-gray-900">
+    <section className="py-16 bg-white dark:bg-gray-900 overflow-hidden">
       <div className="container mx-auto px-6">
         {/* Heading Section */}
         <motion.div
@@ -185,70 +182,26 @@ export default function MentorshipTestimonials() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.id}
-              ref={index === testimonials.length - 1 ? lastTestimonialRef : null}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: (index % TESTIMONIALS_PER_PAGE) * 0.1 }}
-              className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-sm relative"
-            >
-              {/* Quote marks */}
-              <div className="absolute top-6 right-8 text-gray-200 dark:text-gray-700">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M9.5,3C4.8,3,1,6.8,1,11.5c0,2.8,1.3,5.2,3.4,6.8c-0.3,1.3-1.2,2.7-2.4,3.5c-0.2,0.1-0.3,0.4-0.2,0.6
-                    c0.1,0.2,0.3,0.3,0.5,0.3c2.2-0.1,4.4-1.2,5.8-2.9c0.5,0.1,0.9,0.1,1.4,0.1c4.7,0,8.5-3.8,8.5-8.5C18,6.8,14.2,3,9.5,3z"/>
-                </svg>
-              </div>
-
-              {/* Rating */}
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-5 h-5 ${
-                      i < testimonial.rating
-                        ? 'text-yellow-400 fill-current'
-                        : 'text-gray-300 dark:text-gray-600'
-                    }`}
-                  />
-                ))}
-              </div>
-
-              {/* Content */}
-              <p className="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed">
-                {testimonial.content}
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center">
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.name}
-                  className="w-10 h-10 rounded-full object-cover mr-4"
-                />
-                <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white">
-                    {testimonial.name}
-                  </h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {testimonial.role} @ {testimonial.company}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Loading more indicator */}
-        {loadingMore && (
-          <div className="flex justify-center mt-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        {/* Marquee Container */}
+        <div 
+          className="relative w-full overflow-hidden"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {/* Single Row Marquee */}
+          <div 
+            ref={marqueeRef}
+            className="flex py-4 animate-marquee"
+            style={{ 
+              animationPlayState: isHovered ? 'paused' : 'running',
+              animationDuration: '30s'
+            }}
+          >
+            {testimonials.length > 0 && createMarqueeItems().map((testimonial, index) => (
+              <TestimonialCard key={`${testimonial.id}-${index}`} testimonial={testimonial} />
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </section>
   );

@@ -131,7 +131,6 @@ const Testimonials: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
   const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
-  const [isLoading, setIsLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [title, setTitle] = useState('What Our Clients Say');
@@ -163,8 +162,6 @@ const Testimonials: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching data:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -253,11 +250,7 @@ const Testimonials: React.FC = () => {
           </p>
         </motion.div>
 
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        ) : (
+        {
           <div className="relative">
             <div className="flex justify-center items-center">
               <AnimatePresence initial={false} custom={direction} mode="popLayout">
@@ -331,7 +324,7 @@ const Testimonials: React.FC = () => {
               ))}
             </div>
           </div>
-        )}
+        }
       </div>
     </section>
   );

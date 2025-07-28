@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import ThemeToggle from './ThemeToggle';
+
 import Logo from './Logo';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useOnClickOutside } from '@/hooks/use-click-outside';
@@ -168,7 +168,6 @@ export default function Header() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => renderNavLink(item))}
-            <ThemeToggle />
           </div>
 
           {/* Mobile menu button */}
@@ -194,7 +193,6 @@ export default function Header() {
                 <path d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path>
               </svg>
             </button>
-            <ThemeToggle />
           </div>
         </div>
 

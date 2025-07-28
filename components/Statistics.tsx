@@ -94,7 +94,6 @@ export default function Statistics() {
     heading: 'Our Impact in Numbers',
     paragraph: 'See how we are making a difference in peoples lives through our nutrition platform.'
   })
-  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const supabase = createClientComponentClient()
 
@@ -104,7 +103,6 @@ export default function Statistics() {
 
   const checkDatabaseAccess = async () => {
     try {
-      setIsLoading(true)
       setError(null)
 
       const { error: accessError } = await supabase
@@ -125,8 +123,6 @@ export default function Statistics() {
     } catch (error) {
       console.error('Error verifying database access:', error)
       setError('Database access error')
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -196,20 +192,12 @@ export default function Statistics() {
       if (error.stack) {
         console.error('Error stack:', error.stack)
       }
-    } finally {
-      setIsLoading(false)
     }
   }
 
   useEffect(() => {
     console.log('Statistics state updated:', statistics)
   }, [statistics])
-
-  if (isLoading) {
-    return <div className="flex justify-center items-center h-64">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-    </div>
-  }
 
   if (error) {
     return (
@@ -229,10 +217,6 @@ export default function Statistics() {
         {error ? (
           <div className="text-center text-red-600 dark:text-red-400 mb-8">
             {error}
-          </div>
-        ) : isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         ) : statistics.length === 0 ? (
           <div className="text-center text-gray-600 dark:text-gray-400">

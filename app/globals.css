@@ -2,6 +2,128 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Blog Content Styles */
+.prose {
+  @apply text-gray-700 leading-relaxed;
+}
+
+.prose h1 {
+  @apply text-2xl md:text-3xl font-bold text-gray-900 mb-5 mt-6 first:mt-0;
+}
+
+.prose h2 {
+  @apply text-xl md:text-2xl font-bold text-gray-900 mb-4 mt-6;
+}
+
+.prose h3 {
+  @apply text-lg md:text-xl font-semibold text-gray-900 mb-3 mt-5;
+}
+
+.prose h4 {
+  @apply text-lg md:text-xl font-semibold text-gray-900 mb-2 mt-4;
+}
+
+.prose h5 {
+  @apply text-base md:text-lg font-semibold text-gray-900 mb-2 mt-4;
+}
+
+.prose h6 {
+  @apply text-sm md:text-base font-semibold text-gray-900 mb-2 mt-4;
+}
+
+.prose p {
+  @apply mb-3 text-sm md:text-base leading-relaxed;
+}
+
+.prose a {
+  @apply text-blue-600 hover:text-blue-800 underline transition-colors;
+}
+
+.prose strong {
+  @apply font-semibold text-gray-900;
+}
+
+.prose em {
+  @apply italic;
+}
+
+.prose ul {
+  @apply list-disc list-inside mb-4 space-y-2;
+}
+
+.prose ol {
+  @apply list-decimal list-inside mb-4 space-y-2;
+}
+
+.prose li {
+  @apply text-sm md:text-base leading-relaxed;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-blue-500 pl-4 italic text-gray-600 mb-4 bg-blue-50 py-2;
+}
+
+.prose code {
+  @apply bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono;
+}
+
+.prose pre {
+  @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4;
+}
+
+.prose pre code {
+  @apply bg-transparent text-gray-100 px-0 py-0;
+}
+
+.prose img {
+  @apply rounded-lg shadow-md mb-4 w-full;
+}
+
+.prose table {
+  @apply w-full border-collapse border border-gray-300 mb-4;
+}
+
+.prose th {
+  @apply border border-gray-300 px-4 py-2 bg-gray-50 font-semibold text-left;
+}
+
+.prose td {
+  @apply border border-gray-300 px-4 py-2;
+}
+
+.prose hr {
+  @apply border-t border-gray-300 my-8;
+}
+
+/* Line Clamp Utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 :root {
   --primary: #3498db;
   --secondary: #8e44ad;
@@ -218,6 +340,37 @@ body {
 .animate-gradient {
   animation: gradient 15s ease infinite;
   background-size: 400% 400%;
+}
+
+/* Marquee Animations */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 45s linear infinite;
+  display: flex;
+  width: max-content;
 }
 
 @layer base {
