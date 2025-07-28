@@ -16,6 +16,7 @@ import {
   NewspaperIcon,
   DocumentIcon,
   Bars3Icon,
+  PencilSquareIcon,
 } from '@heroicons/react/24/outline'
 
 const menuItems = [
@@ -26,6 +27,7 @@ const menuItems = [
   { name: 'Mentorship Page', href: '/admin/pages/mentorship', icon: CurrencyDollarIcon },
   { name: 'SmartSpoon', href: '/admin/pages/smartspoon', icon: BeakerIcon },
   { name: 'Contact Page', href: '/admin/pages/contact', icon: EnvelopeIcon },
+  { name: 'Blog Management', href: '/admin/pages/blog', icon: PencilSquareIcon },
   { name: 'Navigation Bar', href: '/admin/pages/navbar', icon: Bars3Icon },
   { name: 'Footer', href: '/admin/pages/footer', icon: NewspaperIcon },
   { name: 'Documents', href: '/admin/pages/documents', icon: DocumentIcon },

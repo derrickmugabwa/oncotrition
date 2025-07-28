@@ -16,6 +16,35 @@ interface Service {
 export interface Database {
   public: {
     Tables: {
+      terms_and_conditions: {
+        Row: {
+          id: string
+          content: string | null
+          title: string | null
+          version: string | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          content?: string | null
+          title?: string | null
+          version?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          content?: string | null
+          title?: string | null
+          version?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
       profiles: {
         Row: {
           id: string

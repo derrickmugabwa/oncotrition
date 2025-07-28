@@ -9,7 +9,7 @@ import Testimonials from '@/components/Testimonials'
 import HomepageMentorship from '@/components/HomepageMentorship'
 import HomepageSmartspoon from '@/components/HomepageSmartspoon'
 import { BrandSlider } from '@/components/BrandSlider'
-import { usePageLoading } from '@/hooks/usePageLoading'
+import { useLoading } from '@/providers/LoadingProvider'
 import { Database } from '@/types/supabase'
 
 type ComponentSetting = Database['public']['Tables']['homepage_components']['Row'];
@@ -27,9 +27,9 @@ const componentMap = {
 type ComponentKey = keyof typeof componentMap;
 
 export default function Home() {
-  usePageLoading();
+  const { setIsLoading } = useLoading();
   const [components, setComponents] = useState<ComponentSetting[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const supabase = createClientComponentClient<Database>();
 
   useEffect(() => {
@@ -47,7 +47,11 @@ export default function Home() {
         setComponents(data || []);
       }
       
-      setIsLoading(false);
+      setIsDataLoaded(true);
+      // Add a small delay to ensure smooth loading transition
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
     };
 
     fetchComponents();
@@ -71,10 +75,11 @@ export default function Home() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, [supabase, setIsLoading]);
 
-  if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  // Don't render anything until data is loaded to prevent flash of empty content
+  if (!isDataLoaded) {
+    return null;
   }
 
   return (
