@@ -1,5 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@supabase/supabase-js'
 import HeroSlider from '@/components/HeroSlider'
 import ModernHero from '@/components/ModernHero'
 import Statistics from '@/components/Statistics'
@@ -29,7 +28,11 @@ const componentMap = {
 type ComponentKey = keyof typeof componentMap;
 
 export default async function Home() {
-  const supabase = createServerComponentClient<Database>({ cookies });
+  // Use public client for homepage components (no auth required)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
   
   // Fetch components server-side
   const { data: components, error } = await supabase
@@ -59,7 +62,7 @@ export default async function Home() {
   return (
     <main>
       {/* Dynamic components managed by admin */}
-      {visibleComponents.map(comp => {
+      {visibleComponents.map((comp: ComponentSetting) => {
         const Component = componentMap[comp.component_key as ComponentKey];
         return Component ? <Component key={comp.id} /> : null;
       })}
