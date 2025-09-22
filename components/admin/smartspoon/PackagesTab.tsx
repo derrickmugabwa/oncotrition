@@ -22,6 +22,7 @@ interface PackagesSettings {
   title: string;
   subtitle: string;
   description: string;
+  cta_link: string;
 }
 
 const defaultPackages = [
@@ -80,7 +81,8 @@ export default function PackagesTab() {
   const [settings, setSettings] = useState<PackagesSettings>({
     title: 'Choose the Right Plan for Your Practice',
     subtitle: 'PRICING PLANS',
-    description: 'Select from our range of flexible pricing options designed to meet the needs of nutrition professionals at every stage of their practice.'
+    description: 'Select from our range of flexible pricing options designed to meet the needs of nutrition professionals at every stage of their practice.',
+    cta_link: 'https://smartspoonplus.com/professional/login'
   });
   const [loading, setLoading] = useState(true);
   const [settingsLoading, setSettingsLoading] = useState(false);
@@ -152,7 +154,8 @@ export default function PackagesTab() {
         .insert([{
           title: settings.title,
           subtitle: settings.subtitle,
-          description: settings.description
+          description: settings.description,
+          cta_link: settings.cta_link
         }]);
 
       if (error) throw error;
@@ -499,6 +502,27 @@ export default function PackagesTab() {
             />
           </div>
           
+          {/* CTA Link */}
+          <div>
+            <label htmlFor="section-cta-link" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              CTA Button Link
+            </label>
+            <input
+              id="section-cta-link"
+              type="url"
+              value={settings.cta_link || ''}
+              onChange={(e) => {
+                setSettings(prev => ({...prev, cta_link: e.target.value}));
+              }}
+              onBlur={(e) => updateSettings({ cta_link: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-white"
+              placeholder="https://smartspoonplus.com/professional/login"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              The URL that the "Get Started" buttons will link to.
+            </p>
+          </div>
+          
           {/* Save Button */}
           <div className="mt-6 flex justify-end">
             <button
@@ -515,7 +539,8 @@ export default function PackagesTab() {
                       .insert([{
                         title: settings.title,
                         subtitle: settings.subtitle,
-                        description: settings.description
+                        description: settings.description,
+                        cta_link: settings.cta_link
                       }])
                       .select();
                       
@@ -543,7 +568,8 @@ export default function PackagesTab() {
                       .update({
                         title: settings.title || '',
                         subtitle: settings.subtitle || '',
-                        description: settings.description || ''
+                        description: settings.description || '',
+                        cta_link: settings.cta_link || ''
                       })
                       .eq('id', settings.id)
                       .select();

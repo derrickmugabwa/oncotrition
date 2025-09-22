@@ -1,7 +1,5 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import { Database } from '@/types/supabase';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -28,44 +26,19 @@ const formatTextContent = (content: string): string => {
     .join('');
 };
 
-export default function TermsPage() {
-  const [termsContent, setTermsContent] = useState<string>('');
-  const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient<Database>();
+export default async function TermsPage() {
+  const supabase = createServerComponentClient<Database>({ cookies });
 
-  useEffect(() => {
-    const fetchTermsContent = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('terms_and_conditions')
-          .select('content')
-          .eq('is_active', true)
-          .single();
+  // Fetch terms content server-side
+  const { data, error } = await supabase
+    .from('terms_and_conditions')
+    .select('content')
+    .eq('is_active', true)
+    .single();
 
-        if (error && error.code !== 'PGRST116') throw error;
-        if (data) {
-          setTermsContent(data.content || '');
-        }
-      } catch (error) {
-        console.error('Error fetching terms content:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTermsContent();
-  }, []);
-
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-        <Footer />
-      </>
-    );
+  let termsContent = '';
+  if (!error && data) {
+    termsContent = data.content || '';
   }
 
   return (

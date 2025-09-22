@@ -17,10 +17,19 @@ interface BlogPost {
   status: string;
   published_at: string;
   reading_time: number;
+  view_count: number;
   is_featured: boolean;
-  author_id: string;
-  category_id: string;
-  tags: string[];
+  blog_authors: {
+    id: string;
+    name: string;
+    profile_image_url: string;
+  };
+  blog_categories: {
+    id: string;
+    name: string;
+    slug: string;
+    color: string;
+  };
 }
 
 interface Category {
@@ -85,9 +94,9 @@ export default function BlogPostEditor({ post, categories, authors, tags, onClos
         published_at: post.published_at ? post.published_at.split('T')[0] : '',
         reading_time: post.reading_time || 5,
         is_featured: Boolean(post.is_featured),
-        author_id: post.author_id || '',
-        category_id: post.category_id || '',
-        tags: Array.isArray(post.tags) ? post.tags : [],
+        author_id: post.blog_authors?.id || '',
+        category_id: post.blog_categories?.id || '',
+        tags: [],
       });
     } else {
       // Reset form for new post

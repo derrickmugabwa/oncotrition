@@ -45,6 +45,64 @@ export interface Database {
           updated_at?: string
         }
       }
+      about_components: {
+        Row: {
+          id: string
+          name: string
+          component_key: string
+          is_visible: boolean
+          display_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          component_key: string
+          is_visible?: boolean
+          display_order: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          component_key?: string
+          is_visible?: boolean
+          display_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      mentorship_components: {
+        Row: {
+          id: string
+          name: string
+          component_key: string
+          is_visible: boolean
+          display_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          component_key: string
+          is_visible?: boolean
+          display_order: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          component_key?: string
+          is_visible?: boolean
+          display_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
       profiles: {
         Row: {
           id: string

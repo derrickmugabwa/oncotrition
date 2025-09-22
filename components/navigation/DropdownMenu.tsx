@@ -30,13 +30,16 @@ interface DropdownMenuProps {
   sections: NavSection[];
   isScrolled: boolean;
   activeDropdown: string | null;
-  setActiveDropdown: (id: string | null) => void;
+  showDropdown: (itemId: string, delay?: number) => void;
+  hideDropdown: (delay?: number) => void;
+  cancelHideTimeout: () => void;
 }
 
-export default function DropdownMenu({ item, sections, isScrolled, activeDropdown, setActiveDropdown }: DropdownMenuProps) {
+export default function DropdownMenu({ item, sections, isScrolled, activeDropdown, showDropdown, hideDropdown, cancelHideTimeout }: DropdownMenuProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
-  useOnClickOutside(dropdownRef, () => setActiveDropdown(null));
+  useOnClickOutside(dropdownRef, () => hideDropdown(0));
   
   const filteredSections = sections
     .filter(section => section.nav_item_id === item.id)
@@ -44,6 +47,29 @@ export default function DropdownMenu({ item, sections, isScrolled, activeDropdow
   
   const [menuPosition, setMenuPosition] = useState<'left' | 'right'>('left');
   const buttonRef = useRef<HTMLButtonElement>(null);
+  
+  // Handle mouse enter - show dropdown with smart timing
+  const handleMouseEnter = () => {
+    // If another dropdown is already open, switch immediately
+    if (activeDropdown && activeDropdown !== item.id) {
+      showDropdown(item.id);
+    } else if (!activeDropdown) {
+      // Add small delay for initial hover to prevent flickering
+      showDropdown(item.id, 50);
+    }
+  };
+
+  // Handle mouse leave - set timeout to close, but allow time for moving to other dropdowns
+  const handleMouseLeave = () => {
+    hideDropdown(300);
+  };
+
+  // Cancel hide timeout when entering dropdown area
+  const handleDropdownEnter = () => {
+    cancelHideTimeout();
+  };
+
+
   
   // Determine if menu should be left or right aligned based on button position
   useEffect(() => {
@@ -63,13 +89,14 @@ export default function DropdownMenu({ item, sections, isScrolled, activeDropdow
   }, [activeDropdown, item.id]);
   
   return (
-    <div className="relative">
+    <div 
+      className="relative" 
+      ref={containerRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <button
         ref={buttonRef}
-        onClick={(e) => {
-          e.preventDefault();
-          setActiveDropdown(activeDropdown === item.id ? null : item.id);
-        }}
         className={`nav-link text-sm font-medium transition-colors duration-200 flex items-center ${
           isScrolled
             ? 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
@@ -94,44 +121,70 @@ export default function DropdownMenu({ item, sections, isScrolled, activeDropdow
       <AnimatePresence>
         {activeDropdown === item.id && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className={`absolute z-50 mt-2 w-96 rounded-xl bg-white dark:bg-gray-800 shadow-xl ring-1 ring-black ring-opacity-5 ${
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className={`absolute z-50 mt-3 w-80 rounded-2xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 ${
               menuPosition === 'right' ? 'right-0' : 'left-0'
             }`}
             ref={dropdownRef}
+            onMouseEnter={handleDropdownEnter}
+            onMouseLeave={handleMouseLeave}
           >
-            <div className="p-4">
-              <div className="flex flex-row gap-6">
-                {/* Left column - Overview */}
-                <div className="w-1/2 border-r border-gray-100 dark:border-gray-700 pr-6">
-                  <Link
-                    href={item.href}
-                    className="block py-3 px-4 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-700 dark:hover:text-emerald-300 rounded-lg transition-colors"
-                    onClick={() => setActiveDropdown(null)}
-                  >
-                    <div className="flex flex-col">
-                      <span className="text-base font-semibold mb-1">{item.name}</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">Overview</span>
+            <div className="p-2">
+              <div className="flex flex-col space-y-1">
+                {/* Overview at the top */}
+                <Link
+                  href={item.href}
+                  className="group relative overflow-hidden rounded-xl p-4 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20 hover:from-emerald-100 hover:to-blue-100 dark:hover:from-emerald-800/30 dark:hover:to-blue-800/30 transition-all duration-300 border border-emerald-200/50 dark:border-emerald-700/50"
+                  onClick={() => hideDropdown(0)}
+                >
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 mb-1 group-hover:text-emerald-800 dark:group-hover:text-emerald-200 transition-colors">
+                          {item.name}
+                        </span>
+                        <span className="text-sm text-emerald-600/80 dark:text-emerald-400/80 font-medium">
+                          Overview & Main Page
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-800/50 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-700/50 transition-colors">
+                        <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
                     </div>
-                  </Link>
-                </div>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 to-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Link>
                 
-                {/* Right column - Section links */}
-                <div className="w-1/2 grid grid-cols-1 gap-1">
-                  {filteredSections.map(section => (
-                    <Link
-                      key={section.id}
-                      href={section.url || `${item.href}#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg transition-colors"
-                      onClick={() => setActiveDropdown(null)}
-                    >
-                      {section.title}
-                    </Link>
-                  ))}
-                </div>
+                {/* Section links below */}
+                {filteredSections.length > 0 && (
+                  <div className="pt-2">
+                    <div className="px-3 py-2">
+                      <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Quick Links
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      {filteredSections.map(section => (
+                        <Link
+                          key={section.id}
+                          href={section.url || `${item.href}#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
+                          className="group flex items-center justify-between px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-200 hover:translate-x-1"
+                          onClick={() => hideDropdown(0)}
+                        >
+                          <span className="font-medium">{section.title}</span>
+                          <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>

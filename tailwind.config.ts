@@ -9,6 +9,9 @@ const config: Config = {
   darkMode: ['class', 'class'],
   theme: {
   	extend: {
+  		fontFamily: {
+  			'poppins': ['Poppins', 'sans-serif'],
+  		},
   		colors: {
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',

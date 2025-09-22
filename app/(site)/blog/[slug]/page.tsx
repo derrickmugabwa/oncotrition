@@ -4,6 +4,13 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import BlogPost from '@/components/blog/BlogPost';
 
+interface Tag {
+  id: string;
+  name: string;
+  slug: string;
+  color: string;
+}
+
 interface BlogPostPageProps {
   params: {
     slug: string;
@@ -119,14 +126,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     .update({ view_count: (post.view_count || 0) + 1 })
     .eq('id', post.id);
 
-  const tags = postTags?.map(pt => pt.blog_tags).filter(Boolean) || [];
+  const tags = (postTags?.map(pt => pt.blog_tags).filter(Boolean) || []) as unknown as Tag[];
+
+  // Transform relatedPosts to match expected type structure
+  const transformedRelatedPosts = relatedPosts?.map(post => ({
+    ...post,
+    blog_authors: Array.isArray(post.blog_authors) ? post.blog_authors[0] : post.blog_authors,
+    blog_categories: Array.isArray(post.blog_categories) ? post.blog_categories[0] : post.blog_categories
+  })) || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-20 font-poppins">
       <BlogPost 
         post={post}
         tags={tags}
-        relatedPosts={relatedPosts || []}
+        relatedPosts={transformedRelatedPosts}
       />
     </div>
   );

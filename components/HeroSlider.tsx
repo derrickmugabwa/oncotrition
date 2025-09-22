@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
@@ -32,21 +32,23 @@ const defaultSlides = [
 const slideVariants = {
   enter: {
     opacity: 0,
-    x: -50,
+    x: -30,
   },
   visible: {
     opacity: 1,
     x: 0,
     transition: {
-      duration: 0.5,
-      staggerChildren: 0.2,
+      duration: 0.3, // Faster animation
+      staggerChildren: 0.1, // Faster stagger
+      ease: "easeOut",
     },
   },
   exit: {
     opacity: 0,
-    x: 50,
+    x: 30,
     transition: {
-      duration: 0.3,
+      duration: 0.2, // Faster exit
+      ease: "easeIn",
     },
   },
 }
@@ -65,8 +67,20 @@ const childVariants = {
 export default function HeroSlider() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides] = useState<SliderImage[]>(defaultSlides)
+  const [imagesLoaded, setImagesLoaded] = useState<Set<string>>(new Set())
   const supabase = createClientComponentClient()
   const router = useRouter()
+
+  // Preload images for faster loading
+  const preloadImage = useCallback((src: string) => {
+    if (typeof window !== 'undefined' && !imagesLoaded.has(src)) {
+      const img = new window.Image()
+      img.onload = () => {
+        setImagesLoaded(prev => new Set([...prev, src]))
+      }
+      img.src = src
+    }
+  }, [imagesLoaded])
 
   useEffect(() => {
     const fetchSlides = async () => {
@@ -80,9 +94,16 @@ export default function HeroSlider() {
 
         if (data && data.length > 0) {
           setSlides(data)
+          // Preload all images immediately
+          data.forEach(slide => preloadImage(slide.image_url))
+        } else {
+          // Preload default image
+          defaultSlides.forEach(slide => preloadImage(slide.image_url))
         }
       } catch (error) {
         console.error('Error fetching slides:', error)
+        // Preload default images on error
+        defaultSlides.forEach(slide => preloadImage(slide.image_url))
       }
     }
 
@@ -106,7 +127,7 @@ export default function HeroSlider() {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [supabase])
+  }, [supabase, preloadImage])
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -117,8 +138,11 @@ export default function HeroSlider() {
   }
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 7000)
-    return () => clearInterval(timer)
+    // Only start auto-slide when we have slides and images are loading
+    if (slides.length > 1) {
+      const timer = setInterval(nextSlide, 5000) // Reduced from 7000ms to 5000ms for faster transitions
+      return () => clearInterval(timer)
+    }
   }, [slides.length])
 
 
@@ -128,7 +152,7 @@ export default function HeroSlider() {
       {slides.map((slide, index) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-700 ${
+          className={`absolute inset-0 transition-opacity duration-300 ${
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -140,9 +164,16 @@ export default function HeroSlider() {
                   src={slide.image_url}
                   alt={slide.title}
                   fill
-                  priority={index === 0}
-                  className="object-cover rounded-l-[40px]"
+                  priority={index <= 1} // Prioritize first two images
+                  className="object-cover rounded-l-[40px] transition-opacity duration-300"
                   sizes="(max-width: 768px) 100vw, 75vw"
+                  quality={90} // High quality for hero images
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                  onLoad={() => {
+                    // Mark image as loaded for smoother transitions
+                    setImagesLoaded(prev => new Set([...prev, slide.image_url]))
+                  }}
                 />
               </div>
             </div>

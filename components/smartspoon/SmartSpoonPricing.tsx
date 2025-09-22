@@ -22,6 +22,7 @@ interface PackagesSettings {
   title?: string;
   subtitle?: string;
   description?: string;
+  cta_link?: string;
 }
 
 export default function SmartSpoonPricing() {
@@ -202,7 +203,9 @@ export default function SmartSpoonPricing() {
                     className="relative mt-auto"
                   >
                     <Link
-                      href="https://smartspoonplus.com/professionals/account/login"
+                      href={settings.cta_link || "https://smartspoonplus.com/professional/login"}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className={`block w-full py-2 lg:py-2 xl:py-2.5 px-4 text-center text-sm lg:text-xs xl:text-sm rounded-xl font-medium transition-all duration-300
                         ${plan.recommended
                           ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:shadow-lg hover:shadow-blue-500/25'
