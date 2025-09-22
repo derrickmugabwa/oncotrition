@@ -254,14 +254,14 @@ const Footer = () => {
             {settings.promo_images.length > 0 && (
               <div>
                 <h4 className="text-lg font-semibold mb-6 text-white">{settings.promo_title}</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   {settings.promo_images.map((promo, index) => (
                     <motion.a
                       key={index}
                       href={promo.link_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block relative w-full h-32 rounded-lg overflow-hidden"
+                      className="block relative w-full h-40 sm:h-32 md:h-36 rounded-lg overflow-hidden bg-gray-800/50 backdrop-blur-sm"
                       whileHover={{ scale: 1.02 }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     >
@@ -269,10 +269,10 @@ const Footer = () => {
                         src={promo.image_url}
                         alt="Promotional content"
                         fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 20vw"
+                        className="object-contain p-2"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
                     </motion.a>
                   ))}
                 </div>

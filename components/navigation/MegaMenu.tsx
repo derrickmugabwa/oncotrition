@@ -30,15 +30,39 @@ interface MegaMenuProps {
   sections: NavSection[];
   isScrolled: boolean;
   activeDropdown: string | null;
-  setActiveDropdown: (id: string | null) => void;
+  showDropdown: (itemId: string, delay?: number) => void;
+  hideDropdown: (delay?: number) => void;
+  cancelHideTimeout: () => void;
 }
 
-export default function MegaMenu({ item, sections, isScrolled, activeDropdown, setActiveDropdown }: MegaMenuProps) {
+export default function MegaMenu({ item, sections, isScrolled, activeDropdown, showDropdown, hideDropdown, cancelHideTimeout }: MegaMenuProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [menuPosition, setMenuPosition] = useState<'center' | 'left' | 'right'>('center');
   
-  useOnClickOutside(dropdownRef, () => setActiveDropdown(null));
+  useOnClickOutside(dropdownRef, () => hideDropdown(0));
+
+  // Handle mouse enter - show dropdown with smart timing
+  const handleMouseEnter = () => {
+    // If another dropdown is already open, switch immediately
+    if (activeDropdown && activeDropdown !== item.id) {
+      showDropdown(item.id);
+    } else if (!activeDropdown) {
+      // Add small delay for initial hover to prevent flickering
+      showDropdown(item.id, 50);
+    }
+  };
+
+  // Handle mouse leave - set timeout to close, but allow time for moving to other dropdowns
+  const handleMouseLeave = () => {
+    hideDropdown(300);
+  };
+
+  // Cancel hide timeout when entering dropdown area
+  const handleDropdownEnter = () => {
+    cancelHideTimeout();
+  };
   
   // Determine if menu should be left, right, or center aligned based on button position
   useEffect(() => {
@@ -87,13 +111,14 @@ export default function MegaMenu({ item, sections, isScrolled, activeDropdown, s
   };
   
   return (
-    <div className="relative">
+    <div 
+      className="relative" 
+      ref={containerRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <button
         ref={buttonRef}
-        onClick={(e) => {
-          e.preventDefault();
-          setActiveDropdown(activeDropdown === item.id ? null : item.id);
-        }}
         className={`nav-link text-sm font-medium transition-colors duration-200 flex items-center ${
           isScrolled
             ? 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
@@ -125,6 +150,8 @@ export default function MegaMenu({ item, sections, isScrolled, activeDropdown, s
             className="absolute z-50 mt-2 w-screen max-w-screen-lg px-4"
             style={{ maxWidth: '1000px', ...getMenuStyle() }}
             ref={dropdownRef}
+            onMouseEnter={handleDropdownEnter}
+            onMouseLeave={handleMouseLeave}
           >
             <div className="overflow-hidden rounded-xl bg-white dark:bg-gray-800 shadow-xl ring-1 ring-black ring-opacity-5">
               {/* Parent navigation link at the top */}
@@ -132,7 +159,7 @@ export default function MegaMenu({ item, sections, isScrolled, activeDropdown, s
                 <Link
                   href={item.href}
                   className="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 flex items-center"
-                  onClick={() => setActiveDropdown(null)}
+                  onClick={() => hideDropdown(0)}
                 >
                   {item.name} Overview
                 </Link>
@@ -158,7 +185,7 @@ export default function MegaMenu({ item, sections, isScrolled, activeDropdown, s
                               key={section.id}
                               href={section.url || `${item.href}#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
                               className="block py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-                              onClick={() => setActiveDropdown(null)}
+                              onClick={() => hideDropdown(0)}
                             >
                               {section.title}
                             </Link>
@@ -175,7 +202,7 @@ export default function MegaMenu({ item, sections, isScrolled, activeDropdown, s
                 <Link
                   href={item.href}
                   className="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 flex items-center"
-                  onClick={() => setActiveDropdown(null)}
+                  onClick={() => hideDropdown(0)}
                 >
                   View all
                   <svg className="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

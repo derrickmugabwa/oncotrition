@@ -115,13 +115,13 @@ function ContactForm() {
         >
           <motion.h2 
             variants={fadeInUp}
-            className="text-2xl font-bold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+            className="text-2xl font-bold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-poppins"
           >
             {contactInfo?.title || 'Get in Touch'}
           </motion.h2>
           <motion.p 
             variants={fadeInUp}
-            className="text-gray-600 dark:text-gray-300 mb-6 text-sm"
+            className="text-gray-600 dark:text-gray-300 mb-6 text-sm font-poppins"
           >
             {contactInfo?.description || "Have questions? We'll love to hear from you. Send us a message and we'll respond as soon as possible."}
           </motion.p>
@@ -237,7 +237,7 @@ function ContactForm() {
         >
           <motion.h2 
             variants={fadeInUp}
-            className="text-2xl font-bold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+            className="text-2xl font-bold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-poppins"
           >
             Send us a Message
           </motion.h2>
@@ -316,7 +316,7 @@ function ContactForm() {
                 disabled={loading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex justify-center items-center space-x-3 py-4 px-6 border-2 border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="w-full flex justify-center items-center space-x-3 py-4 px-6 border-2 border-transparent rounded-lg shadow-sm text-base font-medium font-poppins text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 <span>{loading ? 'Sending...' : 'Send Message'}</span>
                 <FiSend className={`h-4 w-4 ${loading ? 'animate-pulse' : 'animate-none'}`} />

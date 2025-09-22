@@ -155,11 +155,11 @@ export default function Values() {
                     <img 
                       src={valuesImage.image_url} 
                       alt="Our Values" 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-xl"
                     />
                     
-                    {/* Floating image at bottom right - only show if we have a floating image URL */}
-                    {valuesImage.floating_image_url && (
+                    {/* Floating image at bottom right - HIDDEN FOR NOW (uncomment to re-enable) */}
+                    {/* {valuesImage.floating_image_url && (
                       <div className="absolute bottom-[-20px] right-[-80px] z-30">
                         <FloatingImage
                           position="relative"
@@ -168,7 +168,7 @@ export default function Values() {
                           borderTrailColor="bg-emerald-500"
                         />
                       </div>
-                    )}
+                    )} */}
                     
 
                   </motion.div>

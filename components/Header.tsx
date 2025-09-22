@@ -36,10 +36,60 @@ export default function Header() {
   const [navItems, setNavItems] = useState<NavItem[]>([]);
   const [sections, setSections] = useState<NavSection[]>([]);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [expandedMobileItems, setExpandedMobileItems] = useState<Set<string>>(new Set());
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const supabase = createClientComponentClient();
 
-  useOnClickOutside(dropdownRef, () => setActiveDropdown(null));
+  // Global dropdown management functions
+  const showDropdown = (itemId: string, delay: number = 0) => {
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    if (delay > 0) {
+      timeoutRef.current = setTimeout(() => {
+        setActiveDropdown(itemId);
+      }, delay);
+    } else {
+      setActiveDropdown(itemId);
+    }
+  };
+
+  const hideDropdown = (delay: number = 300) => {
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setActiveDropdown(null);
+    }, delay);
+  };
+
+  const cancelHideTimeout = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
+  const toggleMobileItem = (itemId: string) => {
+    setExpandedMobileItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(itemId)) {
+        newSet.delete(itemId);
+      } else {
+        newSet.add(itemId);
+      }
+      return newSet;
+    });
+  };
+
+  useOnClickOutside(headerRef, () => setActiveDropdown(null));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,7 +139,9 @@ export default function Header() {
       sections={sections}
       isScrolled={isScrolled}
       activeDropdown={activeDropdown}
-      setActiveDropdown={setActiveDropdown}
+      showDropdown={showDropdown}
+      hideDropdown={hideDropdown}
+      cancelHideTimeout={cancelHideTimeout}
     />
   );
 
@@ -99,52 +151,35 @@ export default function Header() {
       sections={sections}
       isScrolled={isScrolled}
       activeDropdown={activeDropdown}
-      setActiveDropdown={setActiveDropdown}
+      showDropdown={showDropdown}
+      hideDropdown={hideDropdown}
+      cancelHideTimeout={cancelHideTimeout}
     />
   );
 
-  const renderNavLink = (item: NavItem, isMobile = false) => {
-    if (!isMobile) {
-      switch (item.type) {
-        case 'dropdown':
-          return renderDropdownMenu(item);
-        case 'mega':
-          return renderMegaMenu(item);
-        default:
-          return (
-            <Link
-              key={item.id}
-              href={item.href}
-              target={item.open_in_new_tab ? "_blank" : undefined}
-              rel={item.open_in_new_tab ? "noopener noreferrer" : undefined}
-              className={`nav-link text-sm font-medium transition-colors duration-200 ${
-                isScrolled
-                  ? 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
-                  : 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
-              }`}
-            >
-              {item.name}
-            </Link>
-          );
-      }
+  const renderNavLink = (item: NavItem) => {
+    switch (item.type) {
+      case 'dropdown':
+        return renderDropdownMenu(item);
+      case 'mega':
+        return renderMegaMenu(item);
+      default:
+        return (
+          <Link
+            key={item.id}
+            href={item.href}
+            target={item.open_in_new_tab ? "_blank" : undefined}
+            rel={item.open_in_new_tab ? "noopener noreferrer" : undefined}
+            className={`nav-link text-sm font-medium transition-colors duration-200 ${
+              isScrolled
+                ? 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
+                : 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
+            }`}
+          >
+            {item.name}
+          </Link>
+        );
     }
-
-    return (
-      <Link
-        key={item.id}
-        href={item.href}
-        target={item.open_in_new_tab ? "_blank" : undefined}
-        rel={item.open_in_new_tab ? "noopener noreferrer" : undefined}
-        className={`nav-link text-sm font-medium transition-colors duration-200 ${
-          isScrolled
-            ? 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
-            : 'text-gray-800 hover:text-emerald-600 dark:text-gray-100 dark:hover:text-emerald-400'
-        } ${isMobile ? 'block px-3 py-2 rounded-md' : ''}`}
-        onClick={() => isMobile && setIsMobileMenuOpen(false)}
-      >
-        {item.name}
-      </Link>
-    );
   };
 
   return (
@@ -207,7 +242,82 @@ export default function Header() {
               className="md:hidden"
             >
               <div className="px-2 pt-2 pb-3 space-y-3">
-                {navItems.map((item) => renderNavLink(item, true))}
+                {navItems.map((item) => {
+                  if (item.type === 'dropdown' || item.type === 'mega') {
+                    const isExpanded = expandedMobileItems.has(item.id);
+                    const itemSections = sections.filter(section => section.nav_item_id === item.id);
+
+                    return (
+                      <div key={item.id} className="space-y-1">
+                        {/* Main dropdown button */}
+                        <button
+                          onClick={() => toggleMobileItem(item.id)}
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+                        >
+                          <span>{item.name}</span>
+                          <svg
+                            className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+
+                        {/* Dropdown items */}
+                        <AnimatePresence>
+                          {isExpanded && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="ml-4 space-y-1"
+                            >
+                              {/* Overview link */}
+                              <Link
+                                href={item.href}
+                                className="block px-3 py-2 rounded-md text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors duration-200"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                              >
+                                {item.name} Overview
+                              </Link>
+
+                              {/* Section links */}
+                              {itemSections
+                                .sort((a, b) => a.order_index - b.order_index)
+                                .map((section) => (
+                                  <Link
+                                    key={section.id}
+                                    href={section.url || `${item.href}#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
+                                    className="block px-3 py-2 rounded-md text-sm text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                  >
+                                    {section.title}
+                                  </Link>
+                                ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  }
+
+                  // Regular mobile link
+                  return (
+                    <Link
+                      key={item.id}
+                      href={item.href}
+                      target={item.open_in_new_tab ? "_blank" : undefined}
+                      rel={item.open_in_new_tab ? "noopener noreferrer" : undefined}
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                })}
               </div>
             </motion.div>
           )}

@@ -41,15 +41,15 @@ export default function Mission() {
   }, []);
 
   return (
-    <section className="relative pt-0 pb-4 -mt-16 overflow-hidden bg-white dark:bg-gray-900">
+    <section className="relative pt-0 pb-2 -mt-16 overflow-hidden bg-white dark:bg-gray-900">
       {/* Background removed for clean white look */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="container mx-auto px-4 sm:px-6 lg:px-8 relative pt-28 sm:pt-28 md:pt-16 lg:pt-0">
-        {/* Adjusted padding: increased for mobile/small screens, reduced for desktop */}
-        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+        className="container mx-auto px-4 sm:px-6 lg:px-8 relative pt-32 sm:pt-32 md:pt-20 lg:pt-16">
+        {/* Increased padding significantly since floating cards removed - more breathing room */}
+        <div className="flex flex-col lg:flex-row items-center gap-24 lg:gap-40 py-12">
           {/* Content Side */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
@@ -105,8 +105,8 @@ export default function Mission() {
             className="lg:w-1/2"
           >
             <div className="relative">
-              {/* Meal Plan Card */}
-              <div className="hidden md:block">
+              {/* Meal Plan Card - HIDDEN FOR NOW (uncomment to re-enable) */}
+              {/* <div className="hidden md:block">
                 <MealPlanCard
                   position="absolute top-36 -left-32 lg:-left-32 xl:-left-32"
                   title="Daily Meal Plan"
@@ -119,11 +119,10 @@ export default function Mission() {
                     { time: '17:00', name: 'Nut Mix & Fruit', calories: '210' }
                   ]}
                 />
-              </div>
+              </div> */}
               
-              {/* Conversation Card */}
-              {/* Conversation Card - Hidden on mobile, visible on medium screens and up */}
-              <div className="hidden md:block absolute bottom-4 -left-64 lg:-left-64 xl:-left-64 z-30 w-full max-w-sm">
+              {/* Conversation Card - HIDDEN FOR NOW (uncomment to re-enable) */}
+              {/* <div className="hidden md:block absolute bottom-4 -left-64 lg:-left-64 xl:-left-64 z-30 w-full max-w-sm">
                 <ConversationCard
                   position="relative"
                   className="shadow-xl"
@@ -138,7 +137,7 @@ export default function Mission() {
                     }
                   ]}
                 />
-              </div>
+              </div> */}
               
               {/* Mobile version of cards - only visible on small screens */}
               <div className="md:hidden mt-8 space-y-6">

@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { Providers } from '@/components/Providers';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
-import { LoadingProvider } from '@/providers/LoadingProvider';
+
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
@@ -48,9 +48,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>
-            <LoadingProvider>
-              {children}
-            </LoadingProvider>
+            {children}
           </Providers>
         </ThemeProvider>
       </body>
