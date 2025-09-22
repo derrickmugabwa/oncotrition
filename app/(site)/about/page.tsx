@@ -1,5 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 import Hero from '@/components/about/Hero';
 import Mission from '@/components/about/Mission';
 import Values from '@/components/about/Values';
@@ -24,7 +23,11 @@ const componentMap = {
 type ComponentKey = keyof typeof componentMap;
 
 export default async function About() {
-  const supabase = createServerComponentClient<Database>({ cookies });
+  // Use public client for about components (no auth required)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
   
   // Fetch components server-side
   const { data: components, error } = await supabase

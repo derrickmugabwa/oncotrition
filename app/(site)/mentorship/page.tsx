@@ -1,5 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 import Hero from '@/components/mentorship/Hero';
 import MentorshipCards from '@/components/mentorship/MentorshipCards';
 import MentorshipFeatures from '@/components/mentorship/MentorshipFeatures';
@@ -25,7 +24,11 @@ const componentMap = {
 type ComponentKey = keyof typeof componentMap;
 
 export default async function MentorshipPage() {
-  const supabase = createServerComponentClient<Database>({ cookies });
+  // Use public client for mentorship components (no auth required)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
   
   // Fetch components server-side
   const { data: components, error } = await supabase
@@ -54,7 +57,7 @@ export default async function MentorshipPage() {
 
   return (
     <main>
-      {visibleComponents.map(comp => {
+      {visibleComponents.map((comp: ComponentSetting) => {
         const Component = componentMap[comp.component_key as ComponentKey];
         return Component ? <Component key={comp.id} /> : null;
       })}
