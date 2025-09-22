@@ -5,13 +5,16 @@ import { Providers } from '@/components/Providers';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const supabase = createServerComponentClient({ cookies });
+  // Use public client for site settings (no auth required)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
   
   // Get site settings
   const { data: settings } = await supabase
