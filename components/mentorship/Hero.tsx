@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
@@ -9,6 +10,10 @@ interface HeroContent {
   subtitle: string;
   tagline: string;
   background_image: string;
+}
+
+interface HeroProps {
+  content?: HeroContent;
 }
 
 const floatingAnimation = {
@@ -23,36 +28,26 @@ const floatingAnimation = {
   }
 };
 
-export default function Hero() {
-  const supabase = createClientComponentClient();
-  const [content, setContent] = useState<HeroContent>({
-    title: '',
-    subtitle: '',
-    tagline: '',
+export default function Hero({ content }: HeroProps) {
+  const defaultContent: HeroContent = {
+    title: 'Nutrition Mentorship',
+    subtitle: 'Expert guidance for your nutrition journey',
+    tagline: 'Professional Support',
     background_image: '/images/mentorship-hero-bg.jpg'
-  });
+  };
 
+  const [heroContent, setHeroContent] = useState<HeroContent>(content || defaultContent);
+  const supabase = createClientComponentClient();
+
+  // Update local state when props change
   useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        const { data: heroContent, error } = await supabase
-          .from('mentorship_hero')
-          .select('*')
-          .single();
+    if (content) {
+      setHeroContent(content);
+    }
+  }, [content]);
 
-        if (error) throw error;
-
-        if (heroContent) {
-          setContent(heroContent);
-        }
-      } catch (error) {
-        console.error('Error fetching hero content:', error);
-      }
-    };
-
-    fetchContent();
-
-    // Set up real-time subscription
+  // Set up real-time subscription for admin updates
+  useEffect(() => {
     const channel = supabase
       .channel('mentorship_hero_changes')
       .on(
@@ -64,7 +59,7 @@ export default function Hero() {
         },
         (payload) => {
           if (payload.new) {
-            setContent(payload.new as HeroContent);
+            setHeroContent(payload.new as HeroContent);
           }
         }
       )
@@ -79,15 +74,16 @@ export default function Hero() {
     <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('${content.background_image}')`,
-          }}
-        >
-          {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-black/50"></div>
-        </div>
+        <Image
+          src={heroContent.background_image}
+          alt="Mentorship Hero Background"
+          fill
+          className="object-cover"
+          priority
+          quality={90}
+        />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/50"></div>
       </div>
 
       {/* Floating Particles */}
@@ -127,7 +123,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="inline-block px-4 py-1.5 mb-6 rounded-full border border-blue-400/30 bg-blue-500/10 backdrop-blur-sm"
           >
-            <span className="text-sm text-blue-200 font-medium">{content.tagline}</span>
+            <span className="text-sm text-blue-200 font-medium">{heroContent.tagline}</span>
           </motion.div>
 
           <motion.h1 
@@ -136,7 +132,7 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="text-5xl md:text-7xl font-bold mb-6 text-white"
           >
-            {content.title}
+            {heroContent.title}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -144,7 +140,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto"
           >
-            {content.subtitle}
+            {heroContent.subtitle}
           </motion.p>
 
           {/* Decorative Line */}

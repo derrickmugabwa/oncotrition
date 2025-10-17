@@ -11,8 +11,8 @@ import MentorshipClientWrapper from './MentorshipClientWrapper';
 
 type ComponentSetting = Database['public']['Tables']['mentorship_components']['Row'];
 
-const componentMap = {
-  hero: Hero,
+const componentMap: Record<string, React.ComponentType<any>> = {
+  hero: (props: any) => <Hero content={props.heroData} />,
   features: MentorshipFeatures,
   businessTips: BusinessTips,
   nutritionSurvey: NutritionSurvey,
@@ -30,6 +30,43 @@ export default async function MentorshipPage() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
   
+  // Fetch hero content server-side
+  const { data: heroContent } = await supabase
+    .from('mentorship_hero')
+    .select('*')
+    .single();
+
+  const defaultHeroContent = {
+    title: 'Nutrition Mentorship',
+    subtitle: 'Expert guidance for your nutrition journey',
+    tagline: 'Professional Support',
+    background_image: '/images/mentorship-hero-bg.jpg'
+  };
+
+  const heroData = heroContent || defaultHeroContent;
+  
+  // Fetch mentorship features data server-side
+  const { data: featuresData } = await supabase
+    .from('mentorship_features')
+    .select('*')
+    .order('display_order');
+
+  const { data: featuresContent } = await supabase
+    .from('mentorship_features_content')
+    .select('*')
+    .single();
+
+  const defaultFeaturesContent = {
+    id: '',
+    title: 'Mentorship Features',
+    description: 'Discover the benefits of our mentorship program'
+  };
+
+  const mentorshipFeaturesData = {
+    features: featuresData || [],
+    content: featuresContent || defaultFeaturesContent
+  };
+  
   // Fetch components server-side
   const { data: components, error } = await supabase
     .from('mentorship_components')
@@ -42,8 +79,8 @@ export default async function MentorshipPage() {
     // Return default components if database fails
     return (
       <main>
-        <Hero />
-        <MentorshipFeatures />
+        <Hero content={heroData} />
+        <MentorshipFeatures features={mentorshipFeaturesData.features} content={mentorshipFeaturesData.content} />
         <BusinessTips />
         <NutritionSurvey />
         <MentorshipTestimonials />
@@ -59,7 +96,18 @@ export default async function MentorshipPage() {
     <main>
       {visibleComponents.map((comp: ComponentSetting) => {
         const Component = componentMap[comp.component_key as ComponentKey];
-        return Component ? <Component key={comp.id} /> : null;
+        if (!Component) return null;
+        
+        // Pass data to components that need it
+        if (comp.component_key === 'hero') {
+          return <Hero key={comp.id} content={heroData} />;
+        }
+        
+        if (comp.component_key === 'features') {
+          return <MentorshipFeatures key={comp.id} features={mentorshipFeaturesData.features} content={mentorshipFeaturesData.content} />;
+        }
+        
+        return <Component key={comp.id} />;
       })}
       <MentorshipClientWrapper initialComponents={visibleComponents} />
     </main>
