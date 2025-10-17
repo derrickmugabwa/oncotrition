@@ -17,6 +17,7 @@ import {
   DocumentIcon,
   Bars3Icon,
   PencilSquareIcon,
+  CalendarIcon,
 } from '@heroicons/react/24/outline'
 
 const menuItems = [
@@ -28,6 +29,7 @@ const menuItems = [
   { name: 'SmartSpoon', href: '/admin/pages/smartspoon', icon: BeakerIcon },
   { name: 'Contact Page', href: '/admin/pages/contact', icon: EnvelopeIcon },
   { name: 'Blog Management', href: '/admin/pages/blog', icon: PencilSquareIcon },
+  { name: 'Events & Announcements', href: '/admin/pages/events', icon: CalendarIcon },
   { name: 'Navigation Bar', href: '/admin/pages/navbar', icon: Bars3Icon },
   { name: 'Footer', href: '/admin/pages/footer', icon: NewspaperIcon },
   { name: 'Documents', href: '/admin/pages/documents', icon: DocumentIcon },
@@ -40,7 +42,7 @@ export default function Sidebar() {
   return (
     <div className="h-full flex flex-col">
       {/* Logo and Theme Toggle */}
-      <div className="p-6 flex items-center justify-between">
+      <div className="p-6 flex items-center justify-between flex-shrink-0">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -52,8 +54,8 @@ export default function Sidebar() {
         <ThemeToggle />
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-4 pb-4">
+      {/* Navigation - Scrollable */}
+      <nav className="flex-1 px-4 pb-4 overflow-y-auto scrollbar-thin">
         <div className="space-y-1">
           {menuItems.map((item, index) => {
             const isActive = pathname === item.href

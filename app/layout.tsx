@@ -6,6 +6,8 @@ import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 
 import { createClient } from '@supabase/supabase-js';
+import AnnouncementManager from '@/components/announcements/AnnouncementManager';
+import { Announcement } from '@/types/events';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -46,12 +48,28 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Fetch active announcements server-side
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
+  const now = new Date().toISOString();
+  const { data: announcements } = await supabase
+    .from('announcements')
+    .select('*')
+    .eq('is_active', true)
+    .lte('start_date', now)
+    .gte('end_date', now)
+    .order('priority', { ascending: false });
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>
             {children}
+            <AnnouncementManager announcements={(announcements as Announcement[]) || []} />
           </Providers>
         </ThemeProvider>
       </body>
