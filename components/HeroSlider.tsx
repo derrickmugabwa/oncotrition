@@ -6,6 +6,13 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import { Inter } from 'next/font/google'
+
+const ranade = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+})
 
 interface SliderImage {
   id: number
@@ -148,7 +155,7 @@ export default function HeroSlider() {
 
 
   return (
-    <div className="relative w-full h-[600px] overflow-hidden bg-gray-900">
+    <div className={`relative w-full h-[600px] overflow-hidden bg-gray-900 ${ranade.className}`}>
       {slides.map((slide, index) => (
         <div
           key={slide.id}
@@ -194,14 +201,14 @@ export default function HeroSlider() {
                 >
                   <motion.h2
                     variants={childVariants}
-                    className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight relative z-10"
+                    className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight relative z-10"
                   >
                     {slide.title}
                   </motion.h2>
 
                   <motion.p
                     variants={childVariants}
-                    className="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed relative z-10"
+                    className="text-base md:text-lg text-gray-300 mb-8 leading-relaxed relative z-10"
                   >
                     {slide.description}
                   </motion.p>
@@ -209,7 +216,7 @@ export default function HeroSlider() {
                   <motion.div variants={childVariants} className="relative z-10">
                     <button 
                       onClick={() => router.push(slide.cta_url || '/')}
-                      className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium inline-flex items-center group"
+                      className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-medium inline-flex items-center group"
                     >
                       {slide.cta_text}
                       <svg
