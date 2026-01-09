@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, useInView, AnimatePresence, useAnimation } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import { Inter } from 'next/font/google';
 
@@ -141,7 +141,7 @@ const Testimonials: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [title, setTitle] = useState('What Our Clients Say');
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchData = async () => {

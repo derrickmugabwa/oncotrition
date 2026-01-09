@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
 import { debounce } from 'lodash'
@@ -29,7 +29,7 @@ const TestimonialsTab = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [editStates, setEditStates] = useState<{ [key: number]: Partial<Testimonial> }>({})
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     fetchTestimonials()

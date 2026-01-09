@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 
 interface ModuleContentEditorProps {
   content: {
@@ -21,7 +21,7 @@ export default function ModuleContentEditor({ content, onContentSaved }: ModuleC
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const saveContent = async () => {
     setIsSaving(true);

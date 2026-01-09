@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
@@ -76,7 +76,7 @@ const defaultSlides = [
 ];
 
 export default function Hero() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slides, setSlides] = useState<SlideContent[]>(defaultSlides);

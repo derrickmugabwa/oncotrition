@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Plus, Edit, Trash2, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -24,7 +24,7 @@ export default function TagsTab({ tags }: TagsTabProps) {
     slug: '',
     color: '#6B7280',
   });
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const generateSlug = (name: string) => {
     return name

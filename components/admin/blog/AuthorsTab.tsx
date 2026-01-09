@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Plus, Edit, Trash2, Upload } from 'lucide-react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
@@ -30,7 +30,7 @@ export default function AuthorsTab({ authors }: AuthorsTabProps) {
     social_links: {},
   });
   const [uploadingImage, setUploadingImage] = useState(false);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const uploadImage = async (file: File): Promise<string> => {
     const fileExt = file.name.split('.').pop();

@@ -1,5 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 import { Database } from '@/types/supabase';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -27,7 +26,7 @@ const formatTextContent = (content: string): string => {
 };
 
 export default async function TermsPage() {
-  const supabase = createServerComponentClient<Database>({ cookies });
+  const supabase = await createClient();
 
   // Fetch terms content server-side
   const { data, error } = await supabase

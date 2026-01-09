@@ -2,14 +2,18 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Providers } from '@/components/Providers';
-import { Inter } from 'next/font/google';
+import { Outfit } from 'next/font/google';
 import { cn } from '@/lib/utils';
 
 import { createClient } from '@supabase/supabase-js';
 import AnnouncementManager from '@/components/announcements/AnnouncementManager';
 import { Announcement } from '@/types/events';
 
-const inter = Inter({ subsets: ['latin'] });
+const outfit = Outfit({ 
+  subsets: ['latin'],
+  variable: '--font-outfit',
+  display: 'swap',
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   // Use public client for site settings (no auth required)
@@ -64,8 +68,8 @@ export default async function RootLayout({
     .order('priority', { ascending: false });
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning className={outfit.variable}>
+      <body className={cn(outfit.className, "font-outfit")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>
             {children}

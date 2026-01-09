@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { FaEye, FaTrash } from 'react-icons/fa';
 
 interface Submission {
@@ -16,7 +16,7 @@ interface Submission {
 
 export default function SubmissionsTab() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchSubmissions();

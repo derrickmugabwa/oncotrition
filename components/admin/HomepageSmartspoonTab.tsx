@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -66,7 +66,7 @@ const HomepageSmartspoonTab = () => {
   const [buttonLink, setButtonLink] = useState('/smart-spoon');
   const [services, setServices] = useState<Service[]>(defaultServices);
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchSmartspoonData();

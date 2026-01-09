@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 
 // Force dynamic rendering for this API route
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = await createClient()
 
     // Check if site_settings exists
     const { data: existingSettings, error: fetchError } = await supabase

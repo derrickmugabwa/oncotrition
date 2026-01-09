@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 import { Calendar, Plus, Edit, Trash2, Eye, Search, Filter } from 'lucide-react';
 import { Event } from '@/types/events';
@@ -9,7 +9,7 @@ import EventEditor from './EventEditor';
 import { format } from 'date-fns';
 
 export default function EventsTab() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);

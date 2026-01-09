@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { PlusIcon, TrashIcon, PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-hot-toast';
 import FloatingImageUploader from './components/FloatingImageUploader';
@@ -37,7 +37,7 @@ export default function ValuesTab() {
   const [editingSectionIndex, setEditingSectionIndex] = useState<number | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [floatingImageFile, setFloatingImageFile] = useState<File | null>(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchContent();

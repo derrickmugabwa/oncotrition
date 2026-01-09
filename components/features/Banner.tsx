@@ -1,9 +1,9 @@
 'use client';
 
-import { motion as m, useScroll, useTransform } from 'framer-motion';
+import { motion as m, useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 
 interface BannerContent {
   title: string;
@@ -28,18 +28,12 @@ const item = {
 };
 
 export default function Banner() {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
   const [content, setContent] = useState<BannerContent | null>(null);
-  const supabase = createClientComponentClient();
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const supabase = createClient();
+  
+  const isInView = useInView(containerRef, { once: false, amount: 0.3 });
 
   useEffect(() => {
     async function fetchContent() {
@@ -71,7 +65,8 @@ export default function Banner() {
       {/* Background Elements */}
       <m.div 
         className="absolute inset-0 bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-200"
-        style={{ y, opacity }}
+        animate={{ opacity: isInView ? 1 : 0.5 }}
+        transition={{ duration: 0.6 }}
       >
         <div className="absolute inset-0" style={{
           backgroundImage: theme === 'dark' 

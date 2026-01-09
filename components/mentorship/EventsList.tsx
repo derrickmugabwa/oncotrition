@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import EventCard from './EventCard';
 import BookingModal from './BookingModal';
 import { toast } from 'react-hot-toast';
-import { createClient } from '@/utils/supabase-client';
+import { createClient } from '@/utils/supabase/client';
 
 interface Event {
   id: string;

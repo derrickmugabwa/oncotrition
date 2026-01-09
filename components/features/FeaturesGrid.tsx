@@ -29,7 +29,7 @@ import {
   FaHospital,
   FaNotesMedical
 } from 'react-icons/fa';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 
 const ICONS: { [key: string]: IconType } = {
   FaHeartbeat,
@@ -136,7 +136,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
 export default function FeaturesGrid() {
   const [features, setFeatures] = useState<Feature[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     async function fetchFeatures() {

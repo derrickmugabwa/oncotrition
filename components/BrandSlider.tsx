@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Inter } from 'next/font/google';
@@ -23,7 +23,7 @@ export function BrandSlider() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [title, setTitle] = useState('Our partners and Compliance');
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchBrands();
@@ -51,10 +51,10 @@ export function BrandSlider() {
       const { data, error } = await supabase
         .from('brands_content')
         .select('title')
-        .single();
+        .limit(1);
 
       if (error) throw error;
-      if (data) setTitle(data.title);
+      if (data && data.length > 0) setTitle(data[0].title);
     } catch (error) {
       console.error('Error fetching title:', error);
     }

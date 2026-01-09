@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import toast from 'react-hot-toast'
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd'
 import { 
@@ -224,7 +224,7 @@ const HomepageFeaturesTab = () => {
   const [unsavedChanges, setUnsavedChanges] = useState<FeatureChanges>({})
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {

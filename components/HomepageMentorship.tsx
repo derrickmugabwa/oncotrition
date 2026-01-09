@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import type { Database } from '@/lib/database.types';
 import { Inter } from 'next/font/google';
 
@@ -57,7 +57,7 @@ export default function HomepageMentorship() {
       try {
         setIsLoading(true);
         setError(null);
-        const supabase = createClientComponentClient<Database>();
+        const supabase = createClient();
         
         const { data, error } = await supabase
           .from('homepage_mentorship')

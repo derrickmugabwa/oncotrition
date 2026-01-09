@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import AnnouncementPopup from './AnnouncementPopup';
 import { Announcement } from '@/types/events';
 
@@ -12,7 +12,7 @@ interface AnnouncementManagerProps {
 export default function AnnouncementManager({ announcements }: AnnouncementManagerProps) {
   const [currentAnnouncement, setCurrentAnnouncement] = useState<Announcement | null>(null);
   const [announcementQueue, setAnnouncementQueue] = useState<Announcement[]>([]);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   // Generate a simple session ID (browser fingerprint)
   const getSessionId = () => {

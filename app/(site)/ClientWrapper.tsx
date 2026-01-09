@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Database } from '@/types/supabase'
 
@@ -13,7 +13,7 @@ interface ClientWrapperProps {
 
 export default function ClientWrapper({ initialComponents }: ClientWrapperProps) {
   const router = useRouter();
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   useEffect(() => {
     // Subscribe to realtime changes for admin users

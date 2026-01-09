@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 import { cn } from '@/lib/utils';
 import { HiPlus, HiTrash, HiPencil } from 'react-icons/hi';
@@ -64,7 +64,7 @@ export default function NavbarPage() {
   const [editingItem, setEditingItem] = useState<string | null>(null);
   const [editingSection, setEditingSection] = useState<EditingSectionState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchNavItems();

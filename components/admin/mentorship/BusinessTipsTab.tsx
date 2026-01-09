@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { Trash2, Link2 } from 'lucide-react';
@@ -42,7 +42,7 @@ export default function BusinessTipsTab() {
   const [content, setContent] = useState<BusinessTipsContent | null>(null);
   const [tips, setTips] = useState<BusinessTip[]>([]);
   const [editStates, setEditStates] = useState<{ [key: string]: Partial<BusinessTip> }>({});
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchData();

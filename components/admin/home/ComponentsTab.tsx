@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Switch } from '@headlessui/react';
 import { GripVertical } from 'lucide-react';
@@ -17,7 +17,7 @@ interface ComponentSetting {
 export default function ComponentsTab() {
   const [components, setComponents] = useState<ComponentSetting[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchComponents();

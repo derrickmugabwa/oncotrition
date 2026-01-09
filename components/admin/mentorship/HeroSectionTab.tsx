@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 import { Image as ImageIcon, Type, Text, Save } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -16,7 +16,7 @@ interface HeroContent {
 }
 
 export default function HeroSectionTab() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<HeroContent>({

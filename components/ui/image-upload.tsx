@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Loader2, X, Upload } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -23,7 +23,7 @@ export function ImageUpload({
   folder = 'uploads'
 }: ImageUploadProps) {
   const [loading, setLoading] = useState(false);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const handleUpload = useCallback(async (file: File) => {
     try {

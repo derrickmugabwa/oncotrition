@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import Hero from './Hero';
 
 interface HeroContent {
@@ -16,7 +16,7 @@ interface HeroClientWrapperProps {
 }
 
 export default function HeroClientWrapper({ initialContent }: HeroClientWrapperProps) {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [content, setContent] = useState<HeroContent>(initialContent);
 
   useEffect(() => {

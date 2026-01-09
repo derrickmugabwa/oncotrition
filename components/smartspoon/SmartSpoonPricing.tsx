@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 
 interface Package {
@@ -29,7 +29,7 @@ export default function SmartSpoonPricing() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [settings, setSettings] = useState<PackagesSettings>({});
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchPackages();

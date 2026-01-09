@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { motion, useScroll, useTransform, useInView, useSpring, useMotionValueEvent } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { FiUser, FiUsers, FiClipboard, FiBarChart2, FiHeart, FiActivity, FiCreditCard, FiCalendar, FiMessageCircle, FiTarget, FiAward, FiShoppingBag, FiBookOpen, FiCoffee, FiGift, FiPieChart, FiThumbsUp, FiTrendingUp } from 'react-icons/fi';
 import { GiWeightScale, GiMeal, GiFruitBowl, GiCook, GiMedicines, GiSportMedal } from 'react-icons/gi';
 import { MdOutlineFoodBank, MdOutlineLocalGroceryStore, MdOutlineHealthAndSafety } from 'react-icons/md';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 
 const iconMap = {
   // User & Profile Icons
@@ -157,20 +157,11 @@ export default function Steps() {
   const [steps, setSteps] = useState<Step[]>([]);
   const [settings, setSettings] = useState<StepsSettings>({});
   const [loading, setLoading] = useState(true);
-  const [activeStep, setActiveStep] = useState(0);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   
-  // Refs for scroll animations
-  const sectionRef = useRef<HTMLElement>(null);
-  const stepsContainerRef = useRef<HTMLDivElement>(null);
-  
-  // Scroll progress indicator
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-  
-  const scrollProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  // Ref for in-view animations
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
 
   useEffect(() => {
     fetchSteps();
@@ -180,20 +171,6 @@ export default function Steps() {
     const style = document.documentElement.style;
     style.setProperty('--primary-rgb', '79, 70, 229'); // Indigo-600 RGB values
   }, []);
-  
-  // Track scroll progress and update active step
-  useMotionValueEvent(scrollProgress, "change", (latest) => {
-    // Calculate which step should be active based on scroll position
-    if (steps.length > 0) {
-      const stepIndex = Math.min(
-        Math.floor(latest * steps.length * 1.5),
-        steps.length - 1
-      );
-      if (stepIndex >= 0 && stepIndex !== activeStep) {
-        setActiveStep(stepIndex);
-      }
-    }
-  });
   
   const fetchSettings = async () => {
     try {
@@ -254,11 +231,6 @@ export default function Steps() {
       {settings.background_image && (
         <div className="absolute inset-0 bg-black/70 dark:bg-black/80 backdrop-blur-[2px] z-0"></div>
       )}
-      {/* Scroll Progress Indicator */}
-      <motion.div 
-        className="fixed left-0 top-0 h-1 bg-primary z-50"
-        style={{ scaleX: scrollProgress, transformOrigin: "0% 50%" }}
-      />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -301,7 +273,6 @@ export default function Steps() {
         </motion.div>
 
         <motion.div
-          ref={stepsContainerRef}
           className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5 relative"
         >
           {/* Background decoration */}
@@ -312,7 +283,6 @@ export default function Steps() {
           
           {steps.map((step, index) => {
             const IconComponent = iconMap[step.icon as keyof typeof iconMap];
-            const isActive = index <= activeStep;
             
             return (
               <motion.div

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
@@ -35,7 +35,7 @@ const SliderSettingsTab = () => {
   const [forms, setForms] = useState<SlideForm[]>([
     { title: '', description: '', cta_text: '', cta_url: '' }
   ])
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
   const router = useRouter()
 
   const validateImage = (file: File): Promise<boolean> => {

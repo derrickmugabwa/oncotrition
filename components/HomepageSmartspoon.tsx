@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Database } from '@/types/supabase';
 import { Inter } from 'next/font/google';
 
@@ -135,7 +135,7 @@ export default function HomepageSmartspoon() {
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchSmartspoonData();

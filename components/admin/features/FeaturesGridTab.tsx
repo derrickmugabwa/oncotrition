@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { 
   FaHeartbeat, 
@@ -79,7 +79,7 @@ export default function FeaturesGridTab() {
   const [features, setFeatures] = useState<Feature[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   // Form states
   const [editTitle, setEditTitle] = useState('');

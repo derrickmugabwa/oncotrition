@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import { ALL_ICONS } from './constants/moduleIcons';
@@ -30,7 +30,7 @@ export default function ModulesTab() {
   const [content, setContent] = useState<ModulesContent | null>(null);
   const [error, setError] = useState<string | null>(null);
   
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchData();

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -27,7 +27,7 @@ export default function BusinessTips() {
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState<BusinessTipsContent | null>(null);
   const [tips, setTips] = useState<BusinessTip[]>([]);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1,5 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 import { Metadata } from 'next';
 import BlogListing from '@/components/blog/BlogListing';
 
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = await createClient();
 
   // Fetch featured posts
   const { data: featuredPosts } = await supabase

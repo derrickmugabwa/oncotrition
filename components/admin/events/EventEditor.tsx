@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 import { ArrowLeft, Save, Upload, X, Image as ImageIcon } from 'lucide-react';
 import { Event, EventFormData } from '@/types/events';
@@ -13,7 +13,7 @@ interface EventEditorProps {
 }
 
 export default function EventEditor({ event, onClose }: EventEditorProps) {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);

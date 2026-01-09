@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-hot-toast';
 
@@ -46,7 +46,7 @@ export default function WhyChooseUsTab() {
     background_image: ''
   });
   const [isEditingSection, setIsEditingSection] = useState(false);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchData();

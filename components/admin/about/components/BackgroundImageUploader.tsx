@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, ChangeEvent } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { TrashIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +17,7 @@ export default function BackgroundImageUploader({
 }: BackgroundImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;

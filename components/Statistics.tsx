@@ -3,7 +3,7 @@
 import { useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import { Inter } from 'next/font/google';
 
 const ranade = Inter({
@@ -102,7 +102,7 @@ export default function Statistics() {
     paragraph: 'See how we are making a difference in peoples lives through our nutrition platform.'
   })
   const [error, setError] = useState<string | null>(null)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     checkDatabaseAccess()

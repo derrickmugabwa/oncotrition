@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/utils/supabase-client';
+import { createClient } from '@/utils/supabase/client';
 import { FaEdit, FaTrash, FaPlus, FaGripVertical } from 'react-icons/fa';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import toast from 'react-hot-toast';
