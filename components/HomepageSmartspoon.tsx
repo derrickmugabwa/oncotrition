@@ -5,6 +5,13 @@ import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types/supabase';
+import { Inter } from 'next/font/google';
+
+const ranade = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
 import {
   HeartIcon,
   ScaleIcon,
@@ -105,7 +112,7 @@ const ServiceCard = ({ service, index }: { service: Service; index: number }) =>
           </motion.div>
           <motion.h3 
             whileHover={{ scale: 1.05 }}
-            className="text-xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
+            className="text-lg font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
           >
             {service.title}
           </motion.h3>
@@ -203,7 +210,7 @@ export default function HomepageSmartspoon() {
   }
 
   return (
-    <section className="relative py-12 overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-cyan-950/10">
+    <section className={`relative py-12 overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-cyan-950/10 ${ranade.className}`}>
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-emerald-200/30 via-white/40 to-teal-200/30 dark:from-emerald-500/10 dark:via-gray-900/40 dark:to-teal-500/10 pointer-events-none"></div>
       
@@ -241,12 +248,12 @@ export default function HomepageSmartspoon() {
           className="text-center max-w-4xl mx-auto mb-12 relative z-20"
         >
           <h2 
-            className="text-4xl font-bold mb-6 text-emerald-600 dark:text-emerald-400"
+            className="text-3xl font-bold mb-6 text-emerald-600 dark:text-emerald-400"
           >
             {title || 'Smart Spoon Technology'}
           </h2>
           <p 
-            className="text-gray-800 dark:text-gray-200 text-lg mx-auto"
+            className="text-gray-800 dark:text-gray-200 text-base mx-auto"
           >
             {description || 'Experience the future of nutrition tracking with our innovative smart spoon that helps you make informed dietary decisions in real-time.'}
           </p>

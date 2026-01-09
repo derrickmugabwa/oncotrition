@@ -3,6 +3,13 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Inter } from 'next/font/google';
+
+const ranade = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
 import { 
   BeakerIcon, ChartBarIcon, ClockIcon, CogIcon, 
   CurrencyDollarIcon, DocumentTextIcon, HeartIcon, 
@@ -211,7 +218,7 @@ const FeatureCard = ({ title, description, icon_name, index }: FeatureCardProps)
           </motion.div>
           <motion.h3 
             whileHover={{ scale: 1.05 }}
-            className="text-xl font-semibold text-gray-800 dark:text-white"
+            className="text-lg font-semibold text-gray-800 dark:text-white"
           >
             {title}
           </motion.h3>
@@ -303,7 +310,7 @@ export default function Features() {
   }, [supabase]);
 
   return (
-    <section className="relative py-20 overflow-hidden bg-gradient-to-b from-purple-100 via-indigo-100/70 to-blue-100 dark:from-purple-900/30 dark:via-indigo-900/20 dark:to-blue-900/30">
+    <section className={`relative py-20 overflow-hidden bg-gradient-to-b from-purple-100 via-indigo-100/70 to-blue-100 dark:from-purple-900/30 dark:via-indigo-900/20 dark:to-blue-900/30 ${ranade.className}`}>
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-200/30 via-white/40 to-blue-200/30 dark:from-purple-500/10 dark:via-gray-900/40 dark:to-blue-500/10 pointer-events-none"></div>
       
@@ -326,7 +333,7 @@ export default function Features() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl font-bold text-gray-900 dark:text-white mb-6"
+            className="text-3xl font-bold text-gray-900 dark:text-white mb-6"
           >
             {headerContent.heading}
           </motion.h2>
@@ -334,7 +341,7 @@ export default function Features() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-lg text-gray-600 dark:text-gray-300 mb-8 w-full px-4 sm:px-6 lg:px-8"
+            className="text-base text-gray-600 dark:text-gray-300 mb-8 w-full px-4 sm:px-6 lg:px-8"
           >
             {headerContent.paragraph}
           </motion.p>

@@ -5,6 +5,13 @@ import Image from 'next/image';
 import { motion, useInView, AnimatePresence, useAnimation } from 'framer-motion';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import { Inter } from 'next/font/google';
+
+const ranade = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
 
 interface Testimonial {
   id: number;
@@ -86,7 +93,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, index })
       </div>
 
       <motion.p
-        className="text-gray-600 dark:text-gray-300 mb-8 flex-grow text-lg italic leading-relaxed"
+        className="text-gray-600 dark:text-gray-300 mb-8 flex-grow text-base italic leading-relaxed"
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
@@ -111,7 +118,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, index })
         <div>
           <motion.h4
             whileHover={{ scale: 1.05 }}
-            className="font-semibold text-gray-800 dark:text-white text-lg"
+            className="font-semibold text-gray-800 dark:text-white text-base"
           >
             {testimonial.name}
           </motion.h4>
@@ -222,7 +229,7 @@ const Testimonials: React.FC = () => {
   };
 
   return (
-    <section className="relative py-20 bg-gradient-to-b from-blue-100 via-indigo-200/80 to-violet-200 dark:from-blue-900/30 dark:via-indigo-900/20 dark:to-violet-900/30 overflow-hidden">
+    <section className={`relative py-20 bg-gradient-to-b from-blue-100 via-indigo-200/80 to-violet-200 dark:from-blue-900/30 dark:via-indigo-900/20 dark:to-violet-900/30 overflow-hidden ${ranade.className}`}>
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-200/30 via-white/40 to-violet-200/30 dark:from-blue-500/10 dark:via-gray-900/40 dark:to-violet-500/10 pointer-events-none"></div>
       
@@ -240,12 +247,12 @@ const Testimonials: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               {title}
             </span>
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-sm">
             Join thousands of satisfied users who have transformed their lives with SmartSpoon+
           </p>
         </motion.div>

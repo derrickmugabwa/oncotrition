@@ -6,6 +6,13 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import type { Database } from '@/lib/database.types';
+import { Inter } from 'next/font/google';
+
+const ranade = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
 
 interface MentorshipData {
   id?: string;
@@ -107,7 +114,7 @@ export default function HomepageMentorship() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-cyan-950/10 py-24"
+      className={`relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-cyan-950/10 py-24 ${ranade.className}`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -137,19 +144,19 @@ export default function HomepageMentorship() {
           {/* Content Section */}
           <div className="relative">
             <motion.span
-              className="inline-block px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 text-xl font-medium mb-6"
+              className="inline-block px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 text-lg font-medium mb-6"
             >
               {mentorshipData.subtitle}
             </motion.span>
 
             <motion.h2
-              className="text-2xl lg:text-3xl font-bold mb-6 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
+              className="text-xl lg:text-2xl font-bold mb-6 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
             >
               {mentorshipData.title}
             </motion.h2>
 
             <motion.p
-              className="text-gray-600 dark:text-gray-300 text-sm mb-8 leading-relaxed"
+              className="text-gray-600 dark:text-gray-300 text-xs mb-8 leading-relaxed"
             >
               {mentorshipData.description}
             </motion.p>
@@ -185,7 +192,7 @@ export default function HomepageMentorship() {
                 <motion.span
                   key={feature}
                   whileHover={{ scale: 1.05 }}
-                  className="px-4 py-2 rounded-full bg-white/80 dark:bg-white/10 text-emerald-800 dark:text-emerald-200 text-sm font-medium shadow-sm backdrop-blur-sm"
+                  className="px-4 py-2 rounded-full bg-white/80 dark:bg-white/10 text-emerald-800 dark:text-emerald-200 text-xs font-medium shadow-sm backdrop-blur-sm"
                 >
                   {feature}
                 </motion.span>

@@ -4,6 +4,13 @@ import { useState, useEffect } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Inter } from 'next/font/google';
+
+const ranade = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
 
 interface Brand {
   id: number;
@@ -55,7 +62,7 @@ export function BrandSlider() {
 
   if (loading) {
     return (
-      <section className="relative py-24 bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <section className={`relative py-24 bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 ${ranade.className}`}>
         <div className="container mx-auto px-4">
           <Skeleton className="h-8 w-64 mx-auto mb-12" />
           <div className="flex flex-wrap justify-center gap-16 max-w-6xl mx-auto">
@@ -73,7 +80,7 @@ export function BrandSlider() {
   }
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <section className={`relative py-24 bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 ${ranade.className}`}>
       {/* Subtle pattern overlay */}
       <div 
         className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]"
@@ -85,7 +92,7 @@ export function BrandSlider() {
 
       {/* Content */}
       <div className="relative container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+        <h2 className="text-2xl font-bold text-center mb-12 text-gray-900 dark:text-white">
           {title}
         </h2>
         <div className="flex flex-wrap justify-center gap-16 max-w-6xl mx-auto">
