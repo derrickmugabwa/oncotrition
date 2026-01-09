@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 import { Check, MoveRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -37,7 +37,7 @@ export default function MentorshipCards() {
   const [isInternational, setIsInternational] = useState(false);
   const [sectionTitle, setSectionTitle] = useState('Our Mentorship Packages');
   const [sectionDescription, setSectionDescription] = useState('Choose the perfect mentorship package tailored to your needs and goals.');
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchPackages();

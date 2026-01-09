@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 
 interface LogoProps {
   className?: string;
@@ -14,7 +14,7 @@ export default function Logo({ className = "", showLink = true }: LogoProps) {
   const [logoUrl, setLogoUrl] = useState<string | null>('/logo.png') // Default logo path
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
   
   useEffect(() => {
     const fetchLogo = async () => {

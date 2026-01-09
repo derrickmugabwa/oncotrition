@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 
 interface FooterSettings {
@@ -83,7 +83,7 @@ const Footer = () => {
   const [settings, setSettings] = useState<FooterSettings>(defaultSettings);
   const [isLoading, setIsLoading] = useState(true);
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchSettings = async () => {

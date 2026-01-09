@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { ArrowRightIcon, PlayIcon } from '@heroicons/react/24/outline'
 import { ChartBarIcon, HeartIcon, UserGroupIcon } from '@heroicons/react/24/solid'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Poppins } from 'next/font/google'
 
@@ -114,7 +114,7 @@ export default function ModernHero() {
   const [slides, setSlides] = useState<SliderImage[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [currentStat, setCurrentStat] = useState(0)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
   const router = useRouter()
 
   const stats = [

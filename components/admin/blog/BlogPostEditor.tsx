@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { X, Upload, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
@@ -79,7 +79,7 @@ export default function BlogPostEditor({ post, categories, authors, tags, onClos
   });
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     if (post) {

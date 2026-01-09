@@ -1,9 +1,8 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 import EventsManagement from '@/components/admin/events/EventsManagement';
 
 export default async function AdminEventsPage() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = await createClient();
 
   // Fetch events
   const { data: events } = await supabase

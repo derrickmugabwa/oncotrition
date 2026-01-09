@@ -14,7 +14,7 @@ export default function AboutAnimatedSection({
   className = "", 
   delay = 0 
 }: AboutAnimatedSectionProps) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (

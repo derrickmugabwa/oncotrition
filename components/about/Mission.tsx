@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 import StatsCard from './StatsCard';
 import ConversationCard from './ConversationCard';
@@ -23,7 +23,7 @@ export default function Mission() {
     image_url: ''
   });
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchContent = async () => {

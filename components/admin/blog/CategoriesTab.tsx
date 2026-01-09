@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -26,7 +26,7 @@ export default function CategoriesTab({ categories }: CategoriesTabProps) {
     description: '',
     color: '#3B82F6',
   });
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const generateSlug = (name: string) => {
     return name

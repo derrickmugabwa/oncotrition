@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { 
@@ -72,7 +72,7 @@ export default function Modules() {
   const [modules, setModules] = useState<Module[]>([]);
   const [content, setContent] = useState<ModulesContent | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     async function fetchData() {

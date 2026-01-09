@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { PencilIcon, TrashIcon, XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import toast from 'react-hot-toast';
 import { IconType, ALL_ICONS, ICON_CATEGORIES } from '../constants/moduleIcons';
 import ModuleIconSelector from './ModuleIconSelector';
@@ -36,7 +36,7 @@ export default function ModuleItem({ module, onModuleUpdated }: ModuleItemProps)
   );
   const [isSaving, setIsSaving] = useState(false);
   
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const startEditing = () => {
     setIsEditing(true);

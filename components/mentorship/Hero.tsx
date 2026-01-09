@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 
 interface HeroContent {
   title: string;
@@ -37,7 +37,7 @@ export default function Hero({ content }: HeroProps) {
   };
 
   const [heroContent, setHeroContent] = useState<HeroContent>(content || defaultContent);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   // Update local state when props change
   useEffect(() => {

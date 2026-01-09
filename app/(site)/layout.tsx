@@ -3,8 +3,7 @@ import Footer from '@/components/Footer'
 import ThemeToggle from '@/components/ThemeToggle'
 import WhatsAppButton from '@/components/shared/WhatsAppButton';
 import TawkToChat from '@/components/shared/TawkToChat';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 
 // Maintenance page component
 const MaintenancePage = ({ title, message, contact }: { 
@@ -31,7 +30,7 @@ export default async function SiteLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = await createClient();
   
   // Default settings in case database query fails
   const settings = {

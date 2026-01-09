@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { HiPlus, HiTrash } from 'react-icons/hi'
@@ -118,7 +118,7 @@ export default function FooterTab() {
   const [settings, setSettings] = useState<FooterSettings>(defaultSettings)
   
   const router = useRouter()
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     fetchSettings()

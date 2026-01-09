@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 import { FiUser, FiUsers, FiClipboard, FiBarChart2, FiPlus, FiTrash2, FiHeart, FiActivity, FiCreditCard, FiCalendar, FiMessageCircle, FiTarget, FiAward, FiShoppingBag, FiBookOpen, FiCoffee, FiGift, FiPieChart, FiThumbsUp, FiTrendingUp } from 'react-icons/fi'
@@ -99,7 +99,7 @@ export default function StepsTab() {
   const [settings, setSettings] = useState<StepsSettings>({})
   const [loading, setLoading] = useState(true)
   const [uploadingImage, setUploadingImage] = useState(false)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     fetchSteps()

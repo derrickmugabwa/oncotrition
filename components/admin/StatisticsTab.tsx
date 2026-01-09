@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import toast from 'react-hot-toast'
 
 interface Statistic {
@@ -41,7 +41,7 @@ const StatisticsTab = () => {
   const [unsavedChanges, setUnsavedChanges] = useState<StatisticChanges>({})
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     fetchStatistics()

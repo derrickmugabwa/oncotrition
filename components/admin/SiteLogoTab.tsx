@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import Image from 'next/image'
 import { toast } from 'react-hot-toast'
 import { v4 as uuidv4 } from 'uuid'
@@ -19,7 +19,7 @@ export default function SiteLogoTab() {
   const [preview, setPreview] = useState<string | null>(null)
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     checkAuth()

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface TestimonialsContent {
@@ -28,7 +28,7 @@ export default function MentorshipTestimonials() {
   const [content, setContent] = useState<TestimonialsContent | null>(null);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isHovered, setIsHovered] = useState(false);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const marqueeRef = useRef<HTMLDivElement>(null);
 
 

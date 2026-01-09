@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { PhotoIcon, ArrowUpTrayIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 
 interface FloatingImageUploaderProps {
@@ -22,7 +22,7 @@ export default function FloatingImageUploader({
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentImageUrl || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

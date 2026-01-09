@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import {
   UserGroupIcon, AcademicCapIcon, BeakerIcon, BoltIcon,
   FireIcon, SparklesIcon, ShieldCheckIcon, HandThumbUpIcon,
@@ -113,7 +113,7 @@ function UserCard({ title, description, icon_name, index }: UserCardProps) {
 }
 
 export default function Users() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true });
   const [users, setUsers] = useState<User[]>(defaultUsers);

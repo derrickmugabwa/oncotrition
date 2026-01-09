@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Database } from '@/types/supabase';
 import { FaSave, FaEdit } from 'react-icons/fa';
 import toast from 'react-hot-toast';
@@ -32,7 +32,7 @@ export default function DocumentsTab() {
   const [termsContent, setTermsContent] = useState<string>('');
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState(false);
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchTermsContent();

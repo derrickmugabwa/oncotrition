@@ -1,9 +1,8 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 import BlogManagement from '@/components/admin/blog/BlogManagement';
 
 export default async function AdminBlogPage() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = await createClient();
 
   // Fetch blog posts with related data
   const { data: posts } = await supabase

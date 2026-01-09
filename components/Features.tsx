@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Inter } from 'next/font/google';
 
 const ranade = Inter({
@@ -241,7 +241,7 @@ export default function Features() {
   const [headerContent, setHeaderContent] = useState<HeaderContent>(defaultHeaderContent);
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchData = async () => {

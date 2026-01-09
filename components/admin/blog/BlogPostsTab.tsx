@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { Plus, Edit, Trash2, Eye, Calendar, Clock, User } from 'lucide-react';
 import { format } from 'date-fns';
 import Image from 'next/image';
@@ -72,7 +72,7 @@ export default function BlogPostsTab({ posts, categories, authors, tags }: BlogP
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   // Filter posts based on status and search query
   const handleFilter = (status: string, query: string) => {

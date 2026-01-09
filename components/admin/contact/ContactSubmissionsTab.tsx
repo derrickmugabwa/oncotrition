@@ -1,6 +1,6 @@
 'use client';
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,7 +24,7 @@ export default function ContactSubmissionsTab() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const ITEMS_PER_PAGE = 10;
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchSubmissions(true);

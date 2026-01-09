@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import { Poppins } from 'next/font/google'
 import { 
   BeakerIcon, ChartBarIcon, ClockIcon, CogIcon, 
@@ -200,7 +200,7 @@ export default function ModernFeatures() {
   const [headerContent, setHeaderContent] = useState<HeaderContent | null>(null)
   const containerRef = useRef(null)
   const isInView = useInView(containerRef, { once: true, margin: "-100px" })
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1,4 +1,4 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
@@ -19,7 +19,7 @@ export default function TawkToSettings() {
     enabled: false,
   });
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchSettings();

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, ChangeEvent } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { PlusIcon, TrashIcon, PencilIcon, CheckIcon, XMarkIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-hot-toast';
 import { Listbox, Transition } from '@headlessui/react';
@@ -47,7 +47,7 @@ export default function WhyChooseUsTab() {
   const [isEditingSection, setIsEditingSection] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchData();

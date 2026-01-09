@@ -4,7 +4,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { FiMail, FiPhone, FiMapPin, FiFacebook, FiTwitter, FiInstagram, FiSend } from 'react-icons/fi';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import type { Database } from '@/types/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -40,7 +40,7 @@ const staggerContainer = {
 };
 
 function ContactForm() {
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
   const [loading, setLoading] = useState(false);
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const [formData, setFormData] = useState<FormData>({

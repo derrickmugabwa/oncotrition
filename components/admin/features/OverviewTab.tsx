@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
@@ -20,7 +20,7 @@ export default function OverviewTab() {
   const [bulletPoints, setBulletPoints] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     fetchBannerContent();

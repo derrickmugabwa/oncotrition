@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 
 interface TeamMember {
   id: number;
@@ -106,7 +106,7 @@ export default function Team() {
     heading: 'Meet Our Team',
     description: 'Dedicated experts committed to transforming your nutrition journey'
   });
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     async function fetchData() {

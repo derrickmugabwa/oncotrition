@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 import { Bell, Plus, Edit, Trash2, Eye, Search, ToggleLeft, ToggleRight } from 'lucide-react';
 import { Announcement } from '@/types/events';
@@ -9,7 +9,7 @@ import AnnouncementEditor from './AnnouncementEditor';
 import { format } from 'date-fns';
 
 export default function AnnouncementsTab() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [filteredAnnouncements, setFilteredAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);

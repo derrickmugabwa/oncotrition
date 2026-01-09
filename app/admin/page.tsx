@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Database } from '@/types/supabase'
@@ -49,7 +49,7 @@ const itemVariants = {
 
 export default function AdminPage() {
   const router = useRouter()
-  const supabase = createClientComponentClient<Database>()
+  const supabase = createClient()
   const [stats, setStats] = useState<Stats>({
     totalPages: '0',
     totalFeatures: 0,

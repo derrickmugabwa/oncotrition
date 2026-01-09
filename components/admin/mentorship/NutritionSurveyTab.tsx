@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 import { ListChecks, Save, Plus, Trash2, MoveUp, MoveDown, Edit, X, Upload, Image } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -24,7 +24,7 @@ interface SurveyImage {
 }
 
 export default function NutritionSurveyTab() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);

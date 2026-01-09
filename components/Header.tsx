@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import Logo from './Logo';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { useOnClickOutside } from '@/hooks/use-click-outside';
 import MegaMenu from './navigation/MegaMenu';
 import DropdownMenu from './navigation/DropdownMenu';
@@ -39,7 +39,7 @@ export default function Header() {
   const [expandedMobileItems, setExpandedMobileItems] = useState<Set<string>>(new Set());
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const headerRef = useRef<HTMLElement>(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   // Global dropdown management functions
   const showDropdown = (itemId: string, delay: number = 0) => {
@@ -135,6 +135,7 @@ export default function Header() {
 
   const renderDropdownMenu = (item: NavItem) => (
     <DropdownMenu
+      key={item.id}
       item={item}
       sections={sections}
       isScrolled={isScrolled}
@@ -147,6 +148,7 @@ export default function Header() {
 
   const renderMegaMenu = (item: NavItem) => (
     <MegaMenu
+      key={item.id}
       item={item}
       sections={sections}
       isScrolled={isScrolled}

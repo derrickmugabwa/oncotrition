@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 import BackgroundImageUploader from './BackgroundImageUploader';
 
@@ -22,7 +22,7 @@ export default function SectionContentEditor({
   isEditingSection,
   setIsEditingSection
 }: SectionContentEditorProps) {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const handleSectionEdit = () => {
     setIsEditingSection(true);

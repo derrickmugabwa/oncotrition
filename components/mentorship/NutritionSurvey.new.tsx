@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ListChecks } from 'lucide-react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 
 interface SurveyQuestion {
   id: string;
@@ -47,7 +47,7 @@ interface SurveyImage {
 }
 
 export default function NutritionSurvey() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
   const [surveyImage, setSurveyImage] = useState<SurveyImage>({

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import FloatingImage from './FloatingImage';
 
 interface VisionSection {
@@ -62,7 +62,7 @@ const renderTextWithLinks = (text: string) => {
 export default function Values() {
   const [vision, setVision] = useState<Vision | null>(null);
   const [valuesImage, setValuesImage] = useState<ValuesImage | null>(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchContent = async () => {

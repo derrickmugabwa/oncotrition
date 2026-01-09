@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
@@ -75,7 +75,7 @@ export default function HeroSlider() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides] = useState<SliderImage[]>(defaultSlides)
   const [imagesLoaded, setImagesLoaded] = useState<Set<string>>(new Set())
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
   const router = useRouter()
 
   // Preload images for faster loading
