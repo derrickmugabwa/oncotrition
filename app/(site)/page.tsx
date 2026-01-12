@@ -10,6 +10,7 @@ import HomepageSmartspoon from '@/components/HomepageSmartspoon'
 import { BrandSlider } from '@/components/BrandSlider'
 import { Database } from '@/types/supabase'
 import ClientWrapper from './ClientWrapper'
+import PageLoadingWrapper from '@/components/PageLoadingWrapper'
 
 type ComponentSetting = Database['public']['Tables']['homepage_components']['Row'];
 
@@ -60,13 +61,15 @@ export default async function Home() {
   const visibleComponents = components || [];
 
   return (
-    <main>
-      {/* Dynamic components managed by admin */}
-      {visibleComponents.map((comp: ComponentSetting) => {
-        const Component = componentMap[comp.component_key as ComponentKey];
-        return Component ? <Component key={comp.id} /> : null;
-      })}
-      <ClientWrapper initialComponents={visibleComponents} />
-    </main>
+    <PageLoadingWrapper>
+      <main>
+        {/* Dynamic components managed by admin */}
+        {visibleComponents.map((comp: ComponentSetting) => {
+          const Component = componentMap[comp.component_key as ComponentKey];
+          return Component ? <Component key={comp.id} /> : null;
+        })}
+        <ClientWrapper initialComponents={visibleComponents} />
+      </main>
+    </PageLoadingWrapper>
   );
 }

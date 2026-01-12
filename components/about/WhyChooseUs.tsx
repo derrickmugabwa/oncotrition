@@ -127,7 +127,7 @@ export default function WhyChooseUs() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="text-4xl font-bold mb-4 text-white"
+            className="text-4xl font-bold mb-4 text-white font-outfit"
           >
             {sectionContent.heading}
           </motion.h2>
@@ -136,7 +136,7 @@ export default function WhyChooseUs() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-lg text-gray-200"
+            className="text-lg text-gray-200 font-outfit"
           >
             {sectionContent.description}
           </motion.p>
@@ -160,10 +160,10 @@ export default function WhyChooseUs() {
                     <div className="w-16 h-16 mb-6 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white">
                       {renderIcon(features[currentIndex].icon_path)}
                     </div>
-                    <h3 className="text-2xl font-bold mb-4 text-white">
+                    <h3 className="text-2xl font-bold mb-4 text-white font-outfit">
                       {features[currentIndex].title}
                     </h3>
-                    <p className="text-gray-200 max-w-2xl">
+                    <p className="text-gray-200 max-w-2xl font-outfit">
                       {features[currentIndex].description}
                     </p>
                   </motion.div>

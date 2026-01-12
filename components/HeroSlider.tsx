@@ -6,13 +6,7 @@ import { createClient } from '@/utils/supabase/client'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { Inter } from 'next/font/google'
-
-const ranade = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-})
+import { Button } from '@/components/ui/button'
 
 interface SliderImage {
   id: number
@@ -24,17 +18,7 @@ interface SliderImage {
   order: number
 }
 
-const defaultSlides = [
-  {
-    id: 1,
-    title: 'Welcome to SmartSpoon+',
-    description: 'Your personal nutrition tracking assistant',
-    image_url: '/images/default-hero.jpg',
-    cta_text: 'Get Started',
-    cta_url: '/',
-    order: 0
-  }
-]
+const defaultSlides: SliderImage[] = []
 
 const slideVariants = {
   enter: {
@@ -155,7 +139,7 @@ export default function HeroSlider() {
 
 
   return (
-    <div className={`relative w-full h-[600px] overflow-hidden bg-gray-900 ${ranade.className}`}>
+    <div className="relative w-full h-[600px] overflow-hidden bg-background">
       {slides.map((slide, index) => (
         <div
           key={slide.id}
@@ -163,28 +147,27 @@ export default function HeroSlider() {
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          {/* Background Image with Gradient Overlay */}
+          {/* Full-Width Background Image with Gradient Overlay */}
           <div className="relative w-full h-full">
-            <div className="absolute right-0 w-[75%] h-full">
-              <div className="relative w-full h-full">
-                <Image
-                  src={slide.image_url}
-                  alt={slide.title}
-                  fill
-                  priority={index <= 1} // Prioritize first two images
-                  className="object-cover rounded-l-[40px] transition-opacity duration-300"
-                  sizes="(max-width: 768px) 100vw, 75vw"
-                  quality={90} // High quality for hero images
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                  onLoad={() => {
-                    // Mark image as loaded for smoother transitions
-                    setImagesLoaded(prev => new Set([...prev, slide.image_url]))
-                  }}
-                />
-              </div>
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/60 to-transparent" />
+            {slide.image_url && (
+              <Image
+                src={slide.image_url}
+                alt={slide.title}
+                fill
+                priority={index <= 1} // Prioritize first two images
+                className="object-cover transition-opacity duration-300"
+                sizes="100vw"
+                quality={90} // High quality for hero images
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                onLoad={() => {
+                  // Mark image as loaded for smoother transitions
+                  setImagesLoaded(prev => new Set([...prev, slide.image_url]))
+                }}
+              />
+            )}
+            {/* Dark gradient overlay for better text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
           </div>
 
           {/* Content Container */}
@@ -201,22 +184,23 @@ export default function HeroSlider() {
                 >
                   <motion.h2
                     variants={childVariants}
-                    className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight relative z-10"
+                    className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight relative z-10 drop-shadow-lg"
                   >
                     {slide.title}
                   </motion.h2>
 
                   <motion.p
                     variants={childVariants}
-                    className="text-base md:text-lg text-gray-300 mb-8 leading-relaxed relative z-10"
+                    className="text-base md:text-lg lg:text-xl text-white/90 mb-8 leading-relaxed relative z-10 drop-shadow-md"
                   >
                     {slide.description}
                   </motion.p>
 
                   <motion.div variants={childVariants} className="relative z-10">
-                    <button 
+                    <Button 
                       onClick={() => router.push(slide.cta_url || '/')}
-                      className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-medium inline-flex items-center group"
+                      size="lg"
+                      className="px-8 py-4 text-base font-medium inline-flex items-center group"
                     >
                       {slide.cta_text}
                       <svg
@@ -232,7 +216,7 @@ export default function HeroSlider() {
                           d="M13 7l5 5m0 0l-5 5m5-5H6"
                         />
                       </svg>
-                    </button>
+                    </Button>
                   </motion.div>
                 </motion.div>
               )}
@@ -244,20 +228,24 @@ export default function HeroSlider() {
       {/* Navigation Controls */}
       {slides.length > 1 && (
         <>
-          <button
+          <Button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors backdrop-blur-sm"
+            variant="ghost"
+            size="icon"
+            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
             aria-label="Previous slide"
           >
             <ChevronLeftIcon className="w-6 h-6" />
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors backdrop-blur-sm"
+            variant="ghost"
+            size="icon"
+            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
             aria-label="Next slide"
           >
             <ChevronRightIcon className="w-6 h-6" />
-          </button>
+          </Button>
 
           {/* Slide Indicators */}
           <div className="absolute bottom-8 left-8 flex gap-3">

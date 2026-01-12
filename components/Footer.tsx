@@ -44,39 +44,32 @@ interface FooterSettings {
 
 const defaultSettings: FooterSettings = {
   social_links: {
-    facebook: 'https://www.facebook.com/profile.php?id=61564768904026',
+    facebook: '',
     twitter: '',
-    instagram: 'https://www.instagram.com/smart.spoon.plus/',
+    instagram: '',
     linkedin: ''
   },
   contact_info: {
-    email: 'info@oncotrition.com',
-    phone: '0714034902',
+    email: '',
+    phone: '',
     address: ''
   },
-  quick_links: [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Features', href: '/features' },
-    { name: 'Pricing', href: '/pricing' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Contact', href: '/contact' }
-  ],
+  quick_links: [],
   legal_links: {
-    privacy_policy: '/privacy',
-    terms_of_service: '/terms',
-    cookie_policy: '/cookies'
+    privacy_policy: '',
+    terms_of_service: '',
+    cookie_policy: ''
   },
   newsletter: {
-    enabled: true,
-    description: 'Subscribe to our newsletter for tips and updates.'
+    enabled: false,
+    description: ''
   },
   brand: {
-    description: 'Empowering your journey to better health through personalized nutrition guidance.'
+    description: ''
   },
-  copyright_text: ` ${new Date().getFullYear()} Oncotrition. All rights reserved.`,
+  copyright_text: '',
   promo_images: [],
-  promo_title: 'Featured Content'
+  promo_title: ''
 };
 
 const Footer = () => {

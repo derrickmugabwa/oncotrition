@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { createClient } from '@/utils/supabase/client';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import FloatingImage from './FloatingImage';
 
 interface VisionSection {
@@ -68,12 +70,14 @@ export default function Values() {
     const fetchContent = async () => {
       try {
         // Fetch vision content
-        const { data: visionData } = await supabase
+        const { data: visionData, error: visionError } = await supabase
           .from('values_vision')
           .select('*')
           .single();
   
-        if (visionData) {
+        if (visionError) {
+          console.warn('Error fetching vision data:', visionError);
+        } else if (visionData) {
           setVision(visionData);
         }
       } catch (visionErr) {
@@ -82,16 +86,19 @@ export default function Values() {
 
       try {
         // Fetch values image
-        const { data: valuesImageData } = await supabase
+        const { data: valuesImageData, error: valuesError } = await supabase
           .from('values_image')
           .select('*')
           .single();
   
-        if (valuesImageData) {
+        if (valuesError) {
+          console.warn('Error fetching values image data:', valuesError);
+        } else if (valuesImageData) {
           setValuesImage(valuesImageData);
         }
       } catch (valuesErr) {
         console.warn('Error fetching values image data:', valuesErr);
+        
         // Check if we have locally stored values image data
         const storedValuesImage = localStorage.getItem('values_image');
         if (storedValuesImage) {
@@ -108,121 +115,111 @@ export default function Values() {
     fetchContent();
   }, []);
 
-  if (!vision) return null;
+  if (!vision) {
+    return (
+      <section className="relative py-20 bg-background">
+        <div className="container relative mx-auto px-4">
+          <div className="text-center">
+            <p className="text-muted-foreground">Loading values...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Hardcoded images for secondary cards
+  const secondaryImages = [
+    'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80', // Food/nutrition image
+    'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800&q=80'  // Healthcare/medical image
+  ];
+
+  // Create cards array from vision sections and values
+  const cards = [
+    // Main values card
+    {
+      id: 'values',
+      title: valuesImage?.title || 'Our Values',
+      description: valuesImage?.description || '',
+      imageUrl: valuesImage?.image_url || '',
+      isPrimary: true
+    },
+    // Vision sections as cards with hardcoded images
+    ...(vision.sections || []).map((section, idx) => ({
+      id: `vision-${idx}`,
+      title: section.title,
+      description: section.description,
+      imageUrl: secondaryImages[idx] || secondaryImages[0], // Use hardcoded images
+      isPrimary: false
+    }))
+  ];
 
   return (
-    <section className="py-24 relative overflow-hidden bg-white dark:bg-gray-900">
-      {/* Background removed for clean white look */}
+    <section className="relative py-20 bg-background">
+      <div className="container relative mx-auto px-4">
+        {/* Background label */}
+        <span className="absolute -top-10 -z-50 select-none text-[180px] font-extrabold leading-[1] text-foreground/[0.025] md:text-[250px] lg:text-[400px] -left-[18%]">
+          Values
+        </span>
+        
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-center text-3xl font-bold text-primary mb-6 font-outfit"
+        >
+          {vision.title}
+        </motion.h2>
+        
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="text-center text-base text-muted-foreground mb-8 w-full px-4 sm:px-6 lg:px-8 font-outfit"
+        >
+          {vision.description}
+        </motion.p>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* Values Image Section */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="absolute -top-4 -left-4 w-20 h-20 bg-indigo-500/10 rounded-full blur-2xl"></div>
-            <div className="relative bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 lg:p-10">
-              <motion.div
-                initial={{ scale: 0.95 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              >
-                <h3 className="relative inline-block mb-6">
-                  <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
-                    {valuesImage?.title || 'Our Values'}
-                  </span>
-                  <div className="absolute -bottom-1 left-0 w-1/3 h-1 bg-emerald-500 rounded-full"></div>
-                </h3>
-                
-                {valuesImage?.description && (
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                    {renderTextWithLinks(valuesImage.description)}
-                  </p>
-                )}
-                
-                {valuesImage?.image_url && (
-                  <motion.div 
-                    className="relative w-full aspect-[16/12] rounded-xl shadow-lg mt-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    viewport={{ once: true }}
-                  >
-                    <img 
-                      src={valuesImage.image_url} 
-                      alt="Our Values" 
-                      className="w-full h-full object-cover rounded-xl"
-                    />
-                    
-                    {/* Floating image at bottom right - HIDDEN FOR NOW (uncomment to re-enable) */}
-                    {/* {valuesImage.floating_image_url && (
-                      <div className="absolute bottom-[-20px] right-[-80px] z-30">
-                        <FloatingImage
-                          position="relative"
-                          imageUrl={valuesImage.floating_image_url}
-                          altText="Healthy ingredients"
-                          borderTrailColor="bg-emerald-500"
-                        />
-                      </div>
-                    )} */}
-                    
+      <div className="grid h-auto grid-cols-1 gap-5 md:h-[650px] md:grid-cols-2 lg:grid-cols-[1fr_0.5fr]">
+        {cards.map((card, index) => {
+          const isPrimary = card.isPrimary;
 
-                  </motion.div>
-                )}
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Vision Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="absolute -top-4 -right-4 w-20 h-20 bg-blue-500/10 rounded-full blur-2xl"></div>
-            <div className="relative bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 lg:p-10">
-              <motion.div
-                initial={{ scale: 0.95 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              >
-                <h3 className="relative inline-block mb-8">
-                  <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
-                    {vision.title}
-                  </span>
-                  <div className="absolute -bottom-1 left-0 w-1/3 h-1 bg-emerald-500 rounded-full"></div>
-                </h3>
-                
-                {/* Vision Sections */}
-                <div className="space-y-6">
-                  {(vision.sections || []).map((section, idx: number) => (
-                    <motion.div 
-                      key={idx}
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.15 }}
-                      viewport={{ once: true }}
-                      className="p-5 bg-white/70 dark:bg-gray-800/50 rounded-xl border border-gray-100/50 dark:border-gray-700/50 shadow-sm"
-                    >
-                      <h4 className="text-lg font-semibold mb-3 text-emerald-600 dark:text-emerald-400">
-                        {section.title}
-                      </h4>
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        {renderTextWithLinks(section.description)}
-                      </p>
-                    </motion.div>
-                  ))}
+          return (
+            <motion.div
+              key={card.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              style={{ backgroundImage: card.imageUrl ? `url(${card.imageUrl})` : 'none' }}
+              className={`group relative row-span-1 flex size-full cursor-pointer flex-col justify-end overflow-hidden rounded-[20px] bg-cover bg-center bg-no-repeat p-6 text-white max-md:h-[300px] transition-all duration-300 hover:scale-[0.98] hover:rotate-[0.3deg] ${
+                isPrimary ? 'col-span-1 row-span-1 md:col-span-2 md:row-span-2 lg:col-span-1' : ''
+              } ${!card.imageUrl ? 'bg-gradient-to-br from-teal-500 to-emerald-600' : ''}`}
+            >
+              <div className="absolute inset-0 -z-0 h-[130%] w-full bg-gradient-to-t from-black/80 to-transparent transition-all duration-500 group-hover:h-full" />
+              
+              <article className="relative z-0 flex flex-col gap-4">
+                <div className="flex flex-col gap-3">
+                  <h3 className={`font-semibold font-outfit ${isPrimary ? 'text-3xl md:text-4xl' : 'text-base md:text-lg'}`}>
+                    {card.title}
+                  </h3>
+                  {card.description && (
+                    <p className="text-sm md:text-base text-white/90 leading-relaxed font-outfit">
+                      {renderTextWithLinks(card.description)}
+                    </p>
+                  )}
+                  {isPrimary && (
+                    <Badge className="w-fit text-sm px-3 py-1 bg-white/30 text-white border-0 backdrop-blur-md font-outfit">
+                      Our Foundation
+                    </Badge>
+                  )}
                 </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
+              </article>
+            </motion.div>
+          );
+        })}
+      </div>
       </div>
     </section>
   );

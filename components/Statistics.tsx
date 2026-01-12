@@ -4,13 +4,7 @@ import { useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { createClient } from '@/utils/supabase/client'
-import { Inter } from 'next/font/google';
-
-const ranade = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-});
+import { Card, CardContent } from '@/components/ui/card';
 
 interface Statistic {
   id: number
@@ -39,24 +33,34 @@ const StatCard = ({ stat, index }: StatCardProps) => {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.5, delay: index * 0.2 }}
-      className="relative bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 dark:from-emerald-900/20 dark:via-green-900/10 dark:to-teal-900/20 p-8 rounded-2xl shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+      className="h-full"
     >
-      <motion.h3 
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
-        transition={{ duration: 0.5, delay: index * 0.2 + 0.2 }}
-        className="text-3xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
-      >
-        {stat.number}
-      </motion.h3>
-      <motion.p 
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
-        className="text-emerald-800 dark:text-emerald-200"
-      >
-        {stat.label}
-      </motion.p>
+      <Card className="group relative bg-gradient-to-br from-teal-50 via-emerald-50 to-cyan-50 dark:from-teal-950/30 dark:via-emerald-950/30 dark:to-cyan-950/30 border-2 border-teal-200 dark:border-teal-800 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:border-teal-400 dark:hover:border-teal-600 h-full overflow-hidden">
+        {/* Subtle gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-emerald-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        {/* Decorative circle */}
+        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-500" />
+        
+        <CardContent className="p-8 relative z-10">
+          <motion.h3 
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.5, delay: index * 0.2 + 0.2 }}
+            className="text-4xl font-bold mb-2 bg-gradient-to-r from-teal-600 to-emerald-600 dark:from-teal-400 dark:to-emerald-400 bg-clip-text text-transparent"
+          >
+            {stat.number}
+          </motion.h3>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
+            className="text-teal-700 dark:text-teal-300 font-medium"
+          >
+            {stat.label}
+          </motion.p>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 };
@@ -77,17 +81,15 @@ const Header = ({ headerContent }: { headerContent: HeaderContent }) => {
         initial={{ y: 20, opacity: 0 }}
         animate={isHeadingInView ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-2xl md:text-3xl font-bold mb-4"
+        className="text-2xl md:text-3xl font-bold mb-4 text-primary"
       >
-        <span className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
-          {headerContent.heading}
-        </span>
+        {headerContent.heading}
       </motion.h2>
       <motion.p 
         initial={{ y: 20, opacity: 0 }}
         animate={isHeadingInView ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="text-gray-600 dark:text-gray-300 max-w-4xl mx-auto text-base"
+        className="text-muted-foreground max-w-4xl mx-auto text-base"
       >
         {headerContent.paragraph}
       </motion.p>
@@ -98,8 +100,8 @@ const Header = ({ headerContent }: { headerContent: HeaderContent }) => {
 export default function Statistics() {
   const [statistics, setStatistics] = useState<Statistic[]>([])
   const [headerContent, setHeaderContent] = useState<HeaderContent>({
-    heading: 'Our Impact in Numbers',
-    paragraph: 'See how we are making a difference in peoples lives through our nutrition platform.'
+    heading: '',
+    paragraph: ''
   })
   const [error, setError] = useState<string | null>(null)
   const supabase = createClient()
@@ -208,25 +210,25 @@ export default function Statistics() {
 
   if (error) {
     return (
-      <div className="text-center text-red-600 dark:text-red-400">
+      <div className="text-center text-destructive">
         {error}
       </div>
     )
   }
 
   return (
-    <section className={`py-24 sm:py-32 bg-white dark:bg-gray-900 ${ranade.className}`}>
+    <section className="py-12 bg-background">
       {/* Header with dynamic content */}
       <Header headerContent={headerContent} />
       
       {/* Keep existing statistics section */}
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
         {error ? (
-          <div className="text-center text-red-600 dark:text-red-400 mb-8">
+          <div className="text-center text-destructive mb-8">
             {error}
           </div>
         ) : statistics.length === 0 ? (
-          <div className="text-center text-gray-600 dark:text-gray-400">
+          <div className="text-center text-muted-foreground">
             No statistics available
           </div>
         ) : (

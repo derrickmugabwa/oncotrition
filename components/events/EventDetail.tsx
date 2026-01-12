@@ -3,6 +3,10 @@ import Link from 'next/link';
 import { Calendar, Clock, MapPin, Users, User, Mail, Phone, ArrowLeft, AlertCircle } from 'lucide-react';
 import { Event } from '@/types/events';
 import { format } from 'date-fns';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface EventDetailProps {
   event: Event;
@@ -13,18 +17,18 @@ export default function EventDetail({ event }: EventDetailProps) {
   const formattedDate = format(eventDate, 'EEEE, MMMM dd, yyyy');
   const formattedTime = event.event_time.slice(0, 5); // HH:MM format
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
       case 'upcoming':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'default';
       case 'ongoing':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'secondary';
       case 'completed':
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'outline';
       case 'cancelled':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'destructive';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'outline';
     }
   };
 
@@ -36,14 +40,13 @@ export default function EventDetail({ event }: EventDetailProps) {
   const spotsLeft = event.max_attendees ? event.max_attendees - event.current_attendees : null;
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 font-outfit">
       {/* Back Button */}
-      <Link
-        href="/events"
-        className="inline-flex items-center gap-2 text-[#009688] hover:text-[#00796b] mb-6 transition-colors"
-      >
-        <ArrowLeft className="w-5 h-5" />
-        <span className="font-medium">Back to Events</span>
+      <Link href="/events">
+        <Button variant="ghost" className="mb-6 -ml-2">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Events
+        </Button>
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -66,59 +69,73 @@ export default function EventDetail({ event }: EventDetailProps) {
             )}
             
             {/* Status Badge */}
-            <div className={`absolute top-6 right-6 ${getStatusColor(event.status)} px-4 py-2 rounded-full text-sm font-semibold capitalize border-2 backdrop-blur-sm`}>
-              {event.status}
+            <div className="absolute top-6 right-6">
+              <Badge 
+                variant={getStatusVariant(event.status)} 
+                className={`capitalize text-sm px-4 py-2 ${
+                  event.status === 'upcoming' ? 'bg-green-500 text-white hover:bg-green-600' :
+                  event.status === 'ongoing' ? 'bg-blue-500 text-white hover:bg-blue-600' :
+                  event.status === 'completed' ? 'bg-gray-500 text-white hover:bg-gray-600' :
+                  event.status === 'cancelled' ? 'bg-red-500 text-white hover:bg-red-600' : ''
+                }`}
+              >
+                {event.status}
+              </Badge>
             </div>
           </div>
 
           {/* Title and Description */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {event.title}
-            </h1>
-            
-            <div className="prose prose-lg max-w-none text-gray-700">
-              <p className="whitespace-pre-line">{event.description}</p>
-            </div>
-
-            {/* Additional Info */}
-            {event.additional_info && (
-              <div className="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-blue-900 mb-1">Additional Information</h3>
-                    <p className="text-blue-800 text-sm whitespace-pre-line">{event.additional_info}</p>
-                  </div>
-                </div>
+          <Card className="mb-8">
+            <CardContent className="p-8">
+              <h1 className="text-4xl font-bold text-foreground mb-4">
+                {event.title}
+              </h1>
+              
+              <div className="prose prose-lg max-w-none text-muted-foreground">
+                <p className="whitespace-pre-line">{event.description}</p>
               </div>
-            )}
-          </div>
+
+              {/* Additional Info */}
+              {event.additional_info && (
+                <Alert className="mt-6">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    <h3 className="font-semibold mb-1">Additional Information</h3>
+                    <p className="text-sm whitespace-pre-line">{event.additional_info}</p>
+                  </AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Organizer Information */}
           {(event.organizer_name || event.organizer_contact) && (
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Organizer</h2>
-              <div className="space-y-3">
-                {event.organizer_name && (
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <User className="w-5 h-5 text-[#009688]" />
-                    <span className="font-medium">{event.organizer_name}</span>
-                  </div>
-                )}
-                {event.organizer_contact && (
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <Mail className="w-5 h-5 text-[#009688]" />
-                    <a
-                      href={`mailto:${event.organizer_contact}`}
-                      className="hover:text-[#009688] transition-colors"
-                    >
-                      {event.organizer_contact}
-                    </a>
-                  </div>
-                )}
-              </div>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Organizer</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {event.organizer_name && (
+                    <div className="flex items-center gap-3 text-foreground">
+                      <User className="w-5 h-5 text-primary" />
+                      <span className="font-medium">{event.organizer_name}</span>
+                    </div>
+                  )}
+                  {event.organizer_contact && (
+                    <div className="flex items-center gap-3 text-foreground">
+                      <Mail className="w-5 h-5 text-primary" />
+                      <a
+                        href={`mailto:${event.organizer_contact}`}
+                        className="hover:text-primary transition-colors"
+                      >
+                        {event.organizer_contact}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           )}
         </div>
 
@@ -126,118 +143,158 @@ export default function EventDetail({ event }: EventDetailProps) {
         <div className="lg:col-span-1">
           <div className="sticky top-24 space-y-6">
             {/* Event Details Card */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Event Details</h2>
-              
-              <div className="space-y-4">
-                {/* Date */}
-                <div className="flex items-start gap-3">
-                  <Calendar className="w-5 h-5 text-[#009688] mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm text-gray-500">Date</p>
-                    <p className="font-semibold text-gray-900">{formattedDate}</p>
+            <Card>
+              <CardHeader>
+                <CardTitle>Event Details</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Date */}
+                  <div className="flex items-start gap-3">
+                    <Calendar className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Date</p>
+                      <p className="font-semibold text-foreground">{formattedDate}</p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Time */}
-                <div className="flex items-start gap-3">
-                  <Clock className="w-5 h-5 text-[#009688] mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm text-gray-500">Time</p>
-                    <p className="font-semibold text-gray-900">{formattedTime}</p>
+                  {/* Time */}
+                  <div className="flex items-start gap-3">
+                    <Clock className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Time</p>
+                      <p className="font-semibold text-foreground">{formattedTime}</p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Location */}
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-[#009688] mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm text-gray-500">Location</p>
-                    <p className="font-semibold text-gray-900">{event.location}</p>
+                  {/* Location */}
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Location</p>
+                      <p className="font-semibold text-foreground">{event.location}</p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Attendees */}
-                {event.max_attendees && (
-                  <div className="pt-4 border-t border-gray-200">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Users className="w-5 h-5 text-[#009688]" />
-                        <span className="text-sm text-gray-500">Attendees</span>
+                  {/* Attendees */}
+                  {event.max_attendees && (
+                    <div className="pt-4 border-t">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-5 h-5 text-primary" />
+                          <span className="text-sm text-muted-foreground">Attendees</span>
+                        </div>
+                        <span className="font-semibold text-foreground">
+                          {event.current_attendees} / {event.max_attendees}
+                        </span>
                       </div>
-                      <span className="font-semibold text-gray-900">
-                        {event.current_attendees} / {event.max_attendees}
-                      </span>
+                      <div className="w-full bg-secondary rounded-full h-2 mb-2">
+                        <div
+                          className={`h-2 rounded-full transition-all duration-300 ${
+                            isFull ? 'bg-destructive' : 'bg-primary'
+                          }`}
+                          style={{ width: `${Math.min(attendeePercentage, 100)}%` }}
+                        />
+                      </div>
+                      {spotsLeft !== null && spotsLeft > 0 && (
+                        <p className="text-sm text-muted-foreground">
+                          {spotsLeft} {spotsLeft === 1 ? 'spot' : 'spots'} remaining
+                        </p>
+                      )}
+                      {isFull && (
+                        <p className="text-sm text-destructive font-medium">Event is full</p>
+                      )}
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                      <div
-                        className={`h-2 rounded-full transition-all duration-300 ${
-                          isFull ? 'bg-red-500' : 'bg-[#009688]'
-                        }`}
-                        style={{ width: `${Math.min(attendeePercentage, 100)}%` }}
-                      />
-                    </div>
-                    {spotsLeft !== null && spotsLeft > 0 && (
-                      <p className="text-sm text-gray-600">
-                        {spotsLeft} {spotsLeft === 1 ? 'spot' : 'spots'} remaining
-                      </p>
-                    )}
-                    {isFull && (
-                      <p className="text-sm text-red-600 font-medium">Event is full</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
-            {/* Registration Card */}
-            {event.registration_link && event.status === 'upcoming' && (
-              <div className="bg-gradient-to-br from-[#009688] to-blue-600 rounded-2xl shadow-lg p-6 text-white">
-                <h3 className="text-xl font-bold mb-3">Ready to Join?</h3>
-                <p className="text-white/90 mb-4 text-sm">
-                  {isFull 
-                    ? 'This event is currently full. Register to join the waitlist.'
-                    : 'Secure your spot at this event today!'}
-                </p>
-                <a
-                  href={event.registration_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full text-center bg-white text-[#009688] py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg"
-                >
-                  {isFull ? 'Join Waitlist' : 'Register Now'}
-                </a>
-              </div>
+            {/* Registration Card - Internal Registration */}
+            {event.has_internal_registration && 
+             event.registration_type === 'internal' && 
+             event.status === 'upcoming' && (
+              <Card className="bg-gradient-to-br from-[#009688] to-[#00796b] text-white border-0">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-bold mb-3">Ready to Join?</h3>
+                  <p className="text-white/90 mb-4 text-sm">
+                    {isFull 
+                      ? 'This event is currently full.'
+                      : 'Register now to secure your spot at this event.'}
+                  </p>
+                  {event.registration_deadline && (
+                    <p className="text-white/80 mb-4 text-xs">
+                      Registration closes: {new Date(event.registration_deadline).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </p>
+                  )}
+                  <Link href={`/events/${event.id}/register`} className="block w-full">
+                    <Button 
+                      className="w-full bg-white hover:bg-gray-100 text-[#009688]" 
+                      variant="secondary" 
+                      size="lg"
+                      disabled={isFull}
+                    >
+                      {isFull ? 'Event Full' : 'Register for This Event'}
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Registration Card - External Link */}
+            {event.registration_link && 
+             event.registration_type !== 'internal' && 
+             event.status === 'upcoming' && (
+              <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-0">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-bold mb-3">Ready to Join?</h3>
+                  <p className="text-primary-foreground/90 mb-4 text-sm">
+                    {isFull 
+                      ? 'This event is currently full. Register to join the waitlist.'
+                      : 'Secure your spot at this event today!'}
+                  </p>
+                  <a
+                    href={event.registration_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full"
+                  >
+                    <Button className="w-full bg-white hover:bg-gray-100 text-primary" variant="secondary" size="lg">
+                      {isFull ? 'Join Waitlist' : 'Register Now'}
+                    </Button>
+                  </a>
+                </CardContent>
+              </Card>
             )}
 
             {/* Event Cancelled Notice */}
             {event.status === 'cancelled' && (
-              <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-bold text-red-900 mb-1">Event Cancelled</h3>
-                    <p className="text-red-800 text-sm">
-                      This event has been cancelled. Please check back for future events.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  <h3 className="font-bold mb-1">Event Cancelled</h3>
+                  <p className="text-sm">
+                    This event has been cancelled. Please check back for future events.
+                  </p>
+                </AlertDescription>
+              </Alert>
             )}
 
             {/* Event Completed Notice */}
             {event.status === 'completed' && (
-              <div className="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="w-6 h-6 text-gray-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-bold text-gray-900 mb-1">Event Completed</h3>
-                    <p className="text-gray-700 text-sm">
-                      This event has ended. Check out our upcoming events!
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  <h3 className="font-bold mb-1">Event Completed</h3>
+                  <p className="text-sm">
+                    This event has ended. Check out our upcoming events!
+                  </p>
+                </AlertDescription>
+              </Alert>
             )}
           </div>
         </div>

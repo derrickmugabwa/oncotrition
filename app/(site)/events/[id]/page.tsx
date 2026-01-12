@@ -17,6 +17,8 @@ interface EventPageProps {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: EventPageProps): Promise<Metadata> {
+  const { id } = await params;
+  
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
   const { data: event } = await supabase
     .from('events')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (!event) {
@@ -47,6 +49,8 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
 }
 
 export default async function EventPage({ params }: EventPageProps) {
+  const { id } = await params;
+  
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -56,7 +60,7 @@ export default async function EventPage({ params }: EventPageProps) {
   const { data: event, error } = await supabase
     .from('events')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (error || !event) {
@@ -64,7 +68,7 @@ export default async function EventPage({ params }: EventPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-20 font-poppins">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-20">
       <EventDetail event={event as Event} />
       <EventDetailClient event={event as Event} />
     </main>
