@@ -25,17 +25,7 @@ interface SliderImage {
   order: number
 }
 
-const defaultSlides = [
-  {
-    id: 1,
-    title: 'Welcome to SmartSpoon+',
-    description: 'Your personal nutrition tracking assistant',
-    image_url: '/images/default-hero.jpg',
-    cta_text: 'Get Started',
-    cta_url: '/',
-    order: 0
-  }
-]
+const defaultSlides: SliderImage[] = []
 
 // Keywords to highlight in green (your theme color)
 const highlightKeywords = [

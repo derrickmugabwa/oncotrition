@@ -30,10 +30,10 @@ const floatingAnimation = {
 
 export default function Hero({ content }: HeroProps) {
   const defaultContent: HeroContent = {
-    title: 'Nutrition Mentorship',
-    subtitle: 'Expert guidance for your nutrition journey',
-    tagline: 'Professional Support',
-    background_image: '/images/mentorship-hero-bg.jpg'
+    title: '',
+    subtitle: '',
+    tagline: '',
+    background_image: ''
   };
 
   const [heroContent, setHeroContent] = useState<HeroContent>(content || defaultContent);

@@ -297,24 +297,16 @@ export default function Steps() {
               >
                 <motion.div
                   variants={cardHover}
-                  animate={isActive ? "animate" : "initial"}
-                  initial="initial"
-                  className={`h-full p-8 bg-white dark:bg-gray-800/80 rounded-2xl shadow-xl dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-100 dark:border-gray-700/50 relative z-10 transition-all duration-500 ${
-                    isActive ? "border-primary/30" : ""
-                  }`}
+                  initial="rest"
+                  whileHover="hover"
+                  className="h-full p-8 bg-white dark:bg-gray-800/80 rounded-2xl shadow-xl dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-100 dark:border-gray-700/50 relative z-10 transition-all duration-500"
                 >
                   <motion.div 
-                    variants={floatingAnimation}
-                    animate={isActive ? "animate" : "initial"}
                     className="relative flex flex-col items-center"
                   >
                     {/* Step Number */}
-                    <div className={`absolute -top-4 left-0 rounded-full px-3 py-1 transition-colors duration-500 ${
-                      isActive ? "bg-primary text-white" : "bg-primary/10"
-                    }`}>
-                      <span className={`text-sm font-semibold ${
-                        isActive ? "text-white" : "text-primary"
-                      }`}>
+                    <div className="absolute -top-4 left-0 rounded-full px-3 py-1 bg-primary/10 transition-colors duration-500">
+                      <span className="text-sm font-semibold text-primary">
                         Step {index + 1}
                       </span>
                     </div>
@@ -322,11 +314,7 @@ export default function Steps() {
                     {/* Icon */}
                     <motion.div
                       variants={iconHover}
-                      className={`relative mb-5 w-16 h-16 rounded-xl bg-gradient-to-br flex items-center justify-center transition-all duration-500 shadow-lg overflow-hidden ${
-                        isActive 
-                          ? "from-primary/40 to-primary/20 shadow-primary/20" 
-                          : "from-primary/20 to-primary/10 shadow-primary/5"
-                      }`}
+                      className="relative mb-5 w-16 h-16 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center transition-all duration-500 shadow-lg shadow-primary/5 overflow-hidden"
                     >
                       {/* Background glow effect */}
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-50" />
@@ -342,7 +330,7 @@ export default function Steps() {
                               width: '100%',
                               height: '100%',
                               color: 'rgb(var(--primary-rgb))',
-                              opacity: isActive ? 1 : 0.7
+                              opacity: 0.7
                             }
                           })}
                         </div>
@@ -350,9 +338,7 @@ export default function Steps() {
                     </motion.div>
 
                     {/* Content */}
-                    <h3 className={`text-lg font-bold text-center mb-2 transition-colors duration-500 ${
-                      isActive ? "text-primary" : "text-gray-900 dark:text-white"
-                    }`}>
+                    <h3 className="text-lg font-bold text-center mb-2 text-gray-900 dark:text-white transition-colors duration-500">
                       {step.title}
                     </h3>
                     <p className="text-gray-600 dark:text-gray-300 text-center text-xs leading-relaxed">
@@ -360,15 +346,14 @@ export default function Steps() {
                     </p>
 
                     {/* Decorative Elements */}
-                    <div className={`absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/2 to-transparent rounded-2xl pointer-events-none transition-opacity duration-500 ${
-                      isActive ? "opacity-100" : "opacity-0"
-                    }`} />
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/2 to-transparent rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                     {/* Connecting Lines (only for non-last items) */}
                     {index < steps.length - 1 && (
                       <motion.div
                         initial="hidden"
-                        animate={isActive ? "visible" : "hidden"}
+                        whileInView="visible"
+                        viewport={{ once: true }}
                         variants={connectingLineAnimation}
                         className="hidden lg:block absolute top-1/2 -right-8 w-16 h-px bg-gradient-to-r from-primary to-transparent transform -translate-y-1/2 z-10"
                       />

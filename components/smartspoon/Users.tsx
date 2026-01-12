@@ -50,40 +50,11 @@ const userIcons = {
 
 type IconName = keyof typeof userIcons;
 
-const defaultUsers = [
-  {
-    id: 1,
-    title: "Athletes & Sports Enthusiasts",
-    description: "Track nutrition and optimize performance with precision monitoring of intake and energy expenditure.",
-    icon_name: "bolt",
-    sort_order: 0,
-  },
-  {
-    id: 2,
-    title: "Health-Conscious Individuals",
-    description: "Monitor daily nutritional intake and maintain a balanced diet with smart tracking technology.",
-    icon_name: "sparkles",
-    sort_order: 1,
-  },
-  {
-    id: 3,
-    title: "Fitness Trainers",
-    description: "Help clients achieve their goals with accurate nutrition tracking and data-driven insights.",
-    icon_name: "trophy",
-    sort_order: 2,
-  },
-  {
-    id: 4,
-    title: "Nutritionists & Dietitians",
-    description: "Provide professional guidance backed by precise nutritional data and real-time monitoring.",
-    icon_name: "academic",
-    sort_order: 3,
-  }
-];
+const defaultUsers: any[] = [];
 
 const defaultHeaderContent = {
-  heading: "Who Benefits from SmartSpoon?",
-  paragraph: "Our innovative smart utensil technology serves diverse groups of users, helping them achieve their nutrition and health goals."
+  heading: "",
+  paragraph: ""
 };
 
 function UserCard({ title, description, icon_name, index }: UserCardProps) {

@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import StatsCard from './StatsCard';
 import ConversationCard from './ConversationCard';
 import MealPlanCard from './MealPlanCard';
@@ -27,13 +29,19 @@ export default function Mission() {
 
   useEffect(() => {
     const fetchContent = async () => {
-      const { data, error } = await supabase
-        .from('mission_content')
-        .select('*')
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from('mission_content')
+          .select('*')
+          .single();
 
-      if (!error && data) {
-        setContent(data);
+        if (error) {
+          console.warn('Error fetching mission content:', error);
+        } else if (data) {
+          setContent(data);
+        }
+      } catch (err) {
+        console.warn('Error fetching mission content:', err);
       }
     };
 
@@ -49,51 +57,50 @@ export default function Mission() {
         transition={{ duration: 1 }}
         className="container mx-auto px-4 sm:px-6 lg:px-8 relative pt-32 sm:pt-32 md:pt-20 lg:pt-16">
         {/* Increased padding significantly since floating cards removed - more breathing room */}
-        <div className="flex flex-col lg:flex-row items-center gap-24 lg:gap-40 py-12">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 py-12">
           {/* Content Side */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="lg:w-1/2 space-y-10 relative z-10"
+            className="lg:w-[45%] space-y-8 relative z-10"
           >
-            <div className="space-y-6 relative">
-              <div className="absolute -left-6 -top-6 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl"></div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                viewport={{ once: true }}
-                className="inline-block"
-              >
-                <h2 className="relative inline-block">
-                  <span className="text-5xl lg:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-500">
-                    {content.title}
-                  </span>
-                  <div className="absolute -bottom-2 left-0 w-1/3 h-1.5 bg-emerald-500 rounded-full"></div>
-                </h2>
-              </motion.div>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                viewport={{ once: true }}
-                className="text-2xl font-medium text-emerald-700 dark:text-emerald-300 drop-shadow-sm"
-              >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Badge className="mb-6 text-sm px-4 py-1.5 bg-gradient-to-r from-teal-500 to-emerald-500 text-white border-0 shadow-md font-outfit">
+                About Us
+              </Badge>
+              <h2 className="text-3xl font-bold text-primary mb-6 font-outfit">
+                {content.title}
+              </h2>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-base font-semibold text-teal-600 dark:text-teal-400 mb-6 font-outfit">
                 {content.subtitle}
-              </motion.p>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                viewport={{ once: true }}
-                className="text-lg leading-relaxed text-gray-600 dark:text-gray-300 tracking-wide mb-8"
-              >
+              </p>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-base leading-relaxed text-muted-foreground font-outfit">
                 {content.description}
-              </motion.p>
-              
-            </div>
+              </p>
+            </motion.div>
           </motion.div>
 
           {/* Image Side */}
@@ -102,7 +109,7 @@ export default function Mission() {
             whileInView={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="lg:w-1/2"
+            className="lg:w-[55%]"
           >
             <div className="relative">
               {/* Meal Plan Card - HIDDEN FOR NOW (uncomment to re-enable) */}
@@ -139,59 +146,23 @@ export default function Mission() {
                 />
               </div> */}
               
-              {/* Mobile version of cards - only visible on small screens */}
-              <div className="md:hidden mt-8 space-y-6">
-                <MealPlanCard
-                  position="relative"
-                  title="Daily Meal Plan"
-                  subtitle="Weight Management"
-                  borderTrailColor="bg-emerald-500"
-                  meals={[
-                    { time: '8:00', name: 'Protein Smoothie', calories: '320' },
-                    { time: '11:00', name: 'Quinoa Salad', calories: '280' },
-                    { time: '14:00', name: 'Salmon & Greens', calories: '450' },
-                    { time: '17:00', name: 'Nut Mix & Fruit', calories: '210' }
-                  ]}
-                />
-                
-                <ConversationCard
-                  position="relative"
-                  className="shadow-xl"
-                  messages={[
-                    { 
-                      sender: 'mentor', 
-                      text: "How's client progress this week?" 
-                    },
-                    { 
-                      sender: 'mentee', 
-                      text: "Improving! Struggling with meal plans." 
-                    }
-                  ]}
-                />
+              <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border border-border">
+                {content.image_url ? (
+                  <Image
+                    src={content.image_url}
+                    alt="Mission"
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-700 ease-in-out"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
+                    unoptimized
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                    <span className="text-muted-foreground">Image loading...</span>
+                  </div>
+                )}
               </div>
-              
-              <motion.div 
-                className="relative w-full aspect-square rounded-3xl overflow-hidden shadow-2xl 
-                           bg-gradient-to-br from-white/10 to-white/30 dark:from-white/5 dark:to-white/10 
-                           backdrop-blur-sm border border-white/20 dark:border-white/10
-                           before:absolute before:inset-0 before:z-10 before:border-4 before:border-emerald-200/20 before:rounded-3xl
-                           after:absolute after:inset-0 after:z-0 after:bg-gradient-to-tr after:from-emerald-500/10 after:to-transparent"
-              >
-              {content.image_url ? (
-                <Image
-                  src={content.image_url}
-                  alt="Mission"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-700 ease-in-out"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-                  <span className="text-gray-400 dark:text-gray-500">Image loading...</span>
-                </div>
-              )}
-            </motion.div>
             </div>
           </motion.div>
         </div>

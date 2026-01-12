@@ -63,17 +63,7 @@ const childVariants = {
   },
 };
 
-const defaultSlides = [
-  {
-    id: 1,
-    title: 'Smart Spoon Technology',
-    subtitle: 'Experience the future of nutrition tracking with our innovative smart spoon technology',
-    tagline: 'Precision Nutrition Tracking',
-    background_image: '/images/smartspoon-hero-bg.jpg',
-    cta_text: 'Learn More',
-    cta_url: '/smartspoon/features'
-  }
-];
+const defaultSlides: any[] = [];
 
 export default function Hero() {
   const supabase = createClient();

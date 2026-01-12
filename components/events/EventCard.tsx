@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { Calendar, Clock, MapPin, Users, Star } from 'lucide-react';
 import { Event } from '@/types/events';
 import { format } from 'date-fns';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface EventCardProps {
   event: Event;
@@ -16,18 +19,18 @@ export default function EventCard({ event }: EventCardProps) {
   const formattedDate = format(eventDate, 'MMM dd, yyyy');
   const formattedTime = event.event_time.slice(0, 5); // HH:MM format
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
       case 'upcoming':
-        return 'bg-green-100 text-green-800';
+        return 'default';
       case 'ongoing':
-        return 'bg-blue-100 text-blue-800';
+        return 'secondary';
       case 'completed':
-        return 'bg-gray-100 text-gray-800';
+        return 'outline';
       case 'cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'destructive';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'outline';
     }
   };
 
@@ -41,97 +44,116 @@ export default function EventCard({ event }: EventCardProps) {
     <motion.div
       whileHover={{ y: -8, scale: 1.02 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition-shadow duration-300 h-full flex flex-col"
+      className="h-full font-outfit"
     >
-      {/* Event Image */}
-      <div className="relative h-48 bg-gradient-to-br from-[#009688] to-blue-500 overflow-hidden">
-        {event.featured_image_url ? (
-          <Image
-            src={event.featured_image_url}
-            alt={event.title}
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Calendar className="w-16 h-16 text-white/30" />
-          </div>
-        )}
-        
-        {/* Featured Badge */}
-        {event.is_featured && (
-          <div className="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-            <Star className="w-3 h-3 fill-current" />
-            Featured
-          </div>
-        )}
+      <Card className="h-full flex flex-col overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+        {/* Event Image */}
+        <div className="relative h-48 bg-gradient-to-br from-primary to-primary/60 overflow-hidden">
+          {event.featured_image_url ? (
+            <Image
+              src={event.featured_image_url}
+              alt={event.title}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Calendar className="w-16 h-16 text-white/30" />
+            </div>
+          )}
+          
+          {/* Featured Badge */}
+          {event.is_featured && (
+            <div className="absolute top-3 left-3">
+              <Badge className="bg-yellow-400 text-yellow-900 hover:bg-yellow-500 border-yellow-500">
+                <Star className="w-3 h-3 fill-current mr-1" />
+                Featured
+              </Badge>
+            </div>
+          )}
 
-        {/* Status Badge */}
-        <div className={`absolute top-3 right-3 ${getStatusColor(event.status)} px-3 py-1 rounded-full text-xs font-semibold capitalize`}>
-          {event.status}
-        </div>
-      </div>
-
-      {/* Event Content */}
-      <div className="p-6 flex-1 flex flex-col">
-        {/* Title */}
-        <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
-          {event.title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
-          {event.description}
-        </p>
-
-        {/* Event Details */}
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-2 text-gray-700 text-sm">
-            <Calendar className="w-4 h-4 text-[#009688]" />
-            <span>{formattedDate}</span>
-          </div>
-          <div className="flex items-center gap-2 text-gray-700 text-sm">
-            <Clock className="w-4 h-4 text-[#009688]" />
-            <span>{formattedTime}</span>
-          </div>
-          <div className="flex items-center gap-2 text-gray-700 text-sm">
-            <MapPin className="w-4 h-4 text-[#009688]" />
-            <span className="line-clamp-1">{event.location}</span>
+          {/* Status Badge */}
+          <div className="absolute top-3 right-3">
+            <Badge 
+              variant={getStatusVariant(event.status)} 
+              className={`capitalize ${
+                event.status === 'upcoming' ? 'bg-green-500 text-white hover:bg-green-600' :
+                event.status === 'ongoing' ? 'bg-blue-500 text-white hover:bg-blue-600' :
+                event.status === 'completed' ? 'bg-gray-500 text-white hover:bg-gray-600' :
+                event.status === 'cancelled' ? 'bg-red-500 text-white hover:bg-red-600' : ''
+              }`}
+            >
+              {event.status}
+            </Badge>
           </div>
         </div>
 
-        {/* Attendees Progress */}
-        {event.max_attendees && (
-          <div className="mb-4">
-            <div className="flex items-center justify-between text-sm text-gray-600 mb-1">
-              <div className="flex items-center gap-1">
-                <Users className="w-4 h-4" />
-                <span>{event.current_attendees} / {event.max_attendees} attendees</span>
+        <CardContent className="flex-1 flex flex-col p-6">
+          {/* Title */}
+          <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2">
+            {event.title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-1">
+            {event.description}
+          </p>
+
+          {/* Event Details */}
+          <div className="space-y-2 mb-4">
+            <div className="flex items-center gap-2 text-foreground text-sm">
+              <Calendar className="w-4 h-4 text-primary" />
+              <span>{formattedDate}</span>
+            </div>
+            <div className="flex items-center gap-2 text-foreground text-sm">
+              <Clock className="w-4 h-4 text-primary" />
+              <span>{formattedTime}</span>
+            </div>
+            <div className="flex items-center gap-2 text-foreground text-sm">
+              <MapPin className="w-4 h-4 text-primary" />
+              <span className="line-clamp-1">{event.location}</span>
+            </div>
+          </div>
+
+          {/* Attendees Progress */}
+          {event.max_attendees && (
+            <div className="mb-4">
+              <div className="flex items-center justify-between text-sm text-muted-foreground mb-1">
+                <div className="flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  <span>{event.current_attendees} / {event.max_attendees} attendees</span>
+                </div>
+                <span>{Math.round(attendeePercentage)}%</span>
               </div>
-              <span>{Math.round(attendeePercentage)}%</span>
+              <div className="w-full bg-secondary rounded-full h-2">
+                <div
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    isFull ? 'bg-destructive' : 'bg-primary'
+                  }`}
+                  style={{ width: `${Math.min(attendeePercentage, 100)}%` }}
+                />
+              </div>
+              {isFull && (
+                <p className="text-xs text-destructive mt-1">Event is full</p>
+              )}
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  isFull ? 'bg-red-500' : 'bg-[#009688]'
-                }`}
-                style={{ width: `${Math.min(attendeePercentage, 100)}%` }}
-              />
-            </div>
-            {isFull && (
-              <p className="text-xs text-red-600 mt-1">Event is full</p>
-            )}
-          </div>
-        )}
+          )}
 
-        {/* Action Button */}
-        <Link
-          href={`/events/${event.id}`}
-          className="block w-full text-center bg-gradient-to-r from-[#009688] to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-[#00796b] hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
-        >
-          View Details
-        </Link>
-      </div>
+          {/* Action Button */}
+          <Link 
+            href={`/events/${event.id}`} 
+            className="block w-full text-center bg-[#009688] hover:bg-[#00796b] text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            <span className="text-white">
+              {event.has_internal_registration && 
+               event.registration_type === 'internal' && 
+               event.status === 'upcoming' 
+                ? 'View Details & Register' 
+                : 'View Details'}
+            </span>
+          </Link>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }

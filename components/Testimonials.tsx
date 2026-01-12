@@ -22,32 +22,7 @@ interface Testimonial {
   image: string;
 }
 
-const defaultTestimonials: Testimonial[] = [
-  {
-    id: 1,
-    name: "Sarah Johnson",
-    role: "Fitness Enthusiast",
-    quote: "SmartSpoon+ completely transformed my approach to healthy eating. The personalized meal plans and tracking features made it so easy to stay on track.",
-    rating: 5,
-    image: "/testimonials/sarah.jpg"
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    role: "Marathon Runner",
-    quote: "As an athlete, proper nutrition is crucial. This platform helped me optimize my diet for peak performance. The results have been incredible!",
-    rating: 5,
-    image: "/testimonials/michael.jpg"
-  },
-  {
-    id: 3,
-    name: "Emma Davis",
-    role: "Wellness Coach",
-    quote: "I recommend SmartSpoon+ to all my clients. It's comprehensive, user-friendly, and delivers real results. The best nutrition platform I've used.",
-    rating: 5,
-    image: "/testimonials/emma.jpg"
-  }
-];
+const defaultTestimonials: Testimonial[] = [];
 
 interface TestimonialCardProps {
   testimonial: Testimonial;

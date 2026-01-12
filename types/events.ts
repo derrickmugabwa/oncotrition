@@ -17,6 +17,16 @@ export interface Event {
   is_featured: boolean;
   created_at: string;
   updated_at: string;
+  
+  // Registration system fields (NEW)
+  has_internal_registration: boolean;
+  registration_type: 'external' | 'internal' | 'none';
+  registration_deadline: string | null;
+  early_bird_deadline: string | null;
+  early_bird_discount: number;
+  terms_and_conditions: string | null;
+  requires_payment: boolean;
+  venue_details: string | null;
 }
 
 // Announcement types

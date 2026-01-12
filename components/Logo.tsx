@@ -11,7 +11,7 @@ interface LogoProps {
 }
 
 export default function Logo({ className = "", showLink = true }: LogoProps) {
-  const [logoUrl, setLogoUrl] = useState<string | null>('/logo.png') // Default logo path
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const supabase = createClient()
@@ -121,13 +121,7 @@ export default function Logo({ className = "", showLink = true }: LogoProps) {
                 }}
                 onError={(e) => {
                   console.error('Error loading logo:', e)
-                  if (logoUrl !== '/logo.png') {
-                    // If current logo fails and it's not the default, try the default
-                    console.log('Falling back to default logo')
-                    setLogoUrl('/logo.png')
-                  } else {
-                    setImageError(true)
-                  }
+                  setImageError(true)
                 }}
               />
             </>

@@ -1,347 +1,270 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { ListChecks } from 'lucide-react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
-interface SurveyQuestion {
+interface FAQItem {
   id: string;
   question: string;
+  answer: string;
   order_index: number;
 }
 
-interface SurveyContent {
+interface FAQContent {
   id: string;
   title: string;
   description: string;
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { 
-    opacity: 0,
-    x: -20
-  },
-  visible: { 
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.5
-    }
-  }
-};
-
-interface SurveyImage {
-  id?: string;
-  image_url?: string;
-}
-
 export default function NutritionSurvey() {
   const supabase = createClient();
+  const spiralRef = useRef<HTMLDivElement | null>(null);
   const [loading, setLoading] = useState(true);
-  const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
-  const [surveyImage, setSurveyImage] = useState<SurveyImage>({
-    image_url: '/images/nutrition-survey-default.jpg'
-  });
-  const [content, setContent] = useState<SurveyContent>({
+  const [faqs, setFaqs] = useState<FAQItem[]>([]);
+  const [query, setQuery] = useState('');
+  const [content, setContent] = useState<FAQContent>({
     id: '',
-    title: 'Nutrition Assessment Questions',
-    description: 'Key questions we\'ll explore during your nutrition consultation'
+    title: 'Frequently Asked Questions',
+    description: 'Find answers to common questions about our nutrition services'
   });
+
+  // Spiral configuration
+  const cfg = useMemo(() => ({
+    points: 700,
+    dotRadius: 1.8,
+    duration: 3.0,
+    color: '#14b8a6', // teal-500
+    pulseEffect: true,
+    opacityMin: 0.25,
+    opacityMax: 0.9,
+    sizeMin: 0.5,
+    sizeMax: 1.4,
+  }), []);
 
   useEffect(() => {
     fetchContent();
-    fetchQuestions();
-    fetchSurveyImage();
+    fetchFAQs();
   }, []);
+
+  // Generate spiral SVG
+  useEffect(() => {
+    if (!spiralRef.current) return;
+
+    const SIZE = 560;
+    const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+    const N = cfg.points;
+    const DOT = cfg.dotRadius;
+    const CENTER = SIZE / 2;
+    const PADDING = 4;
+    const MAX_R = CENTER - PADDING - DOT;
+
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width', String(SIZE));
+    svg.setAttribute('height', String(SIZE));
+    svg.setAttribute('viewBox', `0 0 ${SIZE} ${SIZE}`);
+
+    for (let i = 0; i < N; i++) {
+      const idx = i + 0.5;
+      const frac = idx / N;
+      const r = Math.sqrt(frac) * MAX_R;
+      const theta = idx * GOLDEN_ANGLE;
+      const x = CENTER + r * Math.cos(theta);
+      const y = CENTER + r * Math.sin(theta);
+
+      const c = document.createElementNS(svgNS, 'circle');
+      c.setAttribute('cx', x.toFixed(3));
+      c.setAttribute('cy', y.toFixed(3));
+      c.setAttribute('r', String(DOT));
+      c.setAttribute('fill', cfg.color);
+      c.setAttribute('opacity', '0.6');
+
+      if (cfg.pulseEffect) {
+        const animR = document.createElementNS(svgNS, 'animate');
+        animR.setAttribute('attributeName', 'r');
+        animR.setAttribute('values', `${DOT * cfg.sizeMin};${DOT * cfg.sizeMax};${DOT * cfg.sizeMin}`);
+        animR.setAttribute('dur', `${cfg.duration}s`);
+        animR.setAttribute('begin', `${(frac * cfg.duration).toFixed(3)}s`);
+        animR.setAttribute('repeatCount', 'indefinite');
+        animR.setAttribute('calcMode', 'spline');
+        animR.setAttribute('keySplines', '0.4 0 0.6 1;0.4 0 0.6 1');
+        c.appendChild(animR);
+
+        const animO = document.createElementNS(svgNS, 'animate');
+        animO.setAttribute('attributeName', 'opacity');
+        animO.setAttribute('values', `${cfg.opacityMin};${cfg.opacityMax};${cfg.opacityMin}`);
+        animO.setAttribute('dur', `${cfg.duration}s`);
+        animO.setAttribute('begin', `${(frac * cfg.duration).toFixed(3)}s`);
+        animO.setAttribute('repeatCount', 'indefinite');
+        animO.setAttribute('calcMode', 'spline');
+        animO.setAttribute('keySplines', '0.4 0 0.6 1;0.4 0 0.6 1');
+        c.appendChild(animO);
+      }
+
+      svg.appendChild(c);
+    }
+
+    spiralRef.current.innerHTML = '';
+    spiralRef.current.appendChild(svg);
+  }, [cfg]);
 
   const fetchContent = async () => {
     try {
-      const { data: surveyContent, error } = await supabase
+      const { data, error } = await supabase
         .from('nutrition_survey_content')
         .select('*')
         .single();
 
       if (error) throw error;
-
-      if (surveyContent) {
-        setContent(surveyContent);
-      }
+      if (data) setContent(data);
     } catch (error) {
-      console.error('Error fetching survey content:', error);
+      console.error('Error fetching FAQ content:', error);
     }
   };
 
-  const fetchSurveyImage = async () => {
+  const fetchFAQs = async () => {
     try {
-      const { data: imageData, error } = await supabase
-        .from('nutrition_survey_image')
-        .select('*')
-        .single();
-
-      if (error && error.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
-        throw error;
-      }
-
-      if (imageData) {
-        setSurveyImage(imageData);
-      }
-    } catch (error) {
-      console.error('Error fetching survey image:', error);
-    }
-  };
-
-  const fetchQuestions = async () => {
-    try {
-      const { data: surveyQuestions, error } = await supabase
+      const { data, error } = await supabase
         .from('nutrition_survey')
-        .select('*')
+        .select('id, question, answer, order_index')
         .order('order_index', { ascending: true });
 
       if (error) throw error;
-
-      if (surveyQuestions) {
-        setQuestions(surveyQuestions);
+      
+      if (data) {
+        // Map the data to include answer field (will be empty if not in DB yet)
+        const faqData = data.map(item => ({
+          ...item,
+          answer: item.answer || '' // Fallback to empty string if no answer
+        }));
+        setFaqs(faqData);
       }
     } catch (error) {
-      console.error('Error fetching survey questions:', error);
+      console.error('Error fetching FAQs:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Filter FAQs based on search query
+  const filtered = query
+    ? faqs.filter(({ question, answer }) => 
+        (question + answer).toLowerCase().includes(query.toLowerCase())
+      )
+    : faqs;
+
   if (loading) {
     return (
-      <section className="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="animate-pulse space-y-8">
-              <div className="text-center mb-12">
-                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded-lg w-3/4 mx-auto mb-4"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mx-auto"></div>
-              </div>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl p-6 flex items-start gap-4">
-                  <div className="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-                  <div className="flex-1 h-6 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Split questions into left and right columns
-  const leftQuestions = questions.filter((_, idx) => idx % 2 === 0);
-  const rightQuestions = questions.filter((_, idx) => idx % 2 === 1);
-
-  return (
-    <section className="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-6">
-        <div className="max-w-6xl mx-auto">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-4"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#009688]">
-              {content.title}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-lg">
-              {content.description}
-            </p>
-          </motion.div>
-
-          {/* Questions with Center Image Layout - Desktop view hidden on mobile */}
-          <div className="relative min-h-[600px] hidden md:flex justify-center items-center">
-            {/* Center Image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative z-10 w-full max-w-xl mx-auto"
-            >
-              <div className="relative">
-                <img 
-                  src={surveyImage.image_url} 
-                  alt="Nutrition Survey" 
-                  className="w-80 h-80 md:w-[450px] md:h-[450px] mx-auto object-cover rounded-full border-4 border-white dark:border-gray-700 shadow-xl"
-                />
-                <div className="absolute inset-0 rounded-full border-4 border-purple-500 border-opacity-50 animate-pulse"></div>
-              
-                {/* Left Side Questions */}
-                {leftQuestions.map((q, index) => {
-                  // Calculate position with all cards on same horizontal line
-                  const totalCards = leftQuestions.length;
-                  const containerHeight = 90; // Use 90% of the container height
-                  const verticalSpacing = containerHeight / totalCards;
-                  const topPosition = 5 + (index * verticalSpacing); // Start at 5% from top
-                  
-                  // Use the same horizontal position for all left cards
-                  const horizontalOffset = -60; // Fixed horizontal position for all left cards
-                  
-                  return (
-                    <motion.div
-                      key={q.id}
-                      initial={{ opacity: 0, x: -30 }}
-                      animate={{ 
-                        opacity: 1, 
-                        x: 0,
-                        y: [0, -5, 0, 5, 0], // Subtle floating animation
-                      }}
-                      transition={{ 
-                        duration: 0.5, 
-                        delay: 0.1 * index,
-                        y: {
-                          duration: 4 + (index % 3),
-                          repeat: Infinity,
-                          repeatType: "reverse",
-                          ease: "easeInOut"
-                        }
-                      }}
-                      style={{ 
-                        position: 'absolute',
-                        top: `${topPosition}%`,
-                        left: `${horizontalOffset}%`,
-                        zIndex: 20,
-                        maxWidth: '400px',
-                        width: 'auto'
-                      }}
-                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-3 flex items-center gap-3 transform-gpu hover:shadow-xl transition-all duration-300 pointer-events-auto"
-                    >
-                      <motion.div
-                        whileHover={{ rotate: 180 }}
-                        transition={{ duration: 0.3 }}
-                        className="flex-shrink-0"
-                      >
-                        <ListChecks className="w-4 h-4 text-purple-500" />
-                      </motion.div>
-                      <h3 className="text-xs text-gray-800 dark:text-white break-normal" title={q.question}>
-                        {q.question}
-                      </h3>
-                    </motion.div>
-                  );
-                })}
-                
-                {/* Right Side Questions */}
-                {rightQuestions.map((q, index) => {
-                  // Calculate position with all cards on same horizontal line
-                  const totalCards = rightQuestions.length;
-                  const containerHeight = 90; // Use 90% of the container height
-                  const verticalSpacing = containerHeight / totalCards;
-                  const topPosition = 5 + (index * verticalSpacing); // Start at 5% from top
-                  
-                  // Use the same horizontal position for all right cards
-                  const horizontalOffset = -60; // Fixed horizontal position for all right cards
-                  
-                  return (
-                    <motion.div
-                      key={q.id}
-                      initial={{ opacity: 0, x: 30 }}
-                      animate={{ 
-                        opacity: 1, 
-                        x: 0,
-                        y: [0, 5, 0, -5, 0], // Subtle floating animation (opposite phase)
-                      }}
-                      transition={{ 
-                        duration: 0.5, 
-                        delay: 0.1 * index + 0.2,
-                        y: {
-                          duration: 4 + (index % 3),
-                          repeat: Infinity,
-                          repeatType: "reverse",
-                          ease: "easeInOut"
-                        }
-                      }}
-                      style={{ 
-                        position: 'absolute',
-                        top: `${topPosition}%`,
-                        right: `${horizontalOffset}%`,
-                        zIndex: 20,
-                        maxWidth: '400px',
-                        width: 'auto'
-                      }}
-                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-3 flex items-center gap-3 transform-gpu hover:shadow-xl transition-all duration-300 pointer-events-auto"
-                    >
-                      <motion.div
-                        whileHover={{ rotate: 180 }}
-                        transition={{ duration: 0.3 }}
-                        className="flex-shrink-0"
-                      >
-                        <ListChecks className="w-4 h-4 text-purple-500" />
-                      </motion.div>
-                      <h3 className="text-xs text-gray-800 dark:text-white break-normal" title={q.question}>
-                        {q.question}
-                      </h3>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </div>
-          
-          {/* Mobile-friendly stacked layout - visible only on mobile */}
-          <div className="md:hidden mt-8">
-            {/* Mobile Center Image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-8"
-            >
-              <div className="relative w-48 h-48 mx-auto">
-                <img 
-                  src={surveyImage.image_url} 
-                  alt="Nutrition Survey" 
-                  className="w-full h-full object-cover rounded-full border-4 border-white dark:border-gray-700 shadow-xl"
-                />
-                <div className="absolute inset-0 rounded-full border-4 border-purple-500 border-opacity-50 animate-pulse"></div>
-              </div>
-            </motion.div>
-            
-            {/* Mobile Questions List */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="space-y-3 px-2"
-            >
-              {questions.map((q, index) => (
-                <motion.div
-                  key={q.id}
-                  variants={itemVariants}
-                  className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-4 flex items-start gap-3"
-                >
-                  <div className="flex-shrink-0 mt-0.5">
-                    <ListChecks className="w-5 h-5 text-purple-500" />
-                  </div>
-                  <p className="text-sm text-gray-800 dark:text-white">
-                    {q.question}
-                  </p>
-                </motion.div>
-              ))}
-            </motion.div>
+      <div className="relative min-h-screen w-full overflow-hidden bg-white dark:bg-gray-900">
+        <div className="relative mx-auto max-w-5xl px-6 py-16">
+          <div className="animate-pulse space-y-8">
+            <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-24 bg-gray-200 dark:bg-gray-700 rounded-2xl"></div>
+            ))}
           </div>
         </div>
       </div>
-    </section>
+    );
+  }
+
+  return (
+    <div className="relative min-h-screen w-full overflow-hidden bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+      {/* Background Spiral */}
+      <div
+        className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-20 dark:opacity-30"
+        style={{ 
+          maskImage: 'radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%)',
+          WebkitMaskImage: 'radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%)'
+        }}
+      >
+        <div ref={spiralRef} />
+      </div>
+
+      {/* Layout */}
+      <div className="relative mx-auto max-w-5xl px-6 py-16">
+        {/* Header */}
+        <header className="mb-10 flex flex-col md:flex-row items-start md:items-end justify-between border-b border-gray-200 dark:border-gray-700 pb-6 gap-4">
+          <div>
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight font-outfit">
+              {content.title}
+            </h1>
+            <p className="mt-2 text-sm md:text-base text-gray-600 dark:text-gray-400 font-outfit">
+              {content.description}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search questions…"
+              className="h-10 w-full md:w-56 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 text-sm outline-none transition focus:border-teal-500 dark:focus:border-teal-400 font-outfit"
+            />
+          </div>
+        </header>
+
+        {/* Content */}
+        <section className="relative">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            {filtered.map((item, i) => (
+              <FAQItemComponent key={item.id} question={item.question} answer={item.answer} index={i + 1} />
+            ))}
+          </div>
+          
+          {filtered.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 dark:text-gray-400 font-outfit">No questions found matching your search.</p>
+            </div>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+// FAQ Item Component
+function FAQItemComponent({ question, answer, index }: { question: string; answer: string; index: number }) {
+  const [open, setOpen] = useState(false);
+  
+  return (
+    <div className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm p-5 transition hover:border-teal-400 dark:hover:border-teal-500">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between text-left"
+        aria-expanded={open}
+      >
+        <div className="flex items-baseline gap-3">
+          <span className="text-xs text-gray-400 dark:text-gray-500 font-outfit">
+            {String(index).padStart(2, '0')}
+          </span>
+          <h3 className="text-sm md:text-base font-semibold leading-tight font-outfit">
+            {question}
+          </h3>
+        </div>
+        <span className="ml-4 text-gray-600 dark:text-gray-400 transition group-hover:text-teal-600 dark:group-hover:text-teal-400 font-outfit">
+          {open ? '–' : '+'}
+        </span>
+      </button>
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${
+          open ? 'mt-3 grid-rows-[1fr]' : 'grid-rows-[0fr]'
+        }`}
+      >
+        <div className="min-h-0 overflow-hidden">
+          {answer ? (
+            <p className="text-sm text-gray-600 dark:text-gray-300 font-outfit">{answer}</p>
+          ) : (
+            <p className="text-sm text-gray-400 dark:text-gray-500 italic font-outfit">
+              Answer coming soon...
+            </p>
+          )}
+        </div>
+      </div>
+      {/* Hover halo */}
+      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute -inset-1 rounded-2xl border border-teal-200 dark:border-teal-800" />
+      </div>
+    </div>
   );
 }

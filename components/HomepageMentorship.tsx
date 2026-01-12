@@ -6,13 +6,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { createClient } from '@/utils/supabase/client';
 import type { Database } from '@/lib/database.types';
-import { Inter } from 'next/font/google';
-
-const ranade = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-});
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface MentorshipData {
   id?: string;
@@ -26,18 +21,17 @@ interface MentorshipData {
 }
 
 const defaultMentorshipData: MentorshipData = {
-  title: "Transform Your Practice with Expert Guidance",
-  subtitle: "Premium Mentorship Program",
-  description: "Join our exclusive mentorship program and gain access to personalized guidance, advanced nutrition strategies, and a supportive community of healthcare professionals. Elevate your practice and make a greater impact on your clients' lives.",
-  image_url: "/mentorship-banner.jpg",
-  button_text: "Learn More",
-  button_link: "/mentorship",
-  features: ['1:1 Coaching', 'Weekly Workshops', 'Resource Library', 'Community Access']
+  title: "",
+  subtitle: "",
+  description: "",
+  image_url: "",
+  button_text: "",
+  button_link: "",
+  features: []
 };
 
 export default function HomepageMentorship() {
   const [mentorshipData, setMentorshipData] = useState<MentorshipData>(defaultMentorshipData);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Simple animation variants
@@ -55,7 +49,6 @@ export default function HomepageMentorship() {
   useEffect(() => {
     const fetchMentorshipData = async () => {
       try {
-        setIsLoading(true);
         setError(null);
         const supabase = createClient();
         
@@ -75,12 +68,12 @@ export default function HomepageMentorship() {
           
           const newData = {
             id: data.id,
-            title: data.title || defaultMentorshipData.title,
-            subtitle: data.subtitle || defaultMentorshipData.subtitle,
-            description: data.description || defaultMentorshipData.description,
-            image_url: data.image_url || defaultMentorshipData.image_url,
-            button_text: data.button_text || defaultMentorshipData.button_text,
-            button_link: data.button_link || defaultMentorshipData.button_link,
+            title: data.title || '',
+            subtitle: data.subtitle || '',
+            description: data.description || '',
+            image_url: data.image_url || '',
+            button_text: data.button_text || '',
+            button_link: data.button_link || '',
             features: features
           };
 
@@ -89,89 +82,70 @@ export default function HomepageMentorship() {
       } catch (error) {
         console.error('Error in fetchMentorshipData:', error);
         setError('An unexpected error occurred');
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchMentorshipData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-[600px] flex items-center justify-center">
-        <motion.div 
-          className="h-12 w-12 rounded-full border-t-2 border-b-2 border-emerald-500"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        />
-      </div>
-    );
-  }
-
   return (
     <motion.section 
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className={`relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-cyan-950/10 py-24 ${ranade.className}`}
+      className="relative overflow-hidden bg-background py-16 pb-12"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Image Section */}
-          <motion.div
-            className="relative h-[400px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl bg-emerald-50"
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          >
-            <div className="absolute inset-0">
-              <Image
-                src={mentorshipData.image_url}
-                alt="Nutrition Mentorship"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority
-                onError={(e) => {
-                  console.error('Image failed to load:', mentorshipData.image_url);
-                  e.currentTarget.src = '/mentorship-banner.jpg';
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-600/20 to-transparent" />
-            </div>
-          </motion.div>
+          {mentorshipData.image_url && (
+            <motion.div
+              className="relative h-[400px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl bg-muted"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              <div className="absolute inset-0">
+                <Image
+                  src={mentorshipData.image_url}
+                  alt="Nutrition Mentorship"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                  onError={(e) => {
+                    console.error('Image failed to load:', mentorshipData.image_url);
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent" />
+              </div>
+            </motion.div>
+          )}
 
           {/* Content Section */}
-          <div className="relative">
-            <motion.span
-              className="inline-block px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 text-lg font-medium mb-6"
-            >
+          <div className="relative h-[400px] lg:h-[600px] flex flex-col">
+            <Badge className="mb-6 text-sm px-5 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white border-0 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40 transition-all duration-300">
               {mentorshipData.subtitle}
-            </motion.span>
+            </Badge>
 
             <motion.h2
-              className="text-xl lg:text-2xl font-bold mb-6 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent"
+              className="text-xl lg:text-2xl font-bold mb-6 text-primary"
             >
               {mentorshipData.title}
             </motion.h2>
 
             <motion.p
-              className="text-gray-600 dark:text-gray-300 text-xs mb-8 leading-relaxed"
+              className="text-muted-foreground text-base mb-8 leading-relaxed"
             >
               {mentorshipData.description}
             </motion.p>
 
             <div>
               <motion.div
-                className="inline-block"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Link
-                  href={mentorshipData.button_link}
-                  className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 dark:from-emerald-500 dark:to-teal-500 text-white font-semibold shadow-lg transition-all duration-300 hover:shadow-xl"
-                >
-                  <span className="flex items-center">
+                <Link href={mentorshipData.button_link}>
+                  <Button size="lg" className="group px-8 py-6 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-semibold shadow-xl shadow-teal-500/30 hover:shadow-2xl hover:shadow-teal-500/40 transition-all duration-300 text-base">
                     {mentorshipData.button_text}
                     <svg 
                       className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" 
@@ -181,7 +155,7 @@ export default function HomepageMentorship() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
-                  </span>
+                  </Button>
                 </Link>
               </motion.div>
             </div>
@@ -189,13 +163,11 @@ export default function HomepageMentorship() {
             {/* Feature Pills */}
             <div className="mt-8 flex flex-wrap gap-3">
               {mentorshipData.features.map((feature) => (
-                <motion.span
-                  key={feature}
-                  whileHover={{ scale: 1.05 }}
-                  className="px-4 py-2 rounded-full bg-white/80 dark:bg-white/10 text-emerald-800 dark:text-emerald-200 text-xs font-medium shadow-sm backdrop-blur-sm"
-                >
-                  {feature}
-                </motion.span>
+                <motion.div key={feature} whileHover={{ scale: 1.05 }}>
+                  <Badge className="px-6 py-2 text-sm rounded-full bg-white dark:bg-gray-800 text-teal-700 dark:text-teal-300 border-2 border-teal-300 dark:border-teal-700 hover:bg-teal-50 dark:hover:bg-teal-950/50 hover:border-teal-500 dark:hover:border-teal-500 shadow-sm hover:shadow-md transition-all duration-300 font-medium">
+                    {feature}
+                  </Badge>
+                </motion.div>
               ))}
             </div>
           </div>

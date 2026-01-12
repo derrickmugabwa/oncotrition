@@ -68,8 +68,8 @@ function FeatureCard({ feature }: { feature: Feature }) {
 export default function MentorshipFeatures({ features = [], content }: MentorshipFeaturesProps) {
   const defaultContent: SectionContent = {
     id: '',
-    title: 'Mentorship Features',
-    description: 'Discover the benefits of our mentorship program'
+    title: '',
+    description: ''
   };
 
   const sectionContent = content || defaultContent;

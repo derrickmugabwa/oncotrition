@@ -3,13 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { createClient } from '@/utils/supabase/client';
-import { Inter } from 'next/font/google';
-
-const ranade = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-});
+import { Card, CardContent } from '@/components/ui/card';
 import { 
   BeakerIcon, ChartBarIcon, ClockIcon, CogIcon, 
   CurrencyDollarIcon, DocumentTextIcon, HeartIcon, 
@@ -144,41 +138,12 @@ const featureIcons = {
 
 type IconName = keyof typeof featureIcons;
 
-const defaultFeatures = [
-  {
-    id: 1,
-    title: "Personalized Nutrition Plans",
-    description: "Get customized meal plans tailored to your specific goals, preferences, and dietary requirements.",
-    icon_name: "scale",
-    order: 0,
-  },
-  {
-    id: 2,
-    title: "Expert Guidance",
-    description: "Access to certified nutritionists and health experts who provide professional guidance and support.",
-    icon_name: "academic",
-    order: 1,
-  },
-  {
-    id: 3,
-    title: "Progress Tracking",
-    description: "Monitor your health journey with our advanced tracking tools and detailed analytics dashboard.",
-    icon_name: "chart",
-    order: 2,
-  },
-  {
-    id: 4,
-    title: "Community Support",
-    description: "Join our vibrant community of health enthusiasts and share experiences, tips, and success stories.",
-    icon_name: "users",
-    order: 3,
-  }
-];
+const defaultFeatures: Feature[] = [];
 
 const defaultHeaderContent = {
-  heading: "Transform Your Health Journey",
-  paragraph: "Experience a revolutionary approach to nutrition tracking and wellness management.",
-  button_text: "Learn More",
+  heading: "",
+  paragraph: "",
+  button_text: "",
   button_url: "/features"
 };
 
@@ -190,48 +155,59 @@ const FeatureCard = ({ title, description, icon_name, index }: FeatureCardProps)
   return (
     <motion.div 
       ref={cardRef}
-      initial={{ opacity: 0, x: 50 }}
-      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-      transition={{ duration: 0.6, delay: index * 0.2 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{ duration: 0.3 }}
       whileHover={{ 
-        scale: 1.03,
-        boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        y: -8,
         transition: { type: "spring", stiffness: 400, damping: 17 }
       }}
       viewport={{ once: true }}
-      className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg transition-all duration-300 h-full flex flex-col cursor-pointer"
     >
-      <div className="flex flex-col h-full">
-        <motion.div 
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0.5, opacity: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
-          className="flex items-start space-x-4 mb-4"
-        >
+      <Card 
+        className="group relative h-full rounded-xl border border-teal-200 bg-gradient-to-br from-teal-50 via-emerald-50 to-cyan-50 dark:from-teal-950/30 dark:via-emerald-950/30 dark:to-cyan-950/30 dark:border-teal-800 p-5 transition-all duration-300 hover:shadow-xl hover:border-teal-400 dark:hover:border-teal-600 overflow-hidden"
+      >
+        {/* Subtle gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/3 via-transparent to-emerald-500/3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        {/* Decorative circle */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500" />
+        
+        <div className="relative z-10">
+          {/* Icon Section */}
           <motion.div 
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            className="flex-shrink-0"
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0.5, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="mb-4"
           >
-            <div className="p-3 bg-primary/10 dark:bg-primary/20 rounded-xl text-primary">
-              <IconComponent className="w-6 h-6" />
+            <div className="w-16 h-16 rounded-lg bg-emerald-500/15 text-emerald-600 flex items-center justify-center group-hover:scale-125 transition-transform duration-300">
+              <IconComponent className="w-8 h-8" />
             </div>
           </motion.div>
+
+          {/* Title */}
           <motion.h3 
-            whileHover={{ scale: 1.05 }}
-            className="text-lg font-semibold text-gray-800 dark:text-white"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
+            className="text-2xl font-bold text-card-foreground mb-2 group-hover:text-teal-600 transition-colors"
           >
             {title}
           </motion.h3>
-        </motion.div>
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.2 + 0.5 }}
-          className="text-gray-600 dark:text-gray-300 flex-grow"
-        >
-          {description}
-        </motion.p>
-      </div>
+
+          {/* Description */}
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 + 0.4 }}
+            className="text-muted-foreground leading-relaxed text-sm"
+          >
+            {description}
+          </motion.p>
+
+        </div>
+      </Card>
     </motion.div>
   );
 };
@@ -310,14 +286,11 @@ export default function Features() {
   }, [supabase]);
 
   return (
-    <section className={`relative py-20 overflow-hidden bg-gradient-to-b from-purple-100 via-indigo-100/70 to-blue-100 dark:from-purple-900/30 dark:via-indigo-900/20 dark:to-blue-900/30 ${ranade.className}`}>
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-200/30 via-white/40 to-blue-200/30 dark:from-purple-500/10 dark:via-gray-900/40 dark:to-blue-500/10 pointer-events-none"></div>
-      
-      {/* Animated background shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary/20 to-transparent rounded-full animate-drift"></div>
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-secondary/20 to-transparent rounded-full animate-drift-reverse"></div>
+    <section className="relative py-20 overflow-hidden bg-background">
+      {/* Subtle animated background shapes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30 dark:opacity-20">
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary/10 to-transparent rounded-full animate-drift"></div>
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-primary/10 to-transparent rounded-full animate-drift-reverse"></div>
       </div>
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
@@ -333,7 +306,7 @@ export default function Features() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-3xl font-bold text-gray-900 dark:text-white mb-6"
+            className="text-3xl font-bold text-primary mb-6"
           >
             {headerContent.heading}
           </motion.h2>
@@ -341,7 +314,7 @@ export default function Features() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-base text-gray-600 dark:text-gray-300 mb-8 w-full px-4 sm:px-6 lg:px-8"
+            className="text-base text-muted-foreground mb-8 w-full px-4 sm:px-6 lg:px-8"
           >
             {headerContent.paragraph}
           </motion.p>
@@ -380,7 +353,7 @@ export default function Features() {
               : 'scale';
             
             return (
-              <div key={feature.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] flex justify-center">
+              <div key={feature.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex justify-center">
                 <FeatureCard
                   title={feature.title}
                   description={feature.description}

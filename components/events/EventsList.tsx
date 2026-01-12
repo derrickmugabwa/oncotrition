@@ -6,6 +6,8 @@ import { Calendar, Search, Filter } from 'lucide-react';
 import EventCard from './EventCard';
 import EventFilters from './EventFilters';
 import { Event, EventFilters as EventFiltersType } from '@/types/events';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface EventsListProps {
   events: Event[];
@@ -81,7 +83,7 @@ export default function EventsList({ events, featuredEvents, upcomingEvents }: E
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 font-outfit">
       {/* Page Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -89,10 +91,10 @@ export default function EventsList({ events, featuredEvents, upcomingEvents }: E
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
           Upcoming Events
         </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
           Join our nutrition workshops, seminars, and support groups designed to empower you on your health journey.
         </p>
       </motion.div>
@@ -107,24 +109,26 @@ export default function EventsList({ events, featuredEvents, upcomingEvents }: E
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search Input */}
           <div className="relative w-full md:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
+            <Input
               type="text"
               placeholder="Search events..."
               value={filters.search}
               onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688] focus:border-transparent"
+              className="pl-10 w-full"
             />
           </div>
 
           {/* Filter Toggle Button */}
-          <button
+          <Button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            variant="outline"
+            size="default"
+            className="flex items-center gap-2"
           >
-            <Filter className="w-5 h-5" />
+            <Filter className="w-4 h-4" />
             <span>Filters</span>
-          </button>
+          </Button>
         </div>
 
         {/* Filters Panel */}
@@ -141,8 +145,8 @@ export default function EventsList({ events, featuredEvents, upcomingEvents }: E
       </motion.div>
 
       {/* Results Count */}
-      <div className="mb-6 text-gray-600">
-        Showing <span className="font-semibold text-gray-900">{filteredEvents.length}</span> event{filteredEvents.length !== 1 ? 's' : ''}
+      <div className="mb-6 text-muted-foreground">
+        Showing <span className="font-semibold text-foreground">{filteredEvents.length}</span> event{filteredEvents.length !== 1 ? 's' : ''}
       </div>
 
       {/* Featured Events Section */}
@@ -154,8 +158,8 @@ export default function EventsList({ events, featuredEvents, upcomingEvents }: E
           className="mb-12"
         >
           <div className="flex items-center gap-2 mb-6">
-            <Calendar className="w-6 h-6 text-[#009688]" />
-            <h2 className="text-2xl font-bold text-gray-900">Featured Events</h2>
+            <Calendar className="w-6 h-6 text-primary" />
+            <h2 className="text-2xl font-bold text-foreground">Featured Events</h2>
           </div>
           <motion.div
             variants={containerVariants}
@@ -178,15 +182,15 @@ export default function EventsList({ events, featuredEvents, upcomingEvents }: E
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
       >
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-foreground mb-6">
           {filters.status ? `${filters.status.charAt(0).toUpperCase() + filters.status.slice(1)} Events` : 'All Events'}
         </h2>
         
         {filteredEvents.length === 0 ? (
           <div className="text-center py-16">
-            <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">No events found</h3>
-            <p className="text-gray-500">
+            <Calendar className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-muted-foreground mb-2">No events found</h3>
+            <p className="text-muted-foreground">
               {filters.search || filters.status
                 ? 'Try adjusting your filters to see more events.'
                 : 'Check back soon for upcoming events!'}
