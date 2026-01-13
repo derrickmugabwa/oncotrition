@@ -4,7 +4,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifyPayment } from '@/lib/paystack';
-import { generateQRCode, uploadQRCodeToSupabase } from '@/lib/qrcode';
+import { generateQRCode } from '@/lib/qrcode';
 import { sendRegistrationEmail } from '@/lib/resend-nutrivibe';
 
 const supabase = createClient(
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     // Verify payment with Paystack
     const paymentVerification = await verifyPayment(reference);
 
-    if (!paymentVerification.success || paymentVerification.data?.status !== 'success') {
+    if (!paymentVerification.status || paymentVerification.data?.status !== 'success') {
       // Update registration status to failed
       await supabase
         .from('nutrivibe_registrations')
@@ -90,21 +90,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate QR Code
-    const qrData = {
-      id: registration.id,
-      name: registration.full_name,
-      email: registration.email,
-      type: registration.participation_type,
-      event_id: registration.event_id,
-      event_title: event.title,
-      timestamp: Date.now(),
-    };
-
-    const qrCodeBuffer = await generateQRCode(JSON.stringify(qrData));
-    const qrCodeUrl = await uploadQRCodeToSupabase(
-      qrCodeBuffer,
-      `${registration.id}.png`,
-      'nutrivibe/qr-codes'
+    const { qrCodeUrl, qrCodeData } = await generateQRCode(
+      registration.id,
+      {
+        fullName: registration.full_name,
+        email: registration.email,
+        participationType: registration.participation_type,
+        eventId: event.id,
+        eventTitle: event.title,
+      }
     );
 
     // Update registration with payment confirmation and QR code
@@ -114,7 +108,7 @@ export async function POST(request: NextRequest) {
         payment_status: 'completed',
         payment_date: new Date().toISOString(),
         qr_code_url: qrCodeUrl,
-        qr_code_data: JSON.stringify(qrData),
+        qr_code_data: qrCodeData,
         updated_at: new Date().toISOString(),
       })
       .eq('id', registration.id);
@@ -131,16 +125,17 @@ export async function POST(request: NextRequest) {
     try {
       await sendRegistrationEmail({
         to: registration.email,
-        registrationId: registration.id,
         fullName: registration.full_name,
-        eventTitle: event.title,
-        eventDate: event.event_date,
-        eventTime: event.event_time,
-        eventLocation: event.location,
-        venueDetails: event.venue_details || '',
+        registrationId: registration.id,
+        qrCodeUrl: qrCodeUrl,
+        eventDetails: {
+          event_date: event.event_date,
+          event_time: event.event_time,
+          location: event.location,
+          venue_details: event.venue_details,
+        },
         participationType: registration.participation_type,
         amount: registration.price_amount,
-        qrCodeUrl: qrCodeUrl,
       });
 
       // Mark email as sent

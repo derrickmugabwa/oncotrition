@@ -33,6 +33,15 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
     organizer_name: event?.organizer_name || '',
     organizer_contact: event?.organizer_contact || '',
     is_featured: event?.is_featured || false,
+    // Registration fields
+    has_internal_registration: event?.has_internal_registration || false,
+    registration_type: event?.registration_type || 'external',
+    registration_deadline: event?.registration_deadline || '',
+    early_bird_deadline: event?.early_bird_deadline || '',
+    early_bird_discount: event?.early_bird_discount || 0,
+    requires_payment: event?.requires_payment || false,
+    venue_details: event?.venue_details || '',
+    terms_and_conditions: event?.terms_and_conditions || '',
   });
 
   const handleChange = (
@@ -123,6 +132,11 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
         registration_link: formData.registration_link || null,
         organizer_name: formData.organizer_name || null,
         organizer_contact: formData.organizer_contact || null,
+        // Handle date fields - convert empty strings to null
+        registration_deadline: formData.registration_deadline || null,
+        early_bird_deadline: formData.early_bird_deadline || null,
+        venue_details: formData.venue_details || null,
+        terms_and_conditions: formData.terms_and_conditions || null,
       };
 
       if (event) {
@@ -323,17 +337,201 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
             {/* Registration Link */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Registration Link
+                External Registration Link
               </label>
               <input
                 type="url"
                 name="registration_link"
                 value={formData.registration_link}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
-                placeholder="https://forms.gle/example"
+                disabled={formData.has_internal_registration && formData.registration_type === 'internal'}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                placeholder="https://forms.gle/example (only for external registration)"
               />
+              {formData.has_internal_registration && formData.registration_type === 'internal' && (
+                <p className="text-xs text-gray-500 mt-1">
+                  External link disabled when using internal registration
+                </p>
+              )}
             </div>
+          </div>
+        </div>
+
+        {/* Internal Registration Settings */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Internal Registration System</h3>
+          
+          <div className="space-y-4">
+            {/* Enable Internal Registration */}
+            <div className="flex items-center gap-3 p-4 bg-teal-50 border border-teal-200 rounded-lg">
+              <input
+                type="checkbox"
+                name="has_internal_registration"
+                id="has_internal_registration"
+                checked={formData.has_internal_registration}
+                onChange={handleChange}
+                className="w-5 h-5 text-[#009688] border-gray-300 rounded focus:ring-[#009688]"
+              />
+              <label htmlFor="has_internal_registration" className="flex-1 cursor-pointer">
+                <span className="block font-medium text-gray-900">
+                  Enable Internal Registration System
+                </span>
+                <span className="block text-sm text-gray-600">
+                  Allow attendees to register directly through the platform with payment processing, QR codes, and check-in management
+                </span>
+              </label>
+            </div>
+
+            {/* Registration Type */}
+            {formData.has_internal_registration && (
+              <div className="space-y-4 pl-4 border-l-4 border-teal-200">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Registration Type *
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="registration_type"
+                        value="internal"
+                        checked={formData.registration_type === 'internal'}
+                        onChange={handleChange}
+                        className="w-4 h-4 text-[#009688] border-gray-300 focus:ring-[#009688]"
+                      />
+                      <span className="text-sm">
+                        <strong>Internal:</strong> Full registration system with payment, QR codes, and check-in
+                      </span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="registration_type"
+                        value="external"
+                        checked={formData.registration_type === 'external'}
+                        onChange={handleChange}
+                        className="w-4 h-4 text-[#009688] border-gray-300 focus:ring-[#009688]"
+                      />
+                      <span className="text-sm">
+                        <strong>External:</strong> Use external registration link (Google Forms, Eventbrite, etc.)
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                {formData.registration_type === 'internal' && (
+                  <>
+                    {/* Requires Payment */}
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        name="requires_payment"
+                        id="requires_payment"
+                        checked={formData.requires_payment}
+                        onChange={handleChange}
+                        className="w-4 h-4 text-[#009688] border-gray-300 rounded focus:ring-[#009688]"
+                      />
+                      <label htmlFor="requires_payment" className="text-sm font-medium text-gray-700 cursor-pointer">
+                        Requires Payment (Paystack integration)
+                      </label>
+                    </div>
+
+                    {/* Deadlines */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Registration Deadline
+                        </label>
+                        <input
+                          type="date"
+                          name="registration_deadline"
+                          value={formData.registration_deadline}
+                          onChange={handleChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Early Bird Deadline
+                        </label>
+                        <input
+                          type="date"
+                          name="early_bird_deadline"
+                          value={formData.early_bird_deadline}
+                          onChange={handleChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Early Bird Discount */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Early Bird Discount (%)
+                      </label>
+                      <input
+                        type="number"
+                        name="early_bird_discount"
+                        value={formData.early_bird_discount}
+                        onChange={handleChange}
+                        min="0"
+                        max="100"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
+                        placeholder="e.g., 20 for 20% discount"
+                      />
+                    </div>
+
+                    {/* Venue Details */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Venue Details
+                      </label>
+                      <textarea
+                        name="venue_details"
+                        value={formData.venue_details}
+                        onChange={handleChange}
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
+                        placeholder="Detailed venue information, directions, parking, etc."
+                      />
+                    </div>
+
+                    {/* Terms and Conditions */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Terms and Conditions
+                      </label>
+                      <textarea
+                        name="terms_and_conditions"
+                        value={formData.terms_and_conditions}
+                        onChange={handleChange}
+                        rows={5}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
+                        placeholder="Registration terms, cancellation policy, code of conduct, etc."
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        These terms will be shown during registration and must be accepted by attendees
+                      </p>
+                    </div>
+
+                    {/* Info Box */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <p className="text-sm text-blue-900 font-medium mb-2">
+                        📝 After Enabling Internal Registration:
+                      </p>
+                      <ul className="text-sm text-blue-700 space-y-1">
+                        <li>• Set up pricing tiers in the Pricing Management page</li>
+                        <li>• Configure interest areas in the Interest Areas page</li>
+                        <li>• Attendees can register and pay through the platform</li>
+                        <li>• QR codes will be generated automatically</li>
+                        <li>• Use the Check-in Scanner on event day</li>
+                      </ul>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

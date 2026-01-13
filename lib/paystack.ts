@@ -7,6 +7,9 @@ interface PaystackInitializeData {
   metadata?: any;
   callback_url: string;
   channels?: string[];
+  subaccount?: string; // Paystack subaccount code
+  transaction_charge?: number; // Amount to charge the subaccount (in kobo)
+  bearer?: 'account' | 'subaccount'; // Who bears Paystack charges
 }
 
 interface PaystackInitializeResponse {
@@ -58,25 +61,40 @@ interface PaystackVerifyResponse {
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 const PAYSTACK_BASE_URL = 'https://api.paystack.co';
+const PAYSTACK_SUBACCOUNT_CODE = process.env.PAYSTACK_SUBACCOUNT_CODE;
 
 if (!PAYSTACK_SECRET_KEY) {
   console.warn('PAYSTACK_SECRET_KEY is not set in environment variables');
 }
 
+if (!PAYSTACK_SUBACCOUNT_CODE) {
+  console.warn('PAYSTACK_SUBACCOUNT_CODE is not set - payments will go to main account');
+}
+
 /**
  * Initialize a Paystack payment transaction
+ * Automatically includes subaccount if configured in environment
  */
 export async function initializePayment(
   data: PaystackInitializeData
 ): Promise<PaystackInitializeResponse> {
   try {
+    // Add subaccount if configured and not already provided
+    const paymentData = {
+      ...data,
+      ...(PAYSTACK_SUBACCOUNT_CODE && !data.subaccount && {
+        subaccount: PAYSTACK_SUBACCOUNT_CODE,
+        bearer: data.bearer || 'subaccount', // Subaccount bears Paystack charges by default
+      }),
+    };
+
     const response = await fetch(`${PAYSTACK_BASE_URL}/transaction/initialize`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(paymentData),
     });
 
     if (!response.ok) {
@@ -145,4 +163,11 @@ export function convertToKobo(amount: number): number {
  */
 export function convertFromKobo(kobo: number): number {
   return kobo / 100;
+}
+
+/**
+ * Get the configured Paystack subaccount code
+ */
+export function getSubaccountCode(): string | undefined {
+  return PAYSTACK_SUBACCOUNT_CODE;
 }

@@ -137,7 +137,7 @@ export function NutrivibeRegistrationEmail({
                 • Please arrive 15 minutes before the event starts for registration<br />
                 • Bring a valid ID for verification<br />
                 • The QR code is unique to your registration and should not be shared<br />
-                • For any questions, contact us at events@oncotrition.com
+                • For any questions, contact us at nitrivibe@oncotritionhc.com or info@oncotritionhc.com
               </Text>
             </Section>
 
@@ -157,12 +157,12 @@ export function NutrivibeRegistrationEmail({
 
             <Text style={footer}>
               Oncotrition | Nutrition & Wellness Innovation<br />
-              <Link href="https://oncotrition.com" style={link}>
-                www.oncotrition.com
+              <Link href="https://oncotritionhc.com" style={link}>
+                www.oncotritionhc.com
               </Link>
               {' | '}
-              <Link href="mailto:events@oncotrition.com" style={link}>
-                events@oncotrition.com
+              <Link href="mailto:nutrivibe@oncotritionhc.com" style={link}>
+                nutrivibe@oncotritionhc.com
               </Link>
             </Text>
           </Section>

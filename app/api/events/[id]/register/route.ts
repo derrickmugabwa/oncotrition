@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { initializePayment } from '@/lib/paystack';
+import { initializePayment, convertToKobo } from '@/lib/paystack';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,6 +17,9 @@ export async function POST(
   try {
     const { id: eventId } = await params;
     const body = await request.json();
+
+    console.log('Registration request for event:', eventId);
+    console.log('Request body:', body);
 
     // Validate required fields
     const {
@@ -33,8 +36,14 @@ export async function POST(
     } = body;
 
     if (!fullName || !email || !phoneNumber || !participationType) {
+      console.error('Missing required fields:', { fullName: !!fullName, email: !!email, phoneNumber: !!phoneNumber, participationType: !!participationType });
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields: ' + [
+          !fullName && 'fullName',
+          !email && 'email',
+          !phoneNumber && 'phoneNumber',
+          !participationType && 'participationType'
+        ].filter(Boolean).join(', ') },
         { status: 400 }
       );
     }
@@ -47,13 +56,17 @@ export async function POST(
       .single();
 
     if (eventError || !event) {
+      console.error('Event not found:', eventError);
       return NextResponse.json(
         { error: 'Event not found' },
         { status: 404 }
       );
     }
 
+    console.log('Event found:', { id: event.id, title: event.title, has_internal_registration: event.has_internal_registration, registration_type: event.registration_type, status: event.status });
+
     if (!event.has_internal_registration || event.registration_type !== 'internal') {
+      console.error('Event does not support internal registration:', { has_internal_registration: event.has_internal_registration, registration_type: event.registration_type });
       return NextResponse.json(
         { error: 'This event does not support internal registration' },
         { status: 400 }
@@ -62,6 +75,7 @@ export async function POST(
 
     // Check if event is still accepting registrations
     if (event.status !== 'upcoming') {
+      console.error('Event is not accepting registrations:', { status: event.status });
       return NextResponse.json(
         { error: 'Registration is closed for this event' },
         { status: 400 }
@@ -81,6 +95,7 @@ export async function POST(
     }
 
     // Get pricing for the selected participation type
+    console.log('Looking up pricing:', { event_id: eventId, participation_type: participationType });
     const { data: pricing, error: pricingError } = await supabase
       .from('nutrivibe_pricing')
       .select('*')
@@ -90,11 +105,23 @@ export async function POST(
       .single();
 
     if (pricingError || !pricing) {
+      console.error('Pricing not found:', pricingError);
+      console.log('Available pricing for event:', eventId);
+      
+      // Get all pricing for this event to help debug
+      const { data: allPricing } = await supabase
+        .from('nutrivibe_pricing')
+        .select('*')
+        .eq('event_id', eventId);
+      console.log('All pricing for event:', allPricing);
+      
       return NextResponse.json(
-        { error: 'Invalid participation type' },
+        { error: 'Invalid participation type or pricing not configured for this event' },
         { status: 400 }
       );
     }
+    
+    console.log('Pricing found:', pricing);
 
     // Check for duplicate registration (same email, same event, completed payment)
     const { data: existingRegistration } = await supabase
@@ -153,7 +180,7 @@ export async function POST(
     
     const paymentResult = await initializePayment({
       email: email,
-      amount: pricing.price,
+      amount: convertToKobo(pricing.price),
       reference: paymentReference,
       callback_url: callbackUrl,
       metadata: {
@@ -165,7 +192,7 @@ export async function POST(
       },
     });
 
-    if (!paymentResult.success || !paymentResult.data) {
+    if (!paymentResult.status || !paymentResult.data) {
       // Delete the registration if payment initialization fails
       await supabase
         .from('nutrivibe_registrations')

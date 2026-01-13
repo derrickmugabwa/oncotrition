@@ -64,6 +64,7 @@ export function RegistrationForm({ event, pricing, interestAreas }: Registration
     setError(null);
 
     try {
+      console.log('Submitting registration:', formData);
       const response = await fetch(`/api/events/${event.id}/register`, {
         method: 'POST',
         headers: {
@@ -73,6 +74,7 @@ export function RegistrationForm({ event, pricing, interestAreas }: Registration
       });
 
       const data = await response.json();
+      console.log('Registration response:', { status: response.status, data });
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to register');
@@ -81,6 +83,7 @@ export function RegistrationForm({ event, pricing, interestAreas }: Registration
       // Redirect to Paystack payment page
       window.location.href = data.paymentUrl;
     } catch (err) {
+      console.error('Registration error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
       setIsSubmitting(false);
     }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
-import { Calendar, Plus, Edit, Trash2, Eye, Search, Filter } from 'lucide-react';
+import { Calendar, Plus, Edit, Trash2, Eye, Search, Filter, Users } from 'lucide-react';
 import { Event } from '@/types/events';
 import EventEditor from './EventEditor';
 import { format } from 'date-fns';
@@ -225,6 +225,12 @@ export default function EventsTab() {
                         Featured
                       </span>
                     )}
+                    {event.has_internal_registration && event.registration_type === 'internal' && (
+                      <span className="px-2 py-1 bg-teal-100 text-teal-800 text-xs font-semibold rounded flex items-center gap-1">
+                        <Users className="w-3 h-3" />
+                        Registration
+                      </span>
+                    )}
                     <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(event.status)}`}>
                       {event.status}
                     </span>
@@ -273,6 +279,16 @@ export default function EventsTab() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 ml-4">
+                  {/* View Registrations - Only show for events with internal registration */}
+                  {event.has_internal_registration && event.registration_type === 'internal' && (
+                    <a
+                      href={`/admin/pages/events/${event.id}/registrations`}
+                      className="p-2 text-[#009688] hover:bg-teal-50 rounded-lg transition-colors"
+                      title="View registrations"
+                    >
+                      <Users className="w-5 h-5" />
+                    </a>
+                  )}
                   <a
                     href={`/events/${event.id}`}
                     target="_blank"
