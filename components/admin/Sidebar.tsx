@@ -36,7 +36,11 @@ const menuItems = [
   { name: 'Site Settings', href: '/admin/settings', icon: Cog6ToothIcon },
 ]
 
-export default function Sidebar() {
+interface SidebarProps {
+  onClose?: () => void;
+}
+
+export default function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname()
 
   return (
@@ -68,6 +72,7 @@ export default function Sidebar() {
               >
                 <Link
                   href={item.href}
+                  onClick={() => onClose?.()}
                   className={`
                     flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200
                     ${isActive

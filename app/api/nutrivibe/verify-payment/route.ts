@@ -64,11 +64,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get event details
+    const { data: event, error: eventError } = await supabase
+      .from('events')
+      .select('*')
+      .eq('id', registration.event_id)
+      .single();
+
+    if (eventError || !event) {
+      return NextResponse.json(
+        { error: 'Event not found' },
+        { status: 404 }
+      );
+    }
+
     // Generate QR code
     const { qrCodeUrl, qrCodeData } = await generateQRCode(registration.id, {
       fullName: registration.full_name,
       email: registration.email,
       participationType: registration.participation_type,
+      eventId: event.id,
+      eventTitle: event.title,
     });
 
     // Update registration with payment success and QR code
@@ -92,7 +108,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get event settings for email
+    // Get event settings for email (fallback to nutrivibe_settings if needed)
     const { data: settings } = await supabase
       .from('nutrivibe_settings')
       .select('*')

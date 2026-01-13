@@ -26,7 +26,7 @@ interface SendRegistrationEmailData {
 export async function sendRegistrationEmail(data: SendRegistrationEmailData) {
   try {
     const { error } = await resend.emails.send({
-      from: 'NutriVibe <events@oncotrition.com>',
+      from: 'NutriVibe <nutrivibe@oncotritionhc.com>',
       to: data.to,
       subject: 'NutriVibe Registration Confirmation - Your QR Code Inside',
       react: NutrivibeRegistrationEmail(data),

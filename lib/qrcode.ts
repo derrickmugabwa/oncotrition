@@ -8,6 +8,8 @@ interface QRCodeData {
   name: string;
   email: string;
   type: string;
+  event_id: string;
+  event_title: string;
   timestamp: number;
 }
 
@@ -25,6 +27,8 @@ export async function generateQRCode(
     fullName: string;
     email: string;
     participationType: string;
+    eventId: string;
+    eventTitle: string;
   }
 ): Promise<GenerateQRCodeResult> {
   try {
@@ -34,6 +38,8 @@ export async function generateQRCode(
       name: data.fullName,
       email: data.email,
       type: data.participationType,
+      event_id: data.eventId,
+      event_title: data.eventTitle,
       timestamp: Date.now(),
     };
 
@@ -98,7 +104,7 @@ export function verifyQRCode(qrCodeData: string): QRCodeData | null {
     const data: QRCodeData = JSON.parse(qrCodeData);
     
     // Validate required fields
-    if (!data.id || !data.name || !data.email || !data.type || !data.timestamp) {
+    if (!data.id || !data.name || !data.email || !data.type || !data.event_id || !data.event_title || !data.timestamp) {
       return null;
     }
 
@@ -124,6 +130,8 @@ export async function generateQRCodeBase64(
     fullName: string;
     email: string;
     participationType: string;
+    eventId: string;
+    eventTitle: string;
   }
 ): Promise<string> {
   const qrData: QRCodeData = {
@@ -131,6 +139,8 @@ export async function generateQRCodeBase64(
     name: data.fullName,
     email: data.email,
     type: data.participationType,
+    event_id: data.eventId,
+    event_title: data.eventTitle,
     timestamp: Date.now(),
   };
 
