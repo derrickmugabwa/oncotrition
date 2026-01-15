@@ -8,21 +8,21 @@ import toast from 'react-hot-toast';
 interface Package {
   id: number;
   name: string;
-  price: number;
-  features: string[];
-  recommended: boolean;
-  gradient: string;
+  price: number | null;
+  features: string[] | any;
+  recommended: boolean | null;
+  gradient: string | null;
   order_number: number;
-  duration_type: string;
-  show_price: boolean;
+  duration_type: string | null;
+  show_price: boolean | null;
 }
 
 interface PackagesSettings {
   id?: number;
-  title: string;
-  subtitle: string;
-  description: string;
-  cta_link: string;
+  title: string | null;
+  subtitle: string | null;
+  description: string | null;
+  cta_link: string | null;
 }
 
 const defaultPackages = [
@@ -221,13 +221,13 @@ export default function PackagesTab() {
     if (editingPackage) {
       setEditForm({
         name: editingPackage.name,
-        price: editingPackage.price,
+        price: editingPackage.price ?? 0,
         features: [...editingPackage.features],
-        recommended: editingPackage.recommended,
-        gradient: editingPackage.gradient,
+        recommended: editingPackage.recommended ?? false,
+        gradient: editingPackage.gradient ?? '',
         order_number: editingPackage.order_number,
-        duration_type: editingPackage.duration_type,
-        show_price: editingPackage.show_price
+        duration_type: editingPackage.duration_type ?? '',
+        show_price: editingPackage.show_price ?? true
       });
     }
   }, [editingPackage]);
@@ -412,7 +412,7 @@ export default function PackagesTab() {
         .upsert(updatedPackagesWithOrder.map(pkg => ({
           id: pkg.id,
           order_number: pkg.order_number
-        })));
+        })) as any);
 
       if (error) throw error;
 
@@ -632,7 +632,7 @@ export default function PackagesTab() {
                     {pkg.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    {pkg.show_price ? `KES ${pkg.price.toLocaleString()}/${pkg.duration_type}` : 'Price hidden'}
+                    {pkg.show_price ? `KES ${(pkg.price ?? 0).toLocaleString()}/${pkg.duration_type}` : 'Price hidden'}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                     {pkg.features.length} features

@@ -33,7 +33,7 @@ export default function ModuleContentEditor({ content, onContentSaved }: ModuleC
           id: content?.id || 1,
           heading: editContent.heading || '',
           description: editContent.description || ''
-        });
+        } as any);
 
       if (error) throw error;
 

@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 interface SurveyQuestion {
   id: string;
   question: string;
+  answer: string | null;
   order_index: number;
 }
 
@@ -40,8 +41,10 @@ export default function NutritionSurveyTab() {
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newQuestion, setNewQuestion] = useState('');
+  const [newAnswer, setNewAnswer] = useState('');
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
   const [editingQuestion, setEditingQuestion] = useState('');
+  const [editingAnswer, setEditingAnswer] = useState('');
 
   useEffect(() => {
     fetchContent();
@@ -140,6 +143,7 @@ export default function NutritionSurveyTab() {
         .from('nutrition_survey')
         .insert([{
           question: newQuestion.trim(),
+          answer: newAnswer.trim(),
           order_index: maxOrder + 1
         }])
         .select()
@@ -149,6 +153,7 @@ export default function NutritionSurveyTab() {
 
       setQuestions([...questions, newQuestionData]);
       setNewQuestion('');
+      setNewAnswer('');
       toast.success('Question added successfully');
     } catch (error) {
       console.error('Error adding question:', error);
@@ -186,16 +191,20 @@ export default function NutritionSurveyTab() {
     try {
       const { error } = await supabase
         .from('nutrition_survey')
-        .update({ question: editingQuestion.trim() })
+        .update({ 
+          question: editingQuestion.trim(),
+          answer: editingAnswer.trim()
+        })
         .eq('id', id);
 
       if (error) throw error;
 
       setQuestions(questions.map(q => 
-        q.id === id ? { ...q, question: editingQuestion.trim() } : q
+        q.id === id ? { ...q, question: editingQuestion.trim(), answer: editingAnswer.trim() } : q
       ));
       setEditingQuestionId(null);
       setEditingQuestion('');
+      setEditingAnswer('');
       toast.success('Question updated successfully');
     } catch (error) {
       console.error('Error updating question:', error);
@@ -230,7 +239,7 @@ export default function NutritionSurveyTab() {
 
       const { error } = await supabase
         .from('nutrition_survey')
-        .upsert(updates);
+        .upsert(updates as any);
 
       if (error) throw error;
 
@@ -400,15 +409,30 @@ export default function NutritionSurveyTab() {
 
       {/* Add New Question Form */}
       <form onSubmit={handleAddQuestion} className="bg-white p-6 rounded-lg shadow-sm border">
-        <div className="flex gap-4">
-          <input
-            type="text"
-            value={newQuestion}
-            onChange={(e) => setNewQuestion(e.target.value)}
-            placeholder="Enter a new survey question"
-            className="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-            disabled={saving}
-          />
+        <h3 className="text-lg font-semibold mb-4">Add New FAQ</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Question</label>
+            <input
+              type="text"
+              value={newQuestion}
+              onChange={(e) => setNewQuestion(e.target.value)}
+              placeholder="Enter the question"
+              className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              disabled={saving}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Answer</label>
+            <textarea
+              value={newAnswer}
+              onChange={(e) => setNewAnswer(e.target.value)}
+              placeholder="Enter the answer"
+              rows={3}
+              className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              disabled={saving}
+            />
+          </div>
           <button
             type="submit"
             disabled={saving}
@@ -418,7 +442,7 @@ export default function NutritionSurveyTab() {
             )}
           >
             <Plus className="w-4 h-4" />
-            Add Question
+            Add FAQ
           </button>
         </div>
       </form>
@@ -432,44 +456,68 @@ export default function NutritionSurveyTab() {
             questions.map((question, index) => (
               <div
                 key={question.id}
-                className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg"
+                className="p-4 bg-gray-50 rounded-lg"
               >
-                <ListChecks className="w-5 h-5 text-purple-500 flex-shrink-0" />
                 {editingQuestionId === question.id ? (
-                  <div className="flex-1 flex gap-2">
-                    <input
-                      type="text"
-                      value={editingQuestion}
-                      onChange={(e) => setEditingQuestion(e.target.value)}
-                      className="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      autoFocus
-                    />
-                    <button
-                      onClick={() => handleEditQuestion(question.id)}
-                      className="p-2 text-green-600 hover:text-green-700 transition-colors"
-                    >
-                      <Save className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setEditingQuestionId(null);
-                        setEditingQuestion('');
-                      }}
-                      className="p-2 text-gray-500 hover:text-gray-600 transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Question</label>
+                      <input
+                        type="text"
+                        value={editingQuestion}
+                        onChange={(e) => setEditingQuestion(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        autoFocus
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Answer</label>
+                      <textarea
+                        value={editingAnswer}
+                        onChange={(e) => setEditingAnswer(e.target.value)}
+                        rows={3}
+                        className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditQuestion(question.id)}
+                        className="flex items-center gap-1 px-3 py-1.5 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      >
+                        <Save className="w-3 h-3" />
+                        Save
+                      </button>
+                      <button
+                        onClick={() => {
+                          setEditingQuestionId(null);
+                          setEditingQuestion('');
+                          setEditingAnswer('');
+                        }}
+                        className="flex items-center gap-1 px-3 py-1.5 text-sm bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                        Cancel
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <>
-                    <p className="flex-1 text-gray-800">{question.question}</p>
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <ListChecks className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900 mb-1">{question.question}</p>
+                        <p className="text-sm text-gray-600">{question.answer || 'No answer provided yet'}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 pt-2 border-t">
                       <button
                         onClick={() => {
                           setEditingQuestionId(question.id);
                           setEditingQuestion(question.question);
+                          setEditingAnswer(question.answer || '');
                         }}
                         className="p-1 text-blue-500 hover:text-blue-600 transition-colors"
+                        title="Edit"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
@@ -480,6 +528,7 @@ export default function NutritionSurveyTab() {
                           "p-1 text-gray-500 hover:text-purple-600 transition-colors",
                           index === 0 && "opacity-50 cursor-not-allowed"
                         )}
+                        title="Move up"
                       >
                         <MoveUp className="w-4 h-4" />
                       </button>
@@ -490,17 +539,19 @@ export default function NutritionSurveyTab() {
                           "p-1 text-gray-500 hover:text-purple-600 transition-colors",
                           index === questions.length - 1 && "opacity-50 cursor-not-allowed"
                         )}
+                        title="Move down"
                       >
                         <MoveDown className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteQuestion(question.id)}
-                        className="p-1 text-red-500 hover:text-red-600 transition-colors"
+                        className="p-1 text-red-500 hover:text-red-600 transition-colors ml-auto"
+                        title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
             ))

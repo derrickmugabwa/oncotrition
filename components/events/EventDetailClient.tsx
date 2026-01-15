@@ -18,7 +18,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
   // Generate iCal file content
   const generateICalFile = () => {
     const eventDate = new Date(event.event_date);
-    const eventTime = event.event_time.split(':');
+    const eventTime = (event.event_time ?? '09:00').split(':');
     const startDateTime = new Date(eventDate);
     startDateTime.setHours(parseInt(eventTime[0]), parseInt(eventTime[1]), 0);
     
@@ -40,7 +40,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
       `DTSTART:${formatDate(startDateTime)}`,
       `DTEND:${formatDate(endDateTime)}`,
       `SUMMARY:${event.title}`,
-      `DESCRIPTION:${event.description.replace(/\n/g, '\\n')}`,
+      `DESCRIPTION:${(event.description ?? '').replace(/\n/g, '\\n')}`,
       `LOCATION:${event.location}`,
       'STATUS:CONFIRMED',
       'END:VEVENT',

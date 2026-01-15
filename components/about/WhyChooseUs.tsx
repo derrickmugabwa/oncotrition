@@ -16,7 +16,7 @@ interface Feature {
 interface SectionContent {
   heading: string;
   description: string;
-  background_image?: string;
+  background_image?: string | null;
 }
 
 export default function WhyChooseUs() {
@@ -88,7 +88,7 @@ export default function WhyChooseUs() {
         } else if (sectionData) {
           setSectionContent({
             heading: sectionData.heading,
-            description: sectionData.description,
+            description: sectionData.description ?? '',
             background_image: sectionData.background_image || ''
           });
         }

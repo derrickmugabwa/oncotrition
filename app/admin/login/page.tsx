@@ -4,16 +4,54 @@ import { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
+import toast, { Toaster } from 'react-hot-toast'
+import { Eye, EyeOff } from 'lucide-react'
 
 export default function AdminLogin() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
+  const [errors, setErrors] = useState({ email: '', password: '' })
   const supabase = createClient()
+
+  const validateForm = () => {
+    const newErrors = { email: '', password: '' }
+    let isValid = true
+
+    // Email validation
+    if (!email) {
+      newErrors.email = 'Email is required'
+      isValid = false
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = 'Please enter a valid email address'
+      isValid = false
+    }
+
+    // Password validation
+    if (!password) {
+      newErrors.password = 'Password is required'
+      isValid = false
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters'
+      isValid = false
+    }
+
+    setErrors(newErrors)
+    return isValid
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validate form
+    if (!validateForm()) {
+      toast.error('Please fix the errors in the form')
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -22,8 +60,15 @@ export default function AdminLogin() {
         password,
       })
 
-      if (error) throw error
-      router.push('/admin')
+      if (error) {
+        toast.error(error.message || 'Invalid email or password')
+        throw error
+      }
+      
+      toast.success('Login successful! Redirecting...')
+      setTimeout(() => {
+        router.push('/admin')
+      }, 500)
     } catch (error) {
       console.error('Error:', error)
     } finally {
@@ -31,9 +76,27 @@ export default function AdminLogin() {
     }
   }
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value)
+    setIsTyping(true)
+    if (errors.email) setErrors({ ...errors, email: '' })
+  }
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value)
+    setIsTyping(true)
+    if (errors.password) setErrors({ ...errors, password: '' })
+  }
+
+  const handleInputBlur = () => {
+    setIsTyping(false)
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      {/* Animated background elements */}
+      <Toaster position="top-right" />
+      
+      {/* Animated background elements - paused during typing */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -45,7 +108,7 @@ export default function AdminLogin() {
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
             }}
-            animate={{
+            animate={isTyping ? {} : {
               scale: [1, 1.2, 1],
               opacity: [0.1, 0.2, 0.1],
               rotate: [0, 180, 360],
@@ -79,8 +142,11 @@ export default function AdminLogin() {
                   type="email"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-800/50 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-400"
+                  onChange={handleEmailChange}
+                  onBlur={handleInputBlur}
+                  className={`w-full px-4 py-3 pr-10 bg-gray-800/50 text-white rounded-lg focus:outline-none focus:ring-2 transition-all placeholder-gray-400 ${
+                    errors.email ? 'ring-2 ring-red-500 focus:ring-red-500' : 'focus:ring-blue-500'
+                  }`}
                   placeholder="Email address"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -89,24 +155,45 @@ export default function AdminLogin() {
                   </svg>
                 </div>
               </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+              )}
             </div>
 
             <div>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-800/50 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-400"
+                  onChange={handlePasswordChange}
+                  onBlur={handleInputBlur}
+                  className={`w-full px-4 py-3 pr-20 bg-gray-800/50 text-white rounded-lg focus:outline-none focus:ring-2 transition-all placeholder-gray-400 ${
+                    errors.password ? 'ring-2 ring-red-500 focus:ring-red-500' : 'focus:ring-blue-500'
+                  }`}
                   placeholder="Password"
                 />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-gray-400 hover:text-white transition-colors pointer-events-auto"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
                   <svg className="h-5 w-5 text-gray-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                     <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
               </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-400">{errors.password}</p>
+              )}
             </div>
 
             <button

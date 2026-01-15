@@ -37,12 +37,12 @@ export default function PluginsTab() {
         .single();
 
       if (error) throw error;
-      setWhatsappSettings(data);
+      setWhatsappSettings(data as any);
       setEditForm({
         phone_number: data.phone_number,
-        message: data.message,
-        position: data.position,
-        enabled: data.enabled,
+        message: data.message ?? '',
+        position: (data.position as any) ?? 'bottom-right',
+        enabled: data.enabled ?? false,
       });
     } catch (error) {
       console.error('Error fetching WhatsApp settings:', error);
@@ -62,7 +62,7 @@ export default function PluginsTab() {
           position: editForm.position,
           enabled: editForm.enabled,
         })
-        .eq('id', whatsappSettings?.id);
+        .eq('id', whatsappSettings?.id ?? 0);
 
       if (error) throw error;
 

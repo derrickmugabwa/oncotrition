@@ -47,7 +47,7 @@ export default function ModulesTab() {
         .order('display_order');
 
       if (modulesError) throw modulesError;
-      setModules(modulesData || []);
+      setModules((modulesData || []) as any);
 
       // Fetch modules content
       const { data: contentData, error: contentError } = await supabase

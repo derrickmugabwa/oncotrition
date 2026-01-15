@@ -67,7 +67,7 @@ const EventsList = () => {
       })
       .filter(event => new Date(event.date) >= currentDate) || [];
 
-      setEvents(eventsWithSlots);
+      setEvents(eventsWithSlots as any);
     } catch (error: any) {
       console.error('Error fetching events:', error);
       toast.error('Failed to load events');

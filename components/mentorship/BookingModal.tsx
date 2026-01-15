@@ -95,7 +95,7 @@ export default function BookingModal({
         phone: formData.phone,
         booking_date: new Date().toLocaleString(),
         amount: amount,
-        payment_status: booking.payment_status
+        payment_status: booking.payment_status ?? 'pending'
       });
 
       // Initiate M-Pesa payment

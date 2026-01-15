@@ -10,22 +10,23 @@ import FloatingImage from './FloatingImage';
 interface VisionSection {
   title: string;
   description: string;
+  image_url?: string;
 }
 
 interface Vision {
   id: number;
   title: string;
   description: string;
-  bullet_points: string[];
-  sections?: VisionSection[];
+  bullet_points: string[] | any;
+  sections?: VisionSection[] | any;
 }
 
 interface ValuesImage {
   id: number;
   title: string;
-  description: string;
-  image_url: string;
-  floating_image_url?: string;
+  description: string | null;
+  image_url: string | null;
+  floating_image_url?: string | null;
 }
 
 // Helper function to render text with hyperlinks
@@ -127,12 +128,6 @@ export default function Values() {
     );
   }
 
-  // Hardcoded images for secondary cards
-  const secondaryImages = [
-    'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80', // Food/nutrition image
-    'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800&q=80'  // Healthcare/medical image
-  ];
-
   // Create cards array from vision sections and values
   const cards = [
     // Main values card
@@ -143,12 +138,12 @@ export default function Values() {
       imageUrl: valuesImage?.image_url || '',
       isPrimary: true
     },
-    // Vision sections as cards with hardcoded images
-    ...(vision.sections || []).map((section, idx) => ({
+    // Vision sections as cards with uploaded images
+    ...(vision.sections || []).map((section: any, idx: number) => ({
       id: `vision-${idx}`,
       title: section.title,
       description: section.description,
-      imageUrl: secondaryImages[idx] || secondaryImages[0], // Use hardcoded images
+      imageUrl: section.image_url || '', // Use uploaded images from database
       isPrimary: false
     }))
   ];

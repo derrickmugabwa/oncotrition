@@ -6,62 +6,13 @@ import BlogPostsTab from './BlogPostsTab';
 import CategoriesTab from './CategoriesTab';
 import AuthorsTab from './AuthorsTab';
 import TagsTab from './TagsTab';
-
-interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  featured_image_url: string;
-  gallery_images: string[];
-  status: string;
-  published_at: string;
-  reading_time: number;
-  view_count: number;
-  is_featured: boolean;
-  blog_authors: {
-    id: string;
-    name: string;
-    profile_image_url: string;
-  };
-  blog_categories: {
-    id: string;
-    name: string;
-    slug: string;
-    color: string;
-  };
-}
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  color: string;
-}
-
-interface Author {
-  id: string;
-  name: string;
-  email: string;
-  bio: string;
-  profile_image_url: string;
-  social_links: any;
-}
-
-interface Tag {
-  id: string;
-  name: string;
-  slug: string;
-  color: string;
-}
+import type { BlogPost, BlogCategory, BlogAuthor, BlogTag } from '@/types/database-helpers';
 
 interface BlogManagementProps {
-  posts: BlogPost[];
-  categories: Category[];
-  authors: Author[];
-  tags: Tag[];
+  posts: any[];
+  categories: BlogCategory[];
+  authors: BlogAuthor[];
+  tags: BlogTag[];
 }
 
 export default function BlogManagement({ posts, categories, authors, tags }: BlogManagementProps) {
@@ -99,23 +50,23 @@ export default function BlogManagement({ posts, categories, authors, tags }: Blo
 
         <TabsContent value="posts" className="mt-6">
           <BlogPostsTab 
-            posts={posts} 
-            categories={categories} 
-            authors={authors}
-            tags={tags}
+            posts={posts as any} 
+            categories={categories as any} 
+            authors={authors as any}
+            tags={tags as any}
           />
         </TabsContent>
 
         <TabsContent value="categories" className="mt-6">
-          <CategoriesTab categories={categories} />
+          <CategoriesTab categories={categories as any} />
         </TabsContent>
 
         <TabsContent value="authors" className="mt-6">
-          <AuthorsTab authors={authors} />
+          <AuthorsTab authors={authors as any} />
         </TabsContent>
 
         <TabsContent value="tags" className="mt-6">
-          <TagsTab tags={tags} />
+          <TagsTab tags={tags as any} />
         </TabsContent>
       </Tabs>
     </div>

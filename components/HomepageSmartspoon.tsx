@@ -24,12 +24,12 @@ interface Service {
 
 interface HomepageSmartspoon {
   id: string;
-  title: string;
-  description: string;
-  button_text: string;
-  button_link: string;
-  image_url: string;
-  services: Service[];
+  title: string | null;
+  description: string | null;
+  button_text: string | null;
+  button_link: string | null;
+  image_url: string | null;
+  services: Service[] | any;
 }
 
 type HomepageSmartspoonRow = Database['public']['Tables']['homepage_smartspoon']['Row'];
@@ -215,7 +215,7 @@ export default function HomepageSmartspoon() {
         {/* Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {services.map((service, index) => (
+            {services.map((service: any, index: number) => (
               <ServiceCard
                 key={service.id}
                 service={service}

@@ -40,7 +40,7 @@ export function BorderTrail({
         transition={{
           ...(transition ?? BASE_TRANSITION),
           delay: delay,
-        }}
+        } as any}
         onAnimationComplete={onAnimationComplete}
       />
     </div>

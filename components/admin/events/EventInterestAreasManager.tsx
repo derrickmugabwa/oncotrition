@@ -20,8 +20,8 @@ interface EventInterestAreasManagerProps {
 interface InterestAreaFormData {
   id?: string;
   name: string;
-  is_active: boolean;
-  display_order: number;
+  is_active: boolean | null;
+  display_order: number | null;
 }
 
 export function EventInterestAreasManager({ event, interestAreas }: EventInterestAreasManagerProps) {
@@ -30,8 +30,8 @@ export function EventInterestAreasManager({ event, interestAreas }: EventInteres
     interestAreas.map(a => ({
       id: a.id,
       name: a.name,
-      is_active: a.is_active,
-      display_order: a.display_order,
+      is_active: a.is_active ?? true,
+      display_order: a.display_order ?? 0,
     }))
   );
   const [isSaving, setIsSaving] = useState(false);
@@ -40,7 +40,7 @@ export function EventInterestAreasManager({ event, interestAreas }: EventInteres
 
   const addInterestArea = () => {
     const newOrder = areas.length > 0 
-      ? Math.max(...areas.map(a => a.display_order)) + 1 
+      ? Math.max(...areas.map(a => a.display_order ?? 0)) + 1 
       : 1;
     
     setAreas([
@@ -69,7 +69,7 @@ export function EventInterestAreasManager({ event, interestAreas }: EventInteres
     const temp = updated[index].display_order;
     updated[index].display_order = updated[index - 1].display_order;
     updated[index - 1].display_order = temp;
-    updated.sort((a, b) => a.display_order - b.display_order);
+    updated.sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
     setAreas(updated);
   };
 
@@ -79,7 +79,7 @@ export function EventInterestAreasManager({ event, interestAreas }: EventInteres
     const temp = updated[index].display_order;
     updated[index].display_order = updated[index + 1].display_order;
     updated[index + 1].display_order = temp;
-    updated.sort((a, b) => a.display_order - b.display_order);
+    updated.sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
     setAreas(updated);
   };
 
@@ -200,18 +200,18 @@ export function EventInterestAreasManager({ event, interestAreas }: EventInteres
                       <div className="flex items-center space-x-2 pt-2">
                         <Switch
                           id={`active-${index}`}
-                          checked={area.is_active}
+                          checked={area.is_active ?? false}
                           onCheckedChange={(checked) => updateInterestArea(index, 'is_active', checked)}
                         />
                         <span className="text-sm text-muted-foreground">
-                          {area.is_active ? 'Active' : 'Inactive'}
+                          {(area.is_active ?? false) ? 'Active' : 'Inactive'}
                         </span>
                       </div>
                     </div>
                   </div>
 
                   {/* Display Order (hidden, auto-managed) */}
-                  <input type="hidden" value={area.display_order} />
+                  <input type="hidden" value={area.display_order ?? 0} />
                 </div>
 
                 {/* Delete Button */}
@@ -259,7 +259,7 @@ export function EventInterestAreasManager({ event, interestAreas }: EventInteres
           <div className="space-y-2">
             {areas
               .filter(a => a.is_active && a.name.trim())
-              .sort((a, b) => a.display_order - b.display_order)
+              .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
               .map((area, index) => (
                 <div
                   key={index}

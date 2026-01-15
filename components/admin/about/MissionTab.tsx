@@ -40,7 +40,7 @@ export default function MissionTab() {
       if (error) throw error;
 
       if (data) {
-        setContent(data);
+        setContent(data as any);
       }
     } catch (error) {
       console.error('Error fetching mission content:', error);
@@ -66,7 +66,7 @@ export default function MissionTab() {
 
       toast.success('Mission content saved successfully');
       if (data) {
-        setContent(data);
+        setContent(data as any);
       }
     } catch (error) {
       console.error('Error saving mission content:', error);

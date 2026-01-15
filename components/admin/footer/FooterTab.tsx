@@ -12,42 +12,42 @@ import { PhotoIcon } from '@heroicons/react/24/outline'
 
 interface FooterSettings {
   id?: number;
-  logo: string;
-  description: string;
-  copyright: string;
+  logo: string | null;
+  description: string | null;
+  copyright: string | null;
   social_links: {
     facebook?: string;
     twitter?: string;
     instagram?: string;
     linkedin?: string;
-  };
+  } | any;
   contact_info: {
     email: string;
     phone: string;
     address: string;
-  };
+  } | any;
   quick_links: Array<{
     name: string;
     href: string;
-  }>;
+  }> | any;
   legal_links: {
     privacy_policy: string;
     terms_of_service: string;
     cookie_policy: string;
-  };
+  } | any;
   newsletter: {
     enabled: boolean;
     description: string;
-  };
+  } | any;
   brand: {
     description: string;
-  };
-  copyright_text: string;
+  } | any;
+  copyright_text: string | null;
   promo_images: Array<{
     image_url: string;
     link_url: string;
-  }>;
-  promo_title: string;
+  }> | any;
+  promo_title: string | null;
 }
 
 const defaultSettings: FooterSettings = {
@@ -141,12 +141,12 @@ export default function FooterTab() {
         setSettings({
           ...defaultSettings,
           ...data,
-          social_links: { ...defaultSettings.social_links, ...data.social_links },
-          contact_info: { ...defaultSettings.contact_info, ...data.contact_info },
+          social_links: { ...defaultSettings.social_links, ...(data.social_links as any) },
+          contact_info: { ...defaultSettings.contact_info, ...(data.contact_info as any) },
           quick_links: data.quick_links || defaultSettings.quick_links,
-          legal_links: { ...defaultSettings.legal_links, ...data.legal_links },
-          newsletter: { ...defaultSettings.newsletter, ...data.newsletter },
-          brand: { ...defaultSettings.brand, ...data.brand },
+          legal_links: { ...defaultSettings.legal_links, ...(data.legal_links as any) },
+          newsletter: { ...defaultSettings.newsletter, ...(data.newsletter as any) },
+          brand: { ...defaultSettings.brand, ...(data.brand as any) },
           promo_images: data.promo_images || defaultSettings.promo_images,
           promo_title: data.promo_title || defaultSettings.promo_title
         })
@@ -185,7 +185,7 @@ export default function FooterTab() {
         // Insert new settings with id = 1
         const { error } = await supabase
           .from('footer_settings')
-          .insert({ ...settingsWithoutId, id: 1 });
+          .insert({ ...settingsWithoutId, id: 1 } as any);
 
         if (error) throw error;
       }
@@ -235,7 +235,7 @@ export default function FooterTab() {
   const removeQuickLink = (index: number) => {
     setSettings(prev => ({
       ...prev,
-      quick_links: prev.quick_links.filter((_, i) => i !== index)
+      quick_links: prev.quick_links.filter((_: any, i: number) => i !== index)
     }))
   }
 
@@ -276,7 +276,7 @@ export default function FooterTab() {
 
       setSettings(prev => ({
         ...prev,
-        promo_images: prev.promo_images.map((image, i) => i === index ? { ...image, image_url: publicUrl } : image)
+        promo_images: prev.promo_images.map((image: any, i: number) => i === index ? { ...image, image_url: publicUrl } : image)
       }));
 
       toast.success('Image uploaded successfully');
@@ -296,14 +296,14 @@ export default function FooterTab() {
   const removePromoImage = (index: number) => {
     setSettings(prev => ({
       ...prev,
-      promo_images: prev.promo_images.filter((_, i) => i !== index)
+      promo_images: prev.promo_images.filter((_: any, i: number) => i !== index)
     }))
   }
 
   const updatePromoImageLink = (index: number, value: string) => {
     setSettings(prev => ({
       ...prev,
-      promo_images: prev.promo_images.map((image, i) => i === index ? { ...image, link_url: value } : image)
+      promo_images: prev.promo_images.map((image: any, i: number) => i === index ? { ...image, link_url: value } : image)
     }))
   }
 
@@ -370,46 +370,6 @@ export default function FooterTab() {
             </div>
           </div>
         ))}
-      </Section>
-
-      <Section title="Quick Links">
-        <div className="space-y-4">
-          {settings.quick_links.map((link, index) => (
-            <div key={index} className="flex items-start space-x-4">
-              <div className="flex-1 space-y-4">
-                <div className="flex space-x-4">
-                  <div className="flex-1">
-                    <Input
-                      value={link.name}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuickLink(index, 'name', e.target.value)}
-                      placeholder="Link Name"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <Input
-                      value={link.href}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuickLink(index, 'href', e.target.value)}
-                      placeholder="Link URL"
-                    />
-                  </div>
-                  <button
-                    onClick={() => removeQuickLink(index)}
-                    className="p-2 text-red-500 hover:text-red-600 transition-colors duration-300"
-                  >
-                    <HiTrash className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-          <button
-            onClick={addQuickLink}
-            className="flex items-center space-x-2 text-primary hover:text-primary/90 transition-colors duration-300"
-          >
-            <HiPlus className="w-5 h-5" />
-            <span>Add Quick Link</span>
-          </button>
-        </div>
       </Section>
 
       <Section title="Contact Information">
@@ -494,12 +454,12 @@ export default function FooterTab() {
             Promotional Title
           </label>
           <Input
-            value={settings.promo_title}
+            value={settings.promo_title ?? ''}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePromoTitle(e.target.value)}
             placeholder="Enter promotional title"
             className="mt-2"
           />
-          {settings.promo_images.map((image, index) => (
+          {settings.promo_images.map((image: any, index: number) => (
             <div key={index} className="flex items-start space-x-4">
               <div className="relative w-40 h-24">
                 {image.image_url && (
@@ -561,7 +521,7 @@ export default function FooterTab() {
 
       <Section title="Copyright Text">
         <TextArea
-          value={settings.copyright_text}
+          value={settings.copyright_text ?? ''}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setSettings(prev => ({ 
             ...prev, 
             copyright_text: e.target.value 

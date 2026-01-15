@@ -41,7 +41,7 @@ export default function MegaMenu({ item, sections, isScrolled, activeDropdown, s
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [menuPosition, setMenuPosition] = useState<'center' | 'left' | 'right'>('center');
   
-  useOnClickOutside(dropdownRef, () => hideDropdown(0));
+  useOnClickOutside(dropdownRef as any, () => hideDropdown(0));
 
   // Handle mouse enter - show dropdown with smart timing
   const handleMouseEnter = () => {

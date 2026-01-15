@@ -1,0 +1,1040 @@
+﻿app/(site)/events/[id]/register/page.tsx(31,34): error TS2339: Property 'title' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(32,24): error TS2339: Property 'description' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(32,61): error TS2339: Property 'title' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(34,36): error TS2339: Property 'title' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(35,26): error TS2339: Property 'description' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(35,63): error TS2339: Property 'title' does not exist on type 'never'.
+app/(site)/layout.tsx(52,32): error TS2339: Property 'value' does not exist on type 'never'.
+app/(site)/layout.tsx(75,49): error TS2339: Property 'value' does not exist on type 'never'.
+app/(site)/layout.tsx(76,55): error TS2339: Property 'value' does not exist on type 'never'.
+app/(site)/layout.tsx(77,55): error TS2339: Property 'value' does not exist on type 'never'.
+app/(site)/layout.tsx(117,41): error TS2339: Property 'phone_number' does not exist on type 'never'.
+app/(site)/layout.tsx(118,37): error TS2339: Property 'message' does not exist on type 'never'.
+app/(site)/layout.tsx(119,38): error TS2339: Property 'position' does not exist on type 'never'.
+app/(site)/layout.tsx(120,37): error TS2339: Property 'enabled' does not exist on type 'never'.
+app/(site)/layout.tsx(125,38): error TS2339: Property 'property_id' does not exist on type 'never'.
+app/(site)/layout.tsx(126,36): error TS2339: Property 'widget_id' does not exist on type 'never'.
+app/(site)/layout.tsx(127,35): error TS2339: Property 'enabled' does not exist on type 'never'.
+app/admin/page.tsx(135,20): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page.tsx(136,23): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/page.tsx(137,28): error TS2339: Property 'updated_at' does not exist on type 'never'.
+app/admin/page.tsx(138,28): error TS2339: Property 'created_at' does not exist on type 'never'.
+app/admin/page.tsx(141,24): error TS2339: Property 'status' does not exist on type 'never'.
+app/admin/pages/events/[id]/check-in/page.tsx(24,29): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/pages/events/[id]/check-in/page.tsx(64,14): error TS2339: Property 'has_internal_registration' does not exist on type 'never'.
+app/admin/pages/events/[id]/check-in/page.tsx(64,49): error TS2339: Property 'registration_type' does not exist on type 'never'.
+app/admin/pages/events/[id]/interest-areas/page.tsx(24,29): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/pages/events/[id]/pricing/page.tsx(24,29): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/pages/events/[id]/registrations/page.tsx(24,29): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/pages/events/[id]/registrations/page.tsx(50,14): error TS2339: Property 'has_internal_registration' does not exist on type 'never'.
+app/admin/pages/events/[id]/registrations/page.tsx(50,49): error TS2339: Property 'registration_type' does not exist on type 'never'.
+app/admin/pages/navbar/page.tsx(114,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "navigation_items", never, "POST">', gave the following error.
+    Argument of type '{ name: string; href: string; order: number; open_in_new_tab: boolean | undefined; type: "link" | "dropdown" | "mega" | undefined; parent_id: string | undefined; column_index: number | undefined; description: string | undefined; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "navigation_items", never, "POST">', gave the following error.
+    Type '{ name: string; href: string; order: number; open_in_new_tab: boolean | undefined; type: "link" | "dropdown" | "mega" | undefined; parent_id: string | undefined; column_index: number | undefined; description: string | undefined; }' is not assignable to type 'never'.
+app/admin/pages/navbar/page.tsx(148,17): error TS2345: Argument of type 'Partial<NavItem>' is not assignable to parameter of type 'never'.
+app/admin/pages/navbar/page.tsx(165,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "navigation_sections", never, "POST">', gave the following error.
+    Argument of type '{ nav_item_id: string; title: string; url: string; column_index: number; order_index: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "navigation_sections", never, "POST">', gave the following error.
+    Type '{ nav_item_id: string; title: string; url: string; column_index: number; order_index: number; }' is not assignable to type 'never'.
+app/admin/pages/navbar/page.tsx(188,17): error TS2345: Argument of type 'Partial<NavSection>' is not assignable to parameter of type 'never'.
+app/admin/pages/navbar/page.tsx(255,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ order: number; id: string; name: string; href: string; open_in_new_tab: boolean; type: "link" | "dropdown" | "mega"; parent_id?: string | undefined; column_index?: number | undefined; description?: string | undefined; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ order: number; id: string; name: string; href: string; open_in_new_tab: boolean; type: "link" | "dropdown" | "mega"; parent_id?: string | undefined; column_index?: number | undefined; description?: string | undefined; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ order: number; id: string; name: string; href: string; open_in_new_tab: boolean; type: "link" | "dropdown" | "mega"; parent_id?: string; column_index?: number; description?: string; }' is not assignable to type 'never'.
+app/admin/settings/page.tsx(129,17): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+app/admin/settings/page.tsx(153,15): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+app/api/admin/mentorship/hero/route.ts(66,17): error TS2345: Argument of type '{ title: any; subtitle: any; tagline: any; background_image: any; }' is not assignable to parameter of type 'never'.
+app/api/admin/mentorship/hero/route.ts(72,32): error TS2339: Property 'id' does not exist on type 'never'.
+app/api/admin/mentorship/hero/route.ts(83,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_hero", never, "POST">', gave the following error.
+    Argument of type '{ title: any; subtitle: any; tagline: any; background_image: any; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_hero", never, "POST">', gave the following error.
+    Type '{ title: any; subtitle: any; tagline: any; background_image: any; }' is not assignable to type 'never'.
+app/api/admin/smartspoon/hero/route.ts(33,17): error TS2345: Argument of type '{ title: any; subtitle: any; tagline: any; background_image: any; }' is not assignable to parameter of type 'never'.
+app/api/admin/smartspoon/hero/route.ts(39,35): error TS2339: Property 'id' does not exist on type 'never'.
+app/api/admin/smartspoon/hero/route.ts(42,55): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_hero", never, "POST">', gave the following error.
+    Argument of type '{ title: any; subtitle: any; tagline: any; background_image: any; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_hero", never, "POST">', gave the following error.
+    Type '{ title: any; subtitle: any; tagline: any; background_image: any; }' is not assignable to type 'never'.
+app/api/debug/route.ts(31,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_events", never, "POST">', gave the following error.
+    Argument of type '{ name: string; date: string; total_slots: number; available_slots: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_events", never, "POST">', gave the following error.
+    Type '{ name: string; date: string; total_slots: number; available_slots: number; }' is not assignable to type 'never'.
+app/api/init/route.ts(21,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "site_settings", never, "POST">', gave the following error.
+    Argument of type '{ logo_url: null; favicon_url: null; show_site_name: boolean; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "site_settings", never, "POST">', gave the following error.
+    Type '{ logo_url: null; favicon_url: null; show_site_name: true; }' is not assignable to type 'never'.
+app/api/mentorship/bookings/route.ts(91,15): error TS2339: Property 'available_slots' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(94,26): error TS2339: Property 'name' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(95,31): error TS2339: Property 'available_slots' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(115,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "event_bookings", never, "POST">', gave the following error.
+    Argument of type '{ event_id: any; name: any; email: any; phone: any; amount: any; payment_status: any; booking_status: string; payment_phone: any; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "event_bookings", never, "POST">', gave the following error.
+    Type '{ event_id: any; name: any; email: any; phone: any; amount: any; payment_status: any; booking_status: string; payment_phone: any; }' is not assignable to type 'never'.
+app/api/mentorship/bookings/route.ts(241,42): error TS2339: Property 'booking_status' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(243,19): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(254,17): error TS2345: Argument of type '{ available_slots: number; updated_at: string; }' is not assignable to parameter of type 'never'.
+app/api/mentorship/bookings/route.ts(255,36): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(258,27): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(267,49): error TS2339: Property 'booking_status' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(271,17): error TS2345: Argument of type '{ available_slots: any; updated_at: string; }' is not assignable to parameter of type 'never'.
+app/api/mentorship/bookings/route.ts(272,36): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(275,27): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(289,15): error TS2345: Argument of type '{ booking_status: any; }' is not assignable to parameter of type 'never'.
+app/api/mentorship/bookings/route.ts(320,26): error TS2339: Property 'id' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(321,33): error TS2339: Property 'booking_status' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(322,31): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(323,38): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(324,31): error TS2339: Property 'booking_status' does not exist on type 'never'.
+app/api/mentorship/events/route.ts(76,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_events", never, "POST">', gave the following error.
+    Argument of type '{ name: any; date: any; total_slots: any; available_slots: any; price: any; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_events", never, "POST">', gave the following error.
+    Type '{ name: any; date: any; total_slots: any; available_slots: any; price: any; }' is not assignable to type 'never'.
+app/api/mentorship/events/route.ts(181,38): error TS2339: Property 'total_slots' does not exist on type 'never'.
+app/api/mentorship/events/route.ts(181,65): error TS2339: Property 'available_slots' does not exist on type 'never'.
+app/api/mentorship/events/route.ts(194,15): error TS2345: Argument of type '{ name: any; date: any; total_slots: any; available_slots: number; price: any; updated_at: string; }' is not assignable to parameter of type 'never'.
+app/api/mentorship/features-content/route.ts(39,23): error TS2339: Property 'id' does not exist on type 'never'.
+app/api/mentorship/features-content/route.ts(43,17): error TS2345: Argument of type '{ title: any; description: any; updated_at: string; }' is not assignable to parameter of type 'never'.
+app/api/mentorship/features-content/route.ts(48,32): error TS2339: Property 'id' does not exist on type 'never'.
+app/api/mentorship/features-content/route.ts(61,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_features_content", never, "POST">', gave the following error.
+    Argument of type '{ title: any; description: any; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_features_content", never, "POST">', gave the following error.
+    Type '{ title: any; description: any; }' is not assignable to type 'never'.
+app/api/mentorship/features/update/route.ts(52,46): error TS2339: Property 'title' does not exist on type 'never'.
+app/api/mentorship/features/update/route.ts(53,58): error TS2339: Property 'description' does not exist on type 'never'.
+app/api/mentorship/features/update/route.ts(54,54): error TS2339: Property 'icon_name' does not exist on type 'never'.
+app/api/mentorship/features/update/route.ts(55,52): error TS2339: Property 'gradient' does not exist on type 'never'.
+app/api/mentorship/features/update/route.ts(56,62): error TS2339: Property 'display_order' does not exist on type 'never'.
+app/api/mentorship/features/update/route.ts(64,15): error TS2345: Argument of type '{ title: any; description: any; icon_name: any; gradient: any; display_order: any; }' is not assignable to parameter of type 'never'.
+app/api/mpesa/stk-push/route.ts(18,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mpesa_logs", never, "POST">', gave the following error.
+    Argument of type '{ timestamp: string; level: "error" | "info"; message: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mpesa_logs", never, "POST">', gave the following error.
+    Type '{ timestamp: string; level: "error" | "info"; message: string; }' is not assignable to type 'never'.
+app/api/mpesa/stk-push/route.ts(352,15): error TS2345: Argument of type '{ checkout_request_id: any; }' is not assignable to parameter of type 'never'.
+app/terms/page.tsx(40,25): error TS2339: Property 'content' does not exist on type 'never'.
+components/about/Team.tsx(132,34): error TS2339: Property 'heading' does not exist on type 'never'.
+components/about/Team.tsx(133,38): error TS2339: Property 'description' does not exist on type 'never'.
+components/about/WhyChooseUs.tsx(90,34): error TS2339: Property 'heading' does not exist on type 'never'.
+components/about/WhyChooseUs.tsx(91,38): error TS2339: Property 'description' does not exist on type 'never'.
+components/about/WhyChooseUs.tsx(92,43): error TS2339: Property 'background_image' does not exist on type 'never'.
+components/admin/about/components/ModuleContentEditor.tsx(32,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: number; heading: string; description: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type 'never[]'.
+components/admin/about/components/ModuleItem.tsx(60,17): error TS2345: Argument of type '{ title: string; icon_svg: string; features: string[]; image_url: string; learn_more_url: string; }' is not assignable to parameter of type 'never'.
+components/admin/about/components/SectionContentEditor.tsx(35,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ section_id: string; heading: string; description: string; background_image: string | undefined; updated_at: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'section_id' does not exist in type 'never[]'.
+components/admin/about/ComponentsTab.tsx(45,17): error TS2345: Argument of type '{ display_order: number; }' is not assignable to parameter of type 'never'.
+components/admin/about/ComponentsTab.tsx(57,15): error TS2345: Argument of type '{ is_visible: boolean; }' is not assignable to parameter of type 'never'.
+components/admin/about/MissionTab.tsx(58,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ updated_at: string; id?: number; title: string; subtitle: string; description: string; image_url: string; created_at?: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'updated_at' does not exist in type 'never[]'.
+components/admin/about/ModulesTab.tsx(63,14): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "modules_content", never, "POST">', gave the following error.
+    Argument of type '{ heading: string; description: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "modules_content", never, "POST">', gave the following error.
+    Type '{ heading: string; description: string; }' is not assignable to type 'never'.
+components/admin/about/ModulesTab.tsx(96,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "modules", never, "POST">', gave the following error.
+    Argument of type '{ title: string; icon_svg: string; features: string[]; display_order: number; image_url: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "modules", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'title' does not exist in type 'never[]'.
+components/admin/about/TeamTab.tsx(58,32): error TS2339: Property 'heading' does not exist on type 'never'.
+components/admin/about/TeamTab.tsx(59,36): error TS2339: Property 'description' does not exist on type 'never'.
+components/admin/about/TeamTab.tsx(78,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ section_id: string; heading: string; description: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'section_id' does not exist in type 'never[]'.
+components/admin/about/TeamTab.tsx(116,15): error TS2345: Argument of type '{ name: string | undefined; position: string | undefined; image_src: string | undefined; bio: string | undefined; linkedin_url: string | null; twitter_url: string | null; }' is not assignable to parameter of type 'never'.
+components/admin/about/TeamTab.tsx(139,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "team_members", never, "POST">', gave the following error.
+    Argument of type '{ name: string; position: string; image_src: string; bio: string; display_order: number; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "team_members", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'name' does not exist in type 'never[]'.
+components/admin/about/ValuesTab.tsx(128,17): error TS2345: Argument of type '{ title: string; }' is not assignable to parameter of type 'never'.
+components/admin/about/ValuesTab.tsx(138,21): error TS2345: Argument of type '{ sections: VisionSection[]; }' is not assignable to parameter of type 'never'.
+components/admin/about/ValuesTab.tsx(342,21): error TS2345: Argument of type 'ValuesImage' is not assignable to parameter of type 'never'.
+components/admin/about/ValuesTab.tsx(359,14): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "values_image", never, "POST">', gave the following error.
+    Argument of type 'ValuesImage[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "values_image", never, "POST">', gave the following error.
+    Type 'ValuesImage' is not assignable to type 'never'.
+components/admin/about/WhyChooseUsTab.new.tsx(77,32): error TS2339: Property 'heading' does not exist on type 'never'.
+components/admin/about/WhyChooseUsTab.new.tsx(78,36): error TS2339: Property 'description' does not exist on type 'never'.
+components/admin/about/WhyChooseUsTab.new.tsx(79,41): error TS2339: Property 'background_image' does not exist on type 'never'.
+components/admin/about/WhyChooseUsTab.new.tsx(98,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ section_id: string; heading: string; description: string; background_image: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'section_id' does not exist in type 'never[]'.
+components/admin/about/WhyChooseUsTab.new.tsx(154,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "why_choose_us_features", never, "POST">', gave the following error.
+    Argument of type '{ title: string; description: string; icon_path: string; display_order: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "why_choose_us_features", never, "POST">', gave the following error.
+    Type '{ title: string; description: string; icon_path: string; display_order: number; }' is not assignable to type 'never'.
+components/admin/about/WhyChooseUsTab.new.tsx(166,30): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/about/WhyChooseUsTab.new.tsx(182,17): error TS2345: Argument of type '{ [x: string]: string; }' is not assignable to parameter of type 'never'.
+components/admin/about/WhyChooseUsTab.new.tsx(232,17): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+components/admin/about/WhyChooseUsTab.tsx(76,32): error TS2339: Property 'heading' does not exist on type 'never'.
+components/admin/about/WhyChooseUsTab.tsx(77,36): error TS2339: Property 'description' does not exist on type 'never'.
+components/admin/about/WhyChooseUsTab.tsx(78,41): error TS2339: Property 'background_image' does not exist on type 'never'.
+components/admin/about/WhyChooseUsTab.tsx(95,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "why_choose_us_features", never, "POST">', gave the following error.
+    Argument of type '{ title: string; description: string; icon_path: string; display_order: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "why_choose_us_features", never, "POST">', gave the following error.
+    Type '{ title: string; description: string; icon_path: string; display_order: number; }' is not assignable to type 'never'.
+components/admin/about/WhyChooseUsTab.tsx(107,30): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/about/WhyChooseUsTab.tsx(155,17): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+components/admin/announcements/AnnouncementEditor.tsx(152,19): error TS2345: Argument of type '{ event_id: string | null; cta_text: string | null; cta_link: string | null; image_url: string | null; start_date: string; end_date: string; title: string; message: string; announcement_type: "event" | "general" | "promotion" | "alert"; is_active: boolean; priority: number; display_frequency: "once" | "daily" | "alw...' is not assignable to parameter of type 'never'.
+components/admin/announcements/AnnouncementEditor.tsx(160,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "announcements", never, "POST">', gave the following error.
+    Argument of type '{ event_id: string | null; cta_text: string | null; cta_link: string | null; image_url: string | null; start_date: string; end_date: string; title: string; message: string; announcement_type: "alert" | ... 2 more ... | "promotion"; is_active: boolean; priority: number; display_frequency: "once" | ... 1 more ... | "a...' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "announcements", never, "POST">', gave the following error.
+    Type '{ event_id: string | null; cta_text: string | null; cta_link: string | null; image_url: string | null; start_date: string; end_date: string; title: string; message: string; announcement_type: "event" | "general" | "promotion" | "alert"; is_active: boolean; priority: number; display_frequency: "once" | "daily" | "alw...' is not assignable to type 'never'.
+components/admin/announcements/AnnouncementsTab.tsx(91,17): error TS2345: Argument of type '{ is_active: boolean; }' is not assignable to parameter of type 'never'.
+components/admin/blog/AuthorsTab.tsx(111,19): error TS2345: Argument of type '{ name: string; email: string; bio: string; profile_image_url: string; social_links: {}; }' is not assignable to parameter of type 'never'.
+components/admin/blog/AuthorsTab.tsx(120,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "blog_authors", never, "POST">', gave the following error.
+    Argument of type '{ name: string; email: string; bio: string; profile_image_url: string; social_links: {}; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "blog_authors", never, "POST">', gave the following error.
+    Type '{ name: string; email: string; bio: string; profile_image_url: string; social_links: {}; }' is not assignable to type 'never'.
+components/admin/blog/BlogPostEditor.tsx(231,19): error TS2345: Argument of type '{ author_id: string | null; category_id: string | null; published_at: string | null; title: string; slug: string; excerpt: string; content: string; featured_image_url: string; gallery_images: string[]; status: string; reading_time: number; is_featured: boolean; tags: string[]; }' is not assignable to parameter of type 'never'.
+components/admin/blog/BlogPostEditor.tsx(240,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "blog_posts", never, "POST">', gave the following error.
+    Argument of type '{ author_id: string | null; category_id: string | null; published_at: string | null; title: string; slug: string; excerpt: string; content: string; featured_image_url: string; gallery_images: string[]; status: string; reading_time: number; is_featured: boolean; tags: string[]; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "blog_posts", never, "POST">', gave the following error.
+    Type '{ author_id: string | null; category_id: string | null; published_at: string | null; title: string; slug: string; excerpt: string; content: string; featured_image_url: string; gallery_images: string[]; status: string; reading_time: number; is_featured: boolean; tags: string[]; }' is not assignable to type 'never'.
+components/admin/blog/CategoriesTab.tsx(86,19): error TS2345: Argument of type '{ name: string; slug: string; description: string; color: string; }' is not assignable to parameter of type 'never'.
+components/admin/blog/CategoriesTab.tsx(95,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "blog_categories", never, "POST">', gave the following error.
+    Argument of type '{ name: string; slug: string; description: string; color: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "blog_categories", never, "POST">', gave the following error.
+    Type '{ name: string; slug: string; description: string; color: string; }' is not assignable to type 'never'.
+components/admin/blog/TagsTab.tsx(83,19): error TS2345: Argument of type '{ name: string; slug: string; color: string; }' is not assignable to parameter of type 'never'.
+components/admin/blog/TagsTab.tsx(92,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "blog_tags", never, "POST">', gave the following error.
+    Argument of type '{ name: string; slug: string; color: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "blog_tags", never, "POST">', gave the following error.
+    Type '{ name: string; slug: string; color: string; }' is not assignable to type 'never'.
+components/admin/contact/ContactInformationTab.tsx(58,17): error TS2345: Argument of type '{ title: string; description: string; email: string; phone: string; address: string; social_links: { facebook?: string; twitter?: string; instagram?: string; }; }' is not assignable to parameter of type 'never'.
+components/admin/events/EventEditor.tsx(37,5): error TS2353: Object literal may only specify known properties, and 'has_internal_registration' does not exist in type 'EventFormData | (() => EventFormData)'.
+components/admin/events/EventEditor.tsx(136,41): error TS2551: Property 'registration_deadline' does not exist on type 'EventFormData'. Did you mean 'registration_link'?
+components/admin/events/EventEditor.tsx(137,39): error TS2339: Property 'early_bird_deadline' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(138,33): error TS2339: Property 'venue_details' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(139,40): error TS2339: Property 'terms_and_conditions' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(146,19): error TS2345: Argument of type '{ additional_info: string | null; featured_image_url: string | null; max_attendees: number | null; registration_link: string | null; organizer_name: string | null; organizer_contact: string | null; ... 11 more ...; is_featured: boolean; }' is not assignable to parameter of type 'never'.
+components/admin/events/EventEditor.tsx(155,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "events", never, "POST">', gave the following error.
+    Argument of type '{ additional_info: string | null; featured_image_url: string | null; max_attendees: number | null; registration_link: string | null; organizer_name: string | null; organizer_contact: string | null; ... 11 more ...; is_featured: boolean; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "events", never, "POST">', gave the following error.
+    Type '{ additional_info: string | null; featured_image_url: string | null; max_attendees: number | null; registration_link: string | null; organizer_name: string | null; organizer_contact: string | null; ... 11 more ...; is_featured: boolean; }' is not assignable to type 'never'.
+components/admin/events/EventEditor.tsx(347,36): error TS2339: Property 'has_internal_registration' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(347,74): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(351,25): error TS2339: Property 'has_internal_registration' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(351,63): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(371,35): error TS2339: Property 'has_internal_registration' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(386,23): error TS2339: Property 'has_internal_registration' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(398,43): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(411,43): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(422,27): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(430,43): error TS2339: Property 'requires_payment' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(448,43): error TS2551: Property 'registration_deadline' does not exist on type 'EventFormData'. Did you mean 'registration_link'?
+components/admin/events/EventEditor.tsx(461,43): error TS2339: Property 'early_bird_deadline' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(476,41): error TS2339: Property 'early_bird_discount' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(492,41): error TS2339: Property 'venue_details' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(507,41): error TS2339: Property 'terms_and_conditions' does not exist on type 'EventFormData'.
+components/admin/events/EventRegistrationsManager.tsx(211,42): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+components/admin/events/EventRegistrationsManager.tsx(213,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/admin/events/EventRegistrationsManager.tsx(224,40): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+components/admin/events/EventRegistrationsManager.tsx(226,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/admin/events/EventRegistrationsManager.tsx(341,65): error TS2322: Type '{ children: Element; variant: "outline"; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+components/admin/events/EventRegistrationsManager.tsx(347,65): error TS2322: Type '{ children: Element; variant: "outline"; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+components/admin/events/EventRegistrationsManager.tsx(353,65): error TS2322: Type '{ children: Element; variant: "outline"; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+components/admin/features/FeaturesGridTab.tsx(128,15): error TS2345: Argument of type '{ title: string; description: string; icon_name: string; gradient: string; }' is not assignable to parameter of type 'never'.
+components/admin/features/FeaturesGridTab.tsx(149,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "features_grid", never, "POST">', gave the following error.
+    Argument of type '{ title: string; description: string; icon_name: string; gradient: string; display_order: number; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "features_grid", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'title' does not exist in type 'never[]'.
+components/admin/features/OverviewTab.tsx(41,21): error TS2339: Property 'title' does not exist on type 'never'.
+components/admin/features/OverviewTab.tsx(42,24): error TS2339: Property 'subtitle' does not exist on type 'never'.
+components/admin/features/OverviewTab.tsx(43,23): error TS2339: Property 'heading' does not exist on type 'never'.
+components/admin/features/OverviewTab.tsx(44,28): error TS2339: Property 'bullet_points' does not exist on type 'never'.
+components/admin/features/OverviewTab.tsx(53,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: number; title: string; subtitle: string; heading: string; bullet_points: string[]; updated_at: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type 'never[]'.
+components/admin/footer/FooterTab.tsx(143,11): error TS2698: Spread types may only be created from object types.
+components/admin/footer/FooterTab.tsx(144,68): error TS2339: Property 'social_links' does not exist on type 'never'.
+components/admin/footer/FooterTab.tsx(145,68): error TS2339: Property 'contact_info' does not exist on type 'never'.
+components/admin/footer/FooterTab.tsx(146,29): error TS2339: Property 'quick_links' does not exist on type 'never'.
+components/admin/footer/FooterTab.tsx(147,66): error TS2339: Property 'legal_links' does not exist on type 'never'.
+components/admin/footer/FooterTab.tsx(148,64): error TS2339: Property 'newsletter' does not exist on type 'never'.
+components/admin/footer/FooterTab.tsx(149,54): error TS2339: Property 'brand' does not exist on type 'never'.
+components/admin/footer/FooterTab.tsx(150,30): error TS2339: Property 'promo_images' does not exist on type 'never'.
+components/admin/footer/FooterTab.tsx(151,29): error TS2339: Property 'promo_title' does not exist on type 'never'.
+components/admin/footer/FooterTab.tsx(180,19): error TS2345: Argument of type '{ logo: string; description: string; copyright: string; social_links: { facebook?: string | undefined; twitter?: string | undefined; instagram?: string | undefined; linkedin?: string | undefined; }; ... 7 more ...; promo_title: string; }' is not assignable to parameter of type 'never'.
+components/admin/footer/FooterTab.tsx(181,38): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/footer/FooterTab.tsx(188,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "footer_settings", never, "POST">', gave the following error.
+    Argument of type '{ id: number; logo: string; description: string; copyright: string; social_links: { facebook?: string; twitter?: string; instagram?: string; linkedin?: string; }; ... 7 more ...; promo_title: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "footer_settings", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type 'never[]'.
+components/admin/home/BrandsTab.tsx(67,31): error TS2339: Property 'title' does not exist on type 'never'.
+components/admin/home/BrandsTab.tsx(77,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ title: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'title' does not exist in type 'never[]'.
+components/admin/home/BrandsTab.tsx(91,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "brands", never, "POST">', gave the following error.
+    Argument of type '{ name: string; logo_url: string; order_index: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "brands", never, "POST">', gave the following error.
+    Type '{ name: string; logo_url: string; order_index: number; }' is not assignable to type 'never'.
+components/admin/home/BrandsTab.tsx(117,17): error TS2345: Argument of type '{ name: string; logo_url: string; order_index: number; }' is not assignable to parameter of type 'never'.
+components/admin/home/ComponentsTab.tsx(65,17): error TS2345: Argument of type '{ display_order: number; }' is not assignable to parameter of type 'never'.
+components/admin/home/ComponentsTab.tsx(77,15): error TS2345: Argument of type '{ is_visible: boolean; }' is not assignable to parameter of type 'never'.
+components/admin/home/PluginsTab.tsx(42,28): error TS2339: Property 'phone_number' does not exist on type 'never'.
+components/admin/home/PluginsTab.tsx(43,23): error TS2339: Property 'message' does not exist on type 'never'.
+components/admin/home/PluginsTab.tsx(44,24): error TS2339: Property 'position' does not exist on type 'never'.
+components/admin/home/PluginsTab.tsx(45,23): error TS2339: Property 'enabled' does not exist on type 'never'.
+components/admin/home/PluginsTab.tsx(59,17): error TS2345: Argument of type '{ phone_number: string; message: string; position: "top-left" | "top-right" | "bottom-left" | "bottom-right"; enabled: boolean; }' is not assignable to parameter of type 'never'.
+components/admin/home/PluginsTab.tsx(65,19): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type '{}'.
+  Type 'undefined' is not assignable to type '{}'.
+components/admin/home/TawkToSettings.tsx(38,27): error TS2339: Property 'property_id' does not exist on type 'never'.
+components/admin/home/TawkToSettings.tsx(39,25): error TS2339: Property 'widget_id' does not exist on type 'never'.
+components/admin/home/TawkToSettings.tsx(40,23): error TS2339: Property 'enabled' does not exist on type 'never'.
+components/admin/home/TawkToSettings.tsx(54,17): error TS2345: Argument of type '{ property_id: string; widget_id: string; enabled: boolean; }' is not assignable to parameter of type 'never'.
+components/admin/home/TawkToSettings.tsx(59,19): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type '{}'.
+  Type 'undefined' is not assignable to type '{}'.
+components/admin/HomepageFeaturesTab.tsx(314,19): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+components/admin/HomepageFeaturesTab.tsx(335,17): error TS2345: Argument of type 'HeaderContent' is not assignable to parameter of type 'never'.
+components/admin/HomepageFeaturesTab.tsx(363,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "features", never, "POST">', gave the following error.
+    Argument of type '{ order: number; title: string; description: string; icon_name: "user" | "approved" | "scale" | "search" | "chart" | "phone" | "star" | "document" | "list" | "menu" | "presentation" | ... 73 more ... | "wrench"; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "features", never, "POST">', gave the following error.
+    Type '{ order: number; title: string; description: string; icon_name: keyof typeof featureIcons; }' is not assignable to type 'never'.
+components/admin/HomepageFeaturesTab.tsx(394,19): error TS2345: Argument of type '{ order: number; }' is not assignable to parameter of type 'never'.
+components/admin/HomepageFeaturesTab.tsx(421,19): error TS2345: Argument of type '{ order: number; }' is not assignable to parameter of type 'never'.
+components/admin/HomepageMentorshipTab.tsx(39,26): error TS2339: Property 'features' does not exist on type 'never'.
+components/admin/HomepageMentorshipTab.tsx(40,28): error TS2339: Property 'image_url' does not exist on type 'never'.
+components/admin/HomepageMentorshipTab.tsx(130,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "homepage_mentorship", never, "POST">', gave the following error.
+    Argument of type '{ title: string; subtitle: string; description: string; image_url: string | null | undefined; button_text: string; button_link: string; features: string[]; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "homepage_mentorship", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'title' does not exist in type 'never[]'.
+components/admin/HomepageMentorshipTab.tsx(144,19): error TS2345: Argument of type '{ title: string; subtitle: string; description: string; image_url: string | null | undefined; button_text: string; button_link: string; features: string[]; }' is not assignable to parameter of type 'never'.
+components/admin/HomepageSmartspoonTab.tsx(86,28): error TS2339: Property 'image_url' does not exist on type 'never'.
+components/admin/HomepageSmartspoonTab.tsx(87,23): error TS2339: Property 'title' does not exist on type 'never'.
+components/admin/HomepageSmartspoonTab.tsx(88,29): error TS2339: Property 'description' does not exist on type 'never'.
+components/admin/HomepageSmartspoonTab.tsx(89,28): error TS2339: Property 'button_text' does not exist on type 'never'.
+components/admin/HomepageSmartspoonTab.tsx(90,28): error TS2339: Property 'button_link' does not exist on type 'never'.
+components/admin/HomepageSmartspoonTab.tsx(91,26): error TS2339: Property 'services' does not exist on type 'never'.
+components/admin/HomepageSmartspoonTab.tsx(207,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: string | undefined; title: string; description: string; button_text: string; button_link: string; image_url: string; services: { id: number; title: string; description: string; icon: string; }[]; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ id: string | undefined; title: string; description: string; button_text: string; button_link: string; image_url: string; services: { id: number; title: string; description: string; icon: string; }[]; }' is not assignable to parameter of type 'never[]'.
+      Type '{ id: string | undefined; title: string; description: string; button_text: string; button_link: string; image_url: string; services: { id: number; title: string; description: string; icon: string; }[]; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+components/admin/mentorship/BusinessTipsTab.tsx(74,14): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/mentorship/BusinessTipsTab.tsx(74,21): error TS2698: Spread types may only be created from object types.
+components/admin/mentorship/BusinessTipsTab.tsx(92,17): error TS2345: Argument of type 'Partial<BusinessTipsContent>' is not assignable to parameter of type 'never'.
+components/admin/mentorship/BusinessTipsTab.tsx(113,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_business_tips", never, "POST">', gave the following error.
+    Argument of type '{ order_index: number; url: string; title: string; description: string; image: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_business_tips", never, "POST">', gave the following error.
+    Type '{ order_index: number; url: string; title: string; description: string; image: string; }' is not assignable to type 'never'.
+components/admin/mentorship/BusinessTipsTab.tsx(121,15): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/mentorship/BusinessTipsTab.tsx(121,22): error TS2698: Spread types may only be created from object types.
+components/admin/mentorship/BusinessTipsTab.tsx(174,17): error TS2345: Argument of type 'Partial<BusinessTip>' is not assignable to parameter of type 'never'.
+components/admin/mentorship/ComponentsTab.tsx(45,17): error TS2345: Argument of type '{ display_order: number; }' is not assignable to parameter of type 'never'.
+components/admin/mentorship/ComponentsTab.tsx(57,15): error TS2345: Argument of type '{ is_visible: boolean; }' is not assignable to parameter of type 'never'.
+components/admin/mentorship/EventBookingsTab.tsx(111,17): error TS2345: Argument of type '{ booking_status: "approved" | "rejected"; }' is not assignable to parameter of type 'never'.
+components/admin/mentorship/HeroSectionTab.tsx(44,27): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/mentorship/HeroSectionTab.tsx(45,30): error TS2339: Property 'title' does not exist on type 'never'.
+components/admin/mentorship/HeroSectionTab.tsx(46,33): error TS2339: Property 'subtitle' does not exist on type 'never'.
+components/admin/mentorship/HeroSectionTab.tsx(47,32): error TS2339: Property 'tagline' does not exist on type 'never'.
+components/admin/mentorship/HeroSectionTab.tsx(48,41): error TS2339: Property 'background_image' does not exist on type 'never'.
+components/admin/mentorship/MentorshipFeaturesTab.tsx(302,17): error TS2345: Argument of type '{ title: string; description: string; icon_name: string; gradient: string; display_order: number; updated_at: string; }' is not assignable to parameter of type 'never'.
+components/admin/mentorship/MentorshipFeaturesTab.tsx(365,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_features", never, "POST">', gave the following error.
+    Argument of type '{ title: string; description: string; icon_name: string; gradient: string; display_order: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_features", never, "POST">', gave the following error.
+    Type '{ title: string; description: string; icon_name: string; gradient: string; display_order: number; }' is not assignable to type 'never'.
+components/admin/mentorship/NutritionSurveyTab.tsx(97,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: string; title: string; description: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type 'never[]'.
+components/admin/mentorship/NutritionSurveyTab.tsx(144,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "nutrition_survey", never, "POST">', gave the following error.
+    Argument of type '{ question: string; answer: string; order_index: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "nutrition_survey", never, "POST">', gave the following error.
+    Type '{ question: string; answer: string; order_index: number; }' is not assignable to type 'never'.
+components/admin/mentorship/NutritionSurveyTab.tsx(194,17): error TS2345: Argument of type '{ question: string; answer: string; }' is not assignable to parameter of type 'never'.
+components/admin/mentorship/NutritionSurveyTab.tsx(242,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: string; order_index: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ id: string; order_index: number; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ id: string; order_index: number; }' is not assignable to type 'never'.
+components/admin/mentorship/NutritionSurveyTab.tsx(295,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: string | undefined; image_url: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type 'never[]'.
+components/admin/mentorship/PackagesTab.tsx(101,21): error TS2339: Property 'title' does not exist on type 'never'.
+components/admin/mentorship/PackagesTab.tsx(104,28): error TS2339: Property 'title' does not exist on type 'never'.
+components/admin/mentorship/PackagesTab.tsx(108,21): error TS2339: Property 'description' does not exist on type 'never'.
+components/admin/mentorship/PackagesTab.tsx(111,34): error TS2339: Property 'description' does not exist on type 'never'.
+components/admin/mentorship/PackagesTab.tsx(148,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_packages", never, "POST">', gave the following error.
+    Argument of type '{ name: string; price: number; international_price: number; title: string; description: string; features: string[]; recommended: boolean; gradient: string; order_number: number; duration_type: string; url: string; show_price: boolean; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_packages", never, "POST">', gave the following error.
+    Type '{ name: string; price: number; international_price: number; title: string; description: string; features: string[]; recommended: boolean; gradient: string; order_number: number; duration_type: string; url: string; show_price: boolean; }' is not assignable to type 'never'.
+components/admin/mentorship/PackagesTab.tsx(199,17): error TS2345: Argument of type '{ name: string; price: number; international_price: number; title: string; description: string; features: string[]; recommended: boolean; gradient: string; order_number: number; duration_type: string; url: string; show_price: boolean; }' is not assignable to parameter of type 'never'.
+components/admin/mentorship/PackagesTab.tsx(245,17): error TS2345: Argument of type '{ title: string; description: string; }' is not assignable to parameter of type 'never'.
+components/admin/mentorship/TestimonialsTab.tsx(71,22): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/mentorship/TestimonialsTab.tsx(71,29): error TS2698: Spread types may only be created from object types.
+components/admin/mentorship/TestimonialsTab.tsx(89,17): error TS2345: Argument of type 'Partial<TestimonialsContent>' is not assignable to parameter of type 'never'.
+components/admin/mentorship/TestimonialsTab.tsx(110,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_testimonials", never, "POST">', gave the following error.
+    Argument of type '{ order_index: number; name: string; content: string; role: string; created_at?: string | undefined; image: string; company: string; updated_at?: string | undefined; rating: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_testimonials", never, "POST">', gave the following error.
+    Type '{ order_index: number; name: string; content: string; role: string; created_at?: string | undefined; image: string; company: string; updated_at?: string | undefined; rating: number; }' is not assignable to type 'never'.
+components/admin/mentorship/TestimonialsTab.tsx(118,15): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/mentorship/TestimonialsTab.tsx(118,22): error TS2698: Spread types may only be created from object types.
+components/admin/mentorship/TestimonialsTab.tsx(156,17): error TS2345: Argument of type 'Partial<Testimonial>' is not assignable to parameter of type 'never'.
+components/admin/SiteLogoTab.tsx(57,21): error TS2339: Property 'logo_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(58,30): error TS2339: Property 'logo_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(59,22): error TS2339: Property 'logo_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(60,22): error TS2339: Property 'logo_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(61,24): error TS2339: Property 'logo_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(62,98): error TS2339: Property 'logo_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(85,21): error TS2339: Property 'favicon_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(86,30): error TS2339: Property 'favicon_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(87,22): error TS2339: Property 'favicon_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(88,22): error TS2339: Property 'favicon_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(89,24): error TS2339: Property 'favicon_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(90,101): error TS2339: Property 'favicon_url' does not exist on type 'never'.
+components/admin/SiteLogoTab.tsx(145,17): error TS2345: Argument of type '{ logo_url: string; }' is not assignable to parameter of type 'never'.
+components/admin/SiteLogoTab.tsx(229,17): error TS2345: Argument of type '{ favicon_url: string; }' is not assignable to parameter of type 'never'.
+components/admin/SiteLogoTab.tsx(309,17): error TS2345: Argument of type '{ logo_url: string; }' is not assignable to parameter of type 'never'.
+components/admin/SiteLogoTab.tsx(340,17): error TS2345: Argument of type '{ favicon_url: string; }' is not assignable to parameter of type 'never'.
+components/admin/SliderSettingsTab.tsx(160,26): error TS2339: Property 'title' does not exist on type 'never'.
+components/admin/SliderSettingsTab.tsx(161,32): error TS2339: Property 'description' does not exist on type 'never'.
+components/admin/SliderSettingsTab.tsx(162,29): error TS2339: Property 'cta_text' does not exist on type 'never'.
+components/admin/SliderSettingsTab.tsx(163,28): error TS2339: Property 'cta_url' does not exist on type 'never'.
+components/admin/SliderSettingsTab.tsx(212,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: number; title: string; description: string; cta_text: string; cta_url: string; image_url: string; order: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ id: number; title: string; description: string; cta_text: string; cta_url: string; image_url: string; order: number; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ id: number; title: string; description: string; cta_text: string; cta_url: string; image_url: string; order: number; }' is not assignable to type 'never'.
+components/admin/smartspoon/DocumentsTab.tsx(51,30): error TS2339: Property 'content' does not exist on type 'never'.
+components/admin/smartspoon/DocumentsTab.tsx(77,19): error TS2345: Argument of type '{ content: string; updated_at: string; }' is not assignable to parameter of type 'never'.
+components/admin/smartspoon/DocumentsTab.tsx(81,34): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/smartspoon/DocumentsTab.tsx(86,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "terms_and_conditions", never, "POST">', gave the following error.
+    Argument of type '{ content: string; is_active: boolean; title: string; version: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "terms_and_conditions", never, "POST">', gave the following error.
+    Object literal may only specify known properties, and 'content' does not exist in type 'never[]'.
+components/admin/smartspoon/HeroSectionTab.tsx(58,24): error TS2339: Property 'title' does not exist on type 'never'.
+components/admin/smartspoon/HeroSectionTab.tsx(59,27): error TS2339: Property 'subtitle' does not exist on type 'never'.
+components/admin/smartspoon/HeroSectionTab.tsx(60,27): error TS2339: Property 'cta_text' does not exist on type 'never'.
+components/admin/smartspoon/HeroSectionTab.tsx(61,26): error TS2339: Property 'cta_url' does not exist on type 'never'.
+components/admin/smartspoon/HeroSectionTab.tsx(214,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: number | undefined; title: string; subtitle: string; cta_text: string; cta_url: string; background_image: string; order: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ id: number | undefined; title: string; subtitle: string; cta_text: string; cta_url: string; background_image: string; order: number; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ id: number | undefined; title: string; subtitle: string; cta_text: string; cta_url: string; background_image: string; order: number; }' is not assignable to type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(154,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages_settings", never, "POST">', gave the following error.
+    Argument of type '{ title: string; subtitle: string; description: string; cta_link: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages_settings", never, "POST">', gave the following error.
+    Type '{ title: string; subtitle: string; description: string; cta_link: string; }' is not assignable to type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(176,19): error TS2345: Argument of type 'Partial<PackagesSettings>' is not assignable to parameter of type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(184,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages_settings", never, "POST">', gave the following error.
+    Argument of type '{ id?: number | undefined; title: string; subtitle: string; description: string; cta_link: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages_settings", never, "POST">', gave the following error.
+    Type '{ id?: number; title: string; subtitle: string; description: string; cta_link: string; }' is not assignable to type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(262,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages", never, "POST">', gave the following error.
+    Argument of type '{ name: string; price: number; features: string[]; recommended: boolean; gradient: string; order_number: number; duration_type: string; show_price: boolean; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages", never, "POST">', gave the following error.
+    Argument of type '{ name: string; price: number; features: string[]; recommended: boolean; gradient: string; order_number: number; duration_type: string; show_price: boolean; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ name: string; price: number; features: string[]; recommended: boolean; gradient: string; order_number: number; duration_type: string; show_price: boolean; }' is not assignable to type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(297,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages", never, "POST">', gave the following error.
+    Argument of type '{ name: string; price: number; features: string[]; recommended: boolean; gradient: string; order_number: number; duration_type: string; show_price: boolean; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages", never, "POST">', gave the following error.
+    Type '{ name: string; price: number; features: string[]; recommended: boolean; gradient: string; order_number: number; duration_type: string; show_price: boolean; }' is not assignable to type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(348,17): error TS2345: Argument of type '{ name: string; price: number; features: string[]; recommended: boolean; gradient: string; order_number: number; duration_type: string; show_price: boolean; }' is not assignable to parameter of type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(412,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: number; order_number: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ id: number; order_number: number; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ id: number; order_number: number; }' is not assignable to type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(539,24): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages_settings", never, "POST">', gave the following error.
+    Argument of type '{ title: string; subtitle: string; description: string; cta_link: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_packages_settings", never, "POST">', gave the following error.
+    Type '{ title: string; subtitle: string; description: string; cta_link: string; }' is not assignable to type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(554,61): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/smartspoon/PackagesTab.tsx(568,31): error TS2345: Argument of type '{ title: string; subtitle: string; description: string; cta_link: string; }' is not assignable to parameter of type 'never'.
+components/admin/smartspoon/StepsTab.tsx(212,19): error TS2345: Argument of type 'Partial<StepsSettings>' is not assignable to parameter of type 'never'.
+components/admin/smartspoon/StepsTab.tsx(220,19): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_steps_settings", never, "POST">', gave the following error.
+    Argument of type 'Partial<StepsSettings>' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_steps_settings", never, "POST">', gave the following error.
+    Argument of type 'Partial<StepsSettings>' is not assignable to parameter of type 'never[]'.
+      Type 'Partial<StepsSettings>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+components/admin/smartspoon/StepsTab.tsx(271,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_steps", never, "POST">', gave the following error.
+    Argument of type '{ icon: string; title: string; description: string; order_number: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_steps", never, "POST">', gave the following error.
+    Argument of type '{ icon: string; title: string; description: string; order_number: number; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ icon: string; title: string; description: string; order_number: number; }' is not assignable to type 'never'.
+components/admin/smartspoon/StepsTab.tsx(286,17): error TS2345: Argument of type 'Partial<Step>' is not assignable to parameter of type 'never'.
+components/admin/smartspoon/StepsTab.tsx(313,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_steps", never, "POST">', gave the following error.
+    Argument of type '{ icon: string; title: string; description: string; order_number: number; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_steps", never, "POST">', gave the following error.
+    Argument of type '{ icon: string; title: string; description: string; order_number: number; }' is not assignable to parameter of type 'never[]'.
+      Type '{ icon: string; title: string; description: string; order_number: number; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+components/admin/smartspoon/StepsTab.tsx(352,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ id: number; icon: string; title: string; description: string; order_number: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ id: number; icon: string; title: string; description: string; order_number: number; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ id: number; icon: string; title: string; description: string; order_number: number; }' is not assignable to type 'never'.
+components/admin/smartspoon/UsersTab.tsx(107,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type 'HeaderContent[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Type 'HeaderContent' is not assignable to type 'never'.
+components/admin/smartspoon/UsersTab.tsx(129,19): error TS2345: Argument of type 'User' is not assignable to parameter of type 'never'.
+components/admin/smartspoon/UsersTab.tsx(138,12): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_users", never, "POST">', gave the following error.
+    Argument of type '{ sort_order: number; id: number; title: string; description: string; icon_name: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_users", never, "POST">', gave the following error.
+    Type '{ sort_order: number; id: number; title: string; description: string; icon_name: string; }' is not assignable to type 'never'.
+components/admin/smartspoon/UsersTab.tsx(195,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ sort_order: number; id: number; title: string; description: string; icon_name: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ sort_order: number; id: number; title: string; description: string; icon_name: string; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ sort_order: number; id: number; title: string; description: string; icon_name: string; }' is not assignable to type 'never'.
+components/admin/StatisticsTab.tsx(101,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "statistics", never, "POST">', gave the following error.
+    Argument of type '{ display_order: number; number: string; label: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "statistics", never, "POST">', gave the following error.
+    Type '{ display_order: number; number: string; label: string; }' is not assignable to type 'never'.
+components/admin/StatisticsTab.tsx(139,17): error TS2345: Argument of type '{ number?: string | undefined; label?: string | undefined; display_order?: number | undefined; }' is not assignable to parameter of type 'never'.
+components/admin/StatisticsTab.tsx(171,19): error TS2345: Argument of type '{ display_order: number; }' is not assignable to parameter of type 'never'.
+components/admin/StatisticsTab.tsx(200,17): error TS2345: Argument of type 'HeaderContent' is not assignable to parameter of type 'never'.
+components/admin/TestimonialsTab.tsx(51,22): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/TestimonialsTab.tsx(51,29): error TS2698: Spread types may only be created from object types.
+components/admin/TestimonialsTab.tsx(67,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "testimonials", never, "POST">', gave the following error.
+    Argument of type 'Omit<Testimonial, "id">[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "testimonials", never, "POST">', gave the following error.
+    Type 'Omit<Testimonial, "id">' is not assignable to type 'never'.
+components/admin/TestimonialsTab.tsx(75,15): error TS2339: Property 'id' does not exist on type 'never'.
+components/admin/TestimonialsTab.tsx(75,22): error TS2698: Spread types may only be created from object types.
+components/admin/TestimonialsTab.tsx(116,17): error TS2345: Argument of type 'Partial<Testimonial>' is not assignable to parameter of type 'never'.
+components/announcements/AnnouncementManager.tsx(59,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ announcement_id: string; user_session_id: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'announcement_id' does not exist in type 'never[]'.
+components/blog/BlogPost.tsx(108,9): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(123,11): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(133,24): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(151,13): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(160,15): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(169,13): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(205,15): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(221,23): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(232,11): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(239,11): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/BlogPost.tsx(271,11): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/RelatedPosts.tsx(67,9): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/RelatedPosts.tsx(80,13): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/RelatedPosts.tsx(154,9): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/contact/ContactForm.tsx(72,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "form_submissions", never, "POST">', gave the following error.
+    Argument of type 'FormData[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "form_submissions", never, "POST">', gave the following error.
+    Type 'FormData' is not assignable to type 'never'.
+components/events/EventDetail.tsx(239,23): error TS2322: Type 'boolean | 0 | null' is not assignable to type 'boolean | undefined'.
+  Type 'null' is not assignable to type 'boolean | undefined'.
+components/events/EventFilters.tsx(39,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/features/FeaturesGrid.tsx(105,7): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType | undefined'.
+components/Footer.tsx(98,13): error TS2698: Spread types may only be created from object types.
+components/Footer.tsx(99,70): error TS2339: Property 'social_links' does not exist on type 'never'.
+components/Footer.tsx(100,70): error TS2339: Property 'contact_info' does not exist on type 'never'.
+components/Footer.tsx(101,31): error TS2339: Property 'quick_links' does not exist on type 'never'.
+components/Footer.tsx(102,68): error TS2339: Property 'legal_links' does not exist on type 'never'.
+components/Footer.tsx(103,66): error TS2339: Property 'newsletter' does not exist on type 'never'.
+components/Footer.tsx(104,56): error TS2339: Property 'brand' does not exist on type 'never'.
+components/Footer.tsx(105,32): error TS2339: Property 'promo_images' does not exist on type 'never'.
+components/Footer.tsx(106,31): error TS2339: Property 'promo_title' does not exist on type 'never'.
+components/Header.tsx(96,21): error TS2345: Argument of type 'RefObject<HTMLElement | null>' is not assignable to parameter of type 'RefObject<HTMLElement>'.
+  Type 'HTMLElement | null' is not assignable to type 'HTMLElement'.
+    Type 'null' is not assignable to type 'HTMLElement'.
+components/Header.tsx(240,14): error TS2552: Cannot find name 'motion'. Did you mean 'Option'?
+components/Header.tsx(274,30): error TS2552: Cannot find name 'motion'. Did you mean 'Option'?
+components/Header.tsx(303,31): error TS2552: Cannot find name 'motion'. Did you mean 'Option'?
+components/Header.tsx(325,15): error TS2552: Cannot find name 'motion'. Did you mean 'Option'?
+components/HeroSlider.tsx(89,52): error TS2339: Property 'image_url' does not exist on type 'never'.
+components/HeroSlider.tsx(180,19): error TS2322: Type '{ enter: { opacity: number; x: number; }; visible: { opacity: number; x: number; transition: { duration: number; staggerChildren: number; ease: string; }; }; exit: { opacity: number; x: number; transition: { ...; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; x: number; transition: { duration: number; staggerChildren: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; x: number; transition: { duration: number; staggerChildren: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; x: number; transition: { duration: number; staggerChildren: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; staggerChildren: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; staggerChildren: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; staggerChildren: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/HomepageMentorship.tsx(67,47): error TS2339: Property 'features' does not exist on type 'never'.
+components/HomepageMentorship.tsx(67,64): error TS2339: Property 'features' does not exist on type 'never'.
+components/HomepageMentorship.tsx(70,22): error TS2339: Property 'id' does not exist on type 'never'.
+components/HomepageMentorship.tsx(71,25): error TS2339: Property 'title' does not exist on type 'never'.
+components/HomepageMentorship.tsx(72,28): error TS2339: Property 'subtitle' does not exist on type 'never'.
+components/HomepageMentorship.tsx(73,31): error TS2339: Property 'description' does not exist on type 'never'.
+components/HomepageMentorship.tsx(74,29): error TS2339: Property 'image_url' does not exist on type 'never'.
+components/HomepageMentorship.tsx(75,31): error TS2339: Property 'button_text' does not exist on type 'never'.
+components/HomepageMentorship.tsx(76,31): error TS2339: Property 'button_link' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(125,37): error TS2339: Property 'services' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(125,68): error TS2339: Property 'services' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(125,86): error TS2339: Property 'services' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(126,18): error TS2339: Property 'services' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(137,20): error TS2339: Property 'id' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(138,23): error TS2339: Property 'title' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(139,29): error TS2339: Property 'description' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(140,29): error TS2339: Property 'button_text' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(141,29): error TS2339: Property 'button_link' does not exist on type 'never'.
+components/HomepageSmartspoon.tsx(142,27): error TS2339: Property 'image_url' does not exist on type 'never'.
+components/mentorship/BookingDetailsPopup.tsx(61,17): error TS2345: Argument of type '{ booking_status: string; payment_status: string | undefined; }' is not assignable to parameter of type 'never'.
+components/mentorship/BookingDetailsPopup.tsx(128,32): error TS2339: Property 'booking_status' does not exist on type 'never'.
+components/mentorship/BookingDetailsPopup.tsx(129,32): error TS2339: Property 'payment_status' does not exist on type 'never'.
+components/mentorship/BookingDetailsPopup.tsx(132,18): error TS2339: Property 'payment_status' does not exist on type 'never'.
+components/mentorship/BookingDetailsPopup.tsx(134,25): error TS2339: Property 'payment_status' does not exist on type 'never'.
+components/mentorship/BookingModal.tsx(57,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "event_bookings", never, "POST">', gave the following error.
+    Argument of type '{ event_id: string; name: string; email: string; phone: string; amount: number; payment_status: string; booking_status: string; payment_phone: string; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "event_bookings", never, "POST">', gave the following error.
+    Type '{ event_id: string; name: string; email: string; phone: string; amount: number; payment_status: string; booking_status: string; payment_phone: string; }' is not assignable to type 'never'.
+components/mentorship/BookingModal.tsx(91,21): error TS2339: Property 'id' does not exist on type 'never'.
+components/mentorship/BookingModal.tsx(92,33): error TS2339: Property 'booking_status' does not exist on type 'never'.
+components/mentorship/BookingModal.tsx(98,33): error TS2339: Property 'payment_status' does not exist on type 'never'.
+components/mentorship/BookingModal.tsx(110,30): error TS2339: Property 'id' does not exist on type 'never'.
+components/mentorship/EventsList.tsx(59,40): error TS2339: Property 'event_bookings' does not exist on type 'never'.
+components/mentorship/EventsList.tsx(60,11): error TS7006: Parameter 'booking' implicitly has an 'any' type.
+components/mentorship/EventsList.tsx(63,11): error TS2698: Spread types may only be created from object types.
+components/mentorship/EventsList.tsx(64,34): error TS2339: Property 'total_slots' does not exist on type 'never'.
+components/mentorship/MentorshipCards.tsx(81,38): error TS2339: Property 'title' does not exist on type 'never'.
+components/mentorship/MentorshipCards.tsx(82,44): error TS2339: Property 'description' does not exist on type 'never'.
+components/mentorship/MentorshipCards.tsx(217,25): error TS2322: Type '{ children: Element; asChild: true; size: "lg"; className: string; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+components/mentorship/NutritionSurvey.tsx(137,11): error TS2698: Spread types may only be created from object types.
+components/mentorship/NutritionSurvey.tsx(138,24): error TS2339: Property 'answer' does not exist on type 'never'.
+components/ModernFeatures.tsx(164,7): error TS2322: Type '{ hidden: { opacity: number; y: number; scale: number; }; visible: { opacity: number; y: number; scale: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; scale: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; scale: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; scale: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/ModernHero.tsx(223,17): error TS2322: Type '{ enter: { opacity: number; x: number; }; visible: { opacity: number; x: number; transition: { duration: number; ease: string; staggerChildren: number; }; }; exit: { opacity: number; x: number; transition: { ...; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; x: number; transition: { duration: number; ease: string; staggerChildren: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; x: number; transition: { duration: number; ease: string; staggerChildren: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; x: number; transition: { duration: number; ease: string; staggerChildren: number; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; staggerChildren: number; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; staggerChildren: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; staggerChildren: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/ModernHero.tsx(230,19): error TS2322: Type '{ enter: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; exit: { opacity: number; y: number; transition: { duration: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/ModernHero.tsx(236,19): error TS2322: Type '{ enter: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; exit: { opacity: number; y: number; transition: { duration: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/ModernHero.tsx(243,19): error TS2322: Type '{ enter: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; exit: { opacity: number; y: number; transition: { duration: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/navigation/DropdownMenu.tsx(42,21): error TS2345: Argument of type 'RefObject<HTMLDivElement | null>' is not assignable to parameter of type 'RefObject<HTMLElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLElement'.
+    Type 'null' is not assignable to type 'HTMLElement'.
+components/navigation/MegaMenu.tsx(44,21): error TS2345: Argument of type 'RefObject<HTMLDivElement | null>' is not assignable to parameter of type 'RefObject<HTMLElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLElement'.
+    Type 'null' is not assignable to type 'HTMLElement'.
+components/steps/Steps.tsx(244,13): error TS2322: Type '{ initial: { opacity: number; y: number; }; animate: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'animate' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/steps/Steps.tsx(254,13): error TS2322: Type '{ initial: { opacity: number; y: number; }; animate: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'animate' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/steps/Steps.tsx(264,13): error TS2322: Type '{ initial: { opacity: number; y: number; }; animate: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'animate' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/steps/Steps.tsx(294,17): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: (i: number) => { opacity: number; y: number; transition: { delay: number; duration: number; ease: number[]; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '(i: number) => { opacity: number; y: number; transition: { delay: number; duration: number; ease: number[]; }; }' is not assignable to type 'Variant'.
+      Type '(i: number) => { opacity: number; y: number; transition: { delay: number; duration: number; ease: number[]; }; }' is not assignable to type 'TargetResolver'.
+        Type '{ opacity: number; y: number; transition: { delay: number; duration: number; ease: number[]; }; }' is not assignable to type 'string | TargetAndTransition'.
+          Type '{ opacity: number; y: number; transition: { delay: number; duration: number; ease: number[]; }; }' is not assignable to type 'TargetAndTransition'.
+            Type '{ opacity: number; y: number; transition: { delay: number; duration: number; ease: number[]; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+              Types of property 'transition' are incompatible.
+                Type '{ delay: number; duration: number; ease: number[]; }' is not assignable to type 'Transition<any> | undefined'.
+                  Type '{ delay: number; duration: number; ease: number[]; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                    Type '{ delay: number; duration: number; ease: number[]; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                      Types of property 'ease' are incompatible.
+                        Type 'number[]' is not assignable to type 'Easing | Easing[] | undefined'.
+                          Type 'number[]' is not assignable to type 'EasingFunction | Easing[]'.
+                            Type 'number[]' is not assignable to type 'Easing[]'.
+                              Type 'number' is not assignable to type 'Easing'.
+components/steps/Steps.tsx(299,19): error TS2322: Type '{ rest: { scale: number; y: number; boxShadow: string; }; hover: { scale: number; y: number; boxShadow: string; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'hover' is incompatible with index signature.
+    Type '{ scale: number; y: number; boxShadow: string; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ scale: number; y: number; boxShadow: string; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ scale: number; y: number; boxShadow: string; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/steps/Steps.tsx(316,23): error TS2322: Type '{ rest: { rotate: number; scale: number; y: number; }; hover: { rotate: number[]; scale: number; y: number; transition: { duration: number; ease: string; rotate: { duration: number; ease: string; times: number[]; }; }; }; }' is not assignable to type 'Variants'.
+  Property 'hover' is incompatible with index signature.
+    Type '{ rotate: number[]; scale: number; y: number; transition: { duration: number; ease: string; rotate: { duration: number; ease: string; times: number[]; }; }; }' is not assignable to type 'Variant'.
+      Type '{ rotate: number[]; scale: number; y: number; transition: { duration: number; ease: string; rotate: { duration: number; ease: string; times: number[]; }; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ rotate: number[]; scale: number; y: number; transition: { duration: number; ease: string; rotate: { duration: number; ease: string; times: number[]; }; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; rotate: { duration: number; ease: string; times: number[]; }; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; rotate: { duration: number; ease: string; times: number[]; }; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; rotate: { duration: number; ease: string; times: number[]; }; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/steps/Steps.tsx(357,25): error TS2322: Type '{ hidden: { width: number; opacity: number; }; visible: { width: string; opacity: number; transition: { delay: number; duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ width: string; opacity: number; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ width: string; opacity: number; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ width: string; opacity: number; transition: { delay: number; duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ delay: number; duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/Testimonials.tsx(142,26): error TS2339: Property 'title' does not exist on type 'never'.
+components/Testimonials.tsx(143,32): error TS2339: Property 'title' does not exist on type 'never'.
+components/ui/border-trail.tsx(40,9): error TS2322: Type '{ delay: number | undefined; isSync?: boolean | undefined; elapsed?: number | undefined; driver?: Driver | undefined; type?: AnimationGeneratorType | undefined; ... 32 more ...; onStop?: (() => void) | undefined; } | { ...; }' is not assignable to type 'Transition<any> | undefined'.
+  Type '{ delay: number | undefined; repeat: number; duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+    Type '{ delay: number | undefined; repeat: number; duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+      Type '{ delay: number | undefined; repeat: number; duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+        Types of property 'ease' are incompatible.
+          Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+features-cards/app/layout.tsx(3,27): error TS2307: Cannot find module '@vercel/analytics/next' or its corresponding type declarations.
+features-cards/app/page.tsx(1,29): error TS2307: Cannot find module '@/components/feature-card' or its corresponding type declarations.
+features-cards/components/ui/accordion.tsx(4,37): error TS2307: Cannot find module '@radix-ui/react-accordion' or its corresponding type declarations.
+features-cards/components/ui/alert-dialog.tsx(4,39): error TS2307: Cannot find module '@radix-ui/react-alert-dialog' or its corresponding type declarations.
+features-cards/components/ui/aspect-ratio.tsx(3,39): error TS2307: Cannot find module '@radix-ui/react-aspect-ratio' or its corresponding type declarations.
+features-cards/components/ui/avatar.tsx(4,34): error TS2307: Cannot find module '@radix-ui/react-avatar' or its corresponding type declarations.
+features-cards/components/ui/calendar.tsx(9,60): error TS2307: Cannot find module 'react-day-picker' or its corresponding type declarations.
+features-cards/components/ui/calendar.tsx(39,31): error TS7006: Parameter 'date' implicitly has an 'any' type.
+features-cards/components/ui/calendar.tsx(128,18): error TS7031: Binding element 'className' implicitly has an 'any' type.
+features-cards/components/ui/calendar.tsx(128,29): error TS7031: Binding element 'rootRef' implicitly has an 'any' type.
+features-cards/components/ui/calendar.tsx(138,21): error TS7031: Binding element 'className' implicitly has an 'any' type.
+features-cards/components/ui/calendar.tsx(138,32): error TS7031: Binding element 'orientation' implicitly has an 'any' type.
+features-cards/components/ui/calendar.tsx(159,24): error TS7031: Binding element 'children' implicitly has an 'any' type.
+features-cards/components/ui/carousel.tsx(6,8): error TS2307: Cannot find module 'embla-carousel-react' or its corresponding type declarations.
+features-cards/components/ui/chart.tsx(4,36): error TS2307: Cannot find module 'recharts' or its corresponding type declarations.
+features-cards/components/ui/chart.tsx(182,23): error TS7006: Parameter 'item' implicitly has an 'any' type.
+features-cards/components/ui/chart.tsx(182,29): error TS7006: Parameter 'index' implicitly has an 'any' type.
+features-cards/components/ui/chart.tsx(278,21): error TS7006: Parameter 'item' implicitly has an 'any' type.
+features-cards/components/ui/checkbox.tsx(4,36): error TS2307: Cannot find module '@radix-ui/react-checkbox' or its corresponding type declarations.
+features-cards/components/ui/collapsible.tsx(3,39): error TS2307: Cannot find module '@radix-ui/react-collapsible' or its corresponding type declarations.
+features-cards/components/ui/command.tsx(4,45): error TS2307: Cannot find module 'cmdk' or its corresponding type declarations.
+features-cards/components/ui/context-menu.tsx(4,39): error TS2307: Cannot find module '@radix-ui/react-context-menu' or its corresponding type declarations.
+features-cards/components/ui/dialog.tsx(4,34): error TS2307: Cannot find module '@radix-ui/react-dialog' or its corresponding type declarations.
+features-cards/components/ui/drawer.tsx(4,43): error TS2307: Cannot find module 'vaul' or its corresponding type declarations.
+features-cards/components/ui/dropdown-menu.tsx(4,40): error TS2307: Cannot find module '@radix-ui/react-dropdown-menu' or its corresponding type declarations.
+features-cards/components/ui/hover-card.tsx(4,37): error TS2307: Cannot find module '@radix-ui/react-hover-card' or its corresponding type declarations.
+features-cards/components/ui/input-group.tsx(101,3): error TS2339: Property 'type' does not exist on type 'Omit<ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { default: string; xs: string; ... 5 more ...; "icon-lg": string; }; }> & ClassProp) | undefined) => string>, "size"> & VariantProps<...>'.
+features-cards/components/ui/input-otp.tsx(4,43): error TS2307: Cannot find module 'input-otp' or its corresponding type declarations.
+features-cards/components/ui/input-otp.tsx(47,61): error TS2339: Property 'slots' does not exist on type '{}'.
+features-cards/components/ui/menubar.tsx(4,35): error TS2307: Cannot find module '@radix-ui/react-menubar' or its corresponding type declarations.
+features-cards/components/ui/navigation-menu.tsx(2,42): error TS2307: Cannot find module '@radix-ui/react-navigation-menu' or its corresponding type declarations.
+features-cards/components/ui/popover.tsx(4,35): error TS2307: Cannot find module '@radix-ui/react-popover' or its corresponding type declarations.
+features-cards/components/ui/progress.tsx(4,36): error TS2307: Cannot find module '@radix-ui/react-progress' or its corresponding type declarations.
+features-cards/components/ui/radio-group.tsx(4,38): error TS2307: Cannot find module '@radix-ui/react-radio-group' or its corresponding type declarations.
+features-cards/components/ui/resizable.tsx(5,37): error TS2307: Cannot find module 'react-resizable-panels' or its corresponding type declarations.
+features-cards/components/ui/scroll-area.tsx(4,38): error TS2307: Cannot find module '@radix-ui/react-scroll-area' or its corresponding type declarations.
+features-cards/components/ui/select.tsx(4,34): error TS2307: Cannot find module '@radix-ui/react-select' or its corresponding type declarations.
+features-cards/components/ui/separator.tsx(4,37): error TS2307: Cannot find module '@radix-ui/react-separator' or its corresponding type declarations.
+features-cards/components/ui/sheet.tsx(4,33): error TS2307: Cannot find module '@radix-ui/react-dialog' or its corresponding type declarations.
+features-cards/components/ui/sidebar.tsx(8,29): error TS2307: Cannot find module '@/hooks/use-mobile' or its corresponding type declarations.
+features-cards/components/ui/sidebar.tsx(19,8): error TS2307: Cannot find module '@/components/ui/sheet' or its corresponding type declarations.
+features-cards/components/ui/sidebar.tsx(26,8): error TS2307: Cannot find module '@/components/ui/tooltip' or its corresponding type declarations.
+features-cards/components/ui/slider.tsx(4,34): error TS2307: Cannot find module '@radix-ui/react-slider' or its corresponding type declarations.
+features-cards/components/ui/sonner.tsx(4,49): error TS2307: Cannot find module 'sonner' or its corresponding type declarations.
+features-cards/components/ui/toaster.tsx(3,26): error TS2307: Cannot find module '@/hooks/use-toast' or its corresponding type declarations.
+features-cards/components/ui/toaster.tsx(11,8): error TS2307: Cannot find module '@/components/ui/toast' or its corresponding type declarations.
+features-cards/components/ui/toaster.tsx(18,31): error TS7031: Binding element 'id' implicitly has an 'any' type.
+features-cards/components/ui/toaster.tsx(18,35): error TS7031: Binding element 'title' implicitly has an 'any' type.
+features-cards/components/ui/toaster.tsx(18,42): error TS7031: Binding element 'description' implicitly has an 'any' type.
+features-cards/components/ui/toaster.tsx(18,55): error TS7031: Binding element 'action' implicitly has an 'any' type.
+features-cards/components/ui/toggle-group.tsx(4,39): error TS2307: Cannot find module '@radix-ui/react-toggle-group' or its corresponding type declarations.
+features-cards/components/ui/toggle-group.tsx(8,32): error TS2307: Cannot find module '@/components/ui/toggle' or its corresponding type declarations.
+features-cards/components/ui/toggle.tsx(4,34): error TS2307: Cannot find module '@radix-ui/react-toggle' or its corresponding type declarations.
+features-cards/components/ui/tooltip.tsx(4,35): error TS2307: Cannot find module '@radix-ui/react-tooltip' or its corresponding type declarations.
+features-cards/components/ui/use-toast.ts(6,53): error TS2307: Cannot find module '@/components/ui/toast' or its corresponding type declarations.
+features-cards/components/ui/use-toast.ts(158,22): error TS7006: Parameter 'open' implicitly has an 'any' type.
+features-cards/hooks/use-toast.ts(6,53): error TS2307: Cannot find module '@/components/ui/toast' or its corresponding type declarations.
+features-cards/hooks/use-toast.ts(158,22): error TS7006: Parameter 'open' implicitly has an 'any' type.
+lib/supabase.ts(1,45): error TS2307: Cannot find module '@supabase/auth-helpers-nextjs' or its corresponding type declarations.
+utils/supabase-client.ts(1,45): error TS2307: Cannot find module '@supabase/auth-helpers-nextjs' or its corresponding type declarations.

@@ -238,9 +238,9 @@ export async function PATCH(req: Request) {
     }
 
     // Check if we need to update slots
-    if (status === 'approved' && booking.booking_status !== 'approved') {
+    if (status === 'approved' && (booking as any).booking_status !== 'approved') {
       // Check if slots are available
-      if (booking.mentorship_events.available_slots <= 0) {
+      if ((booking as any).mentorship_events.available_slots <= 0) {
         console.error('[PATCH] No available slots');
         return NextResponse.json(
           { error: 'No available slots for this event' },
@@ -252,10 +252,10 @@ export async function PATCH(req: Request) {
       const { error: slotError } = await supabase
         .from('mentorship_events')
         .update({ 
-          available_slots: booking.mentorship_events.available_slots - 1,
+          available_slots: (booking as any).mentorship_events.available_slots - 1,
           updated_at: new Date().toISOString()
-        })
-        .eq('id', booking.mentorship_events.id);
+        } as any)
+        .eq('id', (booking as any).mentorship_events.id);
 
       if (slotError) {
         console.error('[PATCH] Error updating slots:', slotError);
@@ -264,15 +264,15 @@ export async function PATCH(req: Request) {
           { status: 500 }
         );
       }
-    } else if (status === 'rejected' && booking.booking_status === 'approved') {
+    } else if (status === 'rejected' && (booking as any).booking_status === 'approved') {
       // If rejecting a previously approved booking, increment the slots
       const { error: slotError } = await supabase
         .from('mentorship_events')
         .update({ 
-          available_slots: booking.mentorship_events.available_slots + 1,
+          available_slots: (booking as any).mentorship_events.available_slots + 1,
           updated_at: new Date().toISOString()
-        })
-        .eq('id', booking.mentorship_events.id);
+        } as any)
+        .eq('id', (booking as any).mentorship_events.id);
 
       if (slotError) {
         console.error('[PATCH] Error updating slots:', slotError);
@@ -286,7 +286,7 @@ export async function PATCH(req: Request) {
     // Update booking status
     const { data: updatedBooking, error: updateError } = await supabase
       .from('event_bookings')
-      .update({ booking_status: status })
+      .update({ booking_status: status } as any)
       .eq('id', bookingId)
       .select(`
         *,
@@ -317,11 +317,11 @@ export async function PATCH(req: Request) {
     }
 
     console.log('[PATCH] Update successful:', {
-      id: updatedBooking.id,
-      newStatus: updatedBooking.booking_status,
-      eventId: updatedBooking.mentorship_events.id,
-      availableSlots: updatedBooking.mentorship_events.available_slots,
-      success: updatedBooking.booking_status === status
+      id: (updatedBooking as any).id,
+      newStatus: (updatedBooking as any).booking_status,
+      eventId: (updatedBooking as any).mentorship_events.id,
+      availableSlots: (updatedBooking as any).mentorship_events.available_slots,
+      success: (updatedBooking as any).booking_status === status
     });
 
     return NextResponse.json({

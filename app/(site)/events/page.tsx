@@ -47,7 +47,7 @@ export default async function EventsPage() {
   const featuredEvents = upcomingEvents.filter(event => event.is_featured);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-20">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16">
       <EventsList 
         events={events}
         featuredEvents={featuredEvents}

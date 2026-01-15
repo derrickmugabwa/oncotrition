@@ -39,7 +39,7 @@ export default function DropdownMenu({ item, sections, isScrolled, activeDropdow
   const dropdownRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  useOnClickOutside(dropdownRef, () => hideDropdown(0));
+  useOnClickOutside(dropdownRef as any, () => hideDropdown(0));
   
   const filteredSections = sections
     .filter(section => section.nav_item_id === item.id)

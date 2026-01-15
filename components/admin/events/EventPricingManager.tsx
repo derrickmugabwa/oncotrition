@@ -23,8 +23,8 @@ interface PricingFormData {
   participation_type: string;
   price: number;
   description: string;
-  is_active: boolean;
-  display_order: number;
+  is_active: boolean | null;
+  display_order: number | null;
 }
 
 export function EventPricingManager({ event, pricing }: EventPricingManagerProps) {
@@ -35,8 +35,8 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
       participation_type: p.participation_type,
       price: p.price,
       description: p.description || '',
-      is_active: p.is_active,
-      display_order: p.display_order,
+      is_active: p.is_active ?? true,
+      display_order: p.display_order ?? 0,
     }))
   );
   const [isSaving, setIsSaving] = useState(false);
@@ -45,7 +45,7 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
 
   const addPricingOption = () => {
     const newOrder = pricingOptions.length > 0 
-      ? Math.max(...pricingOptions.map(p => p.display_order)) + 1 
+      ? Math.max(...pricingOptions.map(p => p.display_order ?? 0)) + 1 
       : 1;
     
     setPricingOptions([
@@ -212,7 +212,7 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
                   <Input
                     id={`order-${index}`}
                     type="number"
-                    value={option.display_order}
+                    value={option.display_order ?? 0}
                     onChange={(e) => updatePricingOption(index, 'display_order', parseInt(e.target.value) || 0)}
                     min="0"
                   />
@@ -224,11 +224,11 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
                   <div className="flex items-center space-x-2 pt-2">
                     <Switch
                       id={`active-${index}`}
-                      checked={option.is_active}
+                      checked={option.is_active ?? false}
                       onCheckedChange={(checked) => updatePricingOption(index, 'is_active', checked)}
                     />
                     <span className="text-sm text-muted-foreground">
-                      {option.is_active ? 'Visible to users' : 'Hidden'}
+                      {(option.is_active ?? false) ? 'Visible to users' : 'Hidden'}
                     </span>
                   </div>
                 </div>
@@ -267,7 +267,7 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
           <div className="space-y-2">
             {pricingOptions
               .filter(p => p.is_active)
-              .sort((a, b) => a.display_order - b.display_order)
+              .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
               .map((option, index) => (
                 <div
                   key={index}

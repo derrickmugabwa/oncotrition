@@ -83,7 +83,7 @@ export default function Hero() {
         if (error) throw error;
 
         if (data && data.length > 0) {
-          setSlides(data);
+          setSlides(data as any);
         }
       } catch (error: any) {
         console.error('Error fetching smartspoon slides:', error);

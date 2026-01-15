@@ -53,7 +53,7 @@ export default function SmartSpoonPricing() {
 
       if (data && data.length > 0) {
         console.log('Settings loaded:', data[0]);
-        setSettings(data[0]);
+        setSettings(data[0] as any);
       } else {
         console.log('No settings found');
       }
@@ -76,7 +76,7 @@ export default function SmartSpoonPricing() {
       }
 
       if (data) {
-        setPackages(data);
+        setPackages(data as any);
       }
     } catch (error) {
       console.error('Error:', error);

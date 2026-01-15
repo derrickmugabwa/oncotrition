@@ -106,8 +106,8 @@ export default function EventBookingsTab() {
     try {
       setIsUpdating(bookingId);
       
-      const { data, error } = await supabase
-        .from('event_bookings')
+      const { data, error }: any = await (supabase
+        .from('event_bookings') as any)
         .update({ booking_status: newStatus })
         .eq('id', bookingId)
         .select()

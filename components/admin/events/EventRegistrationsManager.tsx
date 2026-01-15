@@ -105,7 +105,7 @@ export function EventRegistrationsManager({
       reg.price_amount,
       reg.payment_status,
       reg.checked_in ? 'Yes' : 'No',
-      new Date(reg.created_at).toLocaleString(),
+      reg.created_at ? new Date(reg.created_at).toLocaleString() : 'N/A',
     ]);
 
     const csv = [
@@ -208,9 +208,9 @@ export function EventRegistrationsManager({
             </div>
 
             {/* Status Filter */}
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value || 'all')}>
               <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Payment Status" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Status</SelectItem>
@@ -221,9 +221,9 @@ export function EventRegistrationsManager({
             </Select>
 
             {/* Type Filter */}
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value || 'all')}>
               <SelectTrigger className="w-full md:w-[200px]">
-                <SelectValue placeholder="Participation Type" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
@@ -320,7 +320,7 @@ export function EventRegistrationsManager({
                         )}
                       </td>
                       <td className="p-3 text-sm text-muted-foreground">
-                        {new Date(reg.created_at).toLocaleDateString()}
+                        {reg.created_at ? new Date(reg.created_at).toLocaleDateString() : 'N/A'}
                       </td>
                     </tr>
                   ))
@@ -338,23 +338,17 @@ export function EventRegistrationsManager({
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button variant="outline" className="justify-start" asChild>
-              <a href={`/admin/pages/events/${event.id}/pricing`}>
-                <DollarSign className="w-4 h-4 mr-2" />
-                Manage Pricing
-              </a>
+            <Button variant="outline" className="justify-start" onClick={() => window.location.href = `/admin/pages/events/${event.id}/pricing`}>
+              <DollarSign className="w-4 h-4 mr-2" />
+              Manage Pricing
             </Button>
-            <Button variant="outline" className="justify-start" asChild>
-              <a href={`/admin/pages/events/${event.id}/interest-areas`}>
-                <Filter className="w-4 h-4 mr-2" />
-                Manage Interest Areas
-              </a>
+            <Button variant="outline" className="justify-start" onClick={() => window.location.href = `/admin/pages/events/${event.id}/interest-areas`}>
+              <Filter className="w-4 h-4 mr-2" />
+              Manage Interest Areas
             </Button>
-            <Button variant="outline" className="justify-start" asChild>
-              <a href={`/admin/pages/events/${event.id}/check-in`}>
-                <QrCode className="w-4 h-4 mr-2" />
-                QR Scanner Check-in
-              </a>
+            <Button variant="outline" className="justify-start" onClick={() => window.location.href = `/admin/pages/events/${event.id}/check-in`}>
+              <QrCode className="w-4 h-4 mr-2" />
+              QR Scanner Check-in
             </Button>
           </div>
         </CardContent>

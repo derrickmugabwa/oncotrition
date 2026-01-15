@@ -11,16 +11,16 @@ import { Button } from '@/components/ui/button'
 interface SliderImage {
   id: number
   title: string
-  description: string
-  image_url: string
-  cta_text: string
-  cta_url: string
+  description: string | null
+  image_url: string | null
+  cta_text: string | null
+  cta_url: string | null
   order: number
 }
 
 const defaultSlides: SliderImage[] = []
 
-const slideVariants = {
+const slideVariants: any = {
   enter: {
     opacity: 0,
     x: -30,
@@ -86,15 +86,15 @@ export default function HeroSlider() {
         if (data && data.length > 0) {
           setSlides(data)
           // Preload all images immediately
-          data.forEach(slide => preloadImage(slide.image_url))
+          data.forEach(slide => preloadImage(slide.image_url ?? ''))
         } else {
           // Preload default image
-          defaultSlides.forEach(slide => preloadImage(slide.image_url))
+          defaultSlides.forEach(slide => preloadImage(slide.image_url ?? ''))
         }
       } catch (error) {
         console.error('Error fetching slides:', error)
         // Preload default images on error
-        defaultSlides.forEach(slide => preloadImage(slide.image_url))
+        defaultSlides.forEach(slide => preloadImage(slide.image_url ?? ''))
       }
     }
 
@@ -162,7 +162,7 @@ export default function HeroSlider() {
                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 onLoad={() => {
                   // Mark image as loaded for smoother transitions
-                  setImagesLoaded(prev => new Set([...prev, slide.image_url]))
+                  setImagesLoaded(prev => new Set([...prev, slide.image_url ?? '']))
                 }}
               />
             )}

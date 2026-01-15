@@ -33,11 +33,11 @@ export default function TawkToSettings() {
         .single();
 
       if (error) throw error;
-      setSettings(data);
+      setSettings(data as any);
       setEditForm({
         property_id: data.property_id,
         widget_id: data.widget_id,
-        enabled: data.enabled,
+        enabled: data.enabled ?? false,
       });
     } catch (error) {
       console.error('Error fetching Tawk.to settings:', error);
@@ -56,7 +56,7 @@ export default function TawkToSettings() {
           widget_id: editForm.widget_id,
           enabled: editForm.enabled,
         })
-        .eq('id', settings?.id);
+        .eq('id', settings?.id ?? 0);
 
       if (error) throw error;
 

@@ -56,7 +56,7 @@ export default function EventPaymentVerifyPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-20 font-outfit">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16 font-outfit">
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         {status === 'verifying' && (
           <Card>

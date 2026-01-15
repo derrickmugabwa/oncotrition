@@ -11,10 +11,10 @@ import { Toaster } from 'react-hot-toast'
 interface SliderImage {
   id: number
   title: string
-  description: string
-  image_url: string
-  cta_text: string
-  cta_url: string
+  description: string | null
+  image_url: string | null
+  cta_text: string | null
+  cta_url: string | null
   order: number
 }
 

@@ -76,7 +76,7 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: any = {
   hidden: { 
     opacity: 0,
     y: 20

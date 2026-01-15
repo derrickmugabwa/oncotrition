@@ -29,10 +29,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `Register for ${event.title} - Oncotrition`,
-    description: event.description || `Register for ${event.title}`,
+    description: event.description ?? `Register for ${event.title}`,
     openGraph: {
       title: `Register for ${event.title} - Oncotrition`,
-      description: event.description || `Register for ${event.title}`,
+      description: event.description ?? `Register for ${event.title}`,
       type: 'website',
     },
   };
@@ -59,7 +59,7 @@ export default async function EventRegisterPage({ params }: PageProps) {
   // Check if registration is still open
   if (event.status !== 'upcoming') {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-20 font-outfit">
+      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16 font-outfit">
         <div className="container mx-auto px-4 py-12 max-w-2xl text-center">
           <h1 className="text-3xl font-bold mb-4">Registration Closed</h1>
           <p className="text-muted-foreground mb-8">
@@ -82,7 +82,7 @@ export default async function EventRegisterPage({ params }: PageProps) {
     const now = new Date();
     if (now > deadline) {
       return (
-        <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-20 font-outfit">
+        <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16 font-outfit">
           <div className="container mx-auto px-4 py-12 max-w-2xl text-center">
             <h1 className="text-3xl font-bold mb-4">Registration Deadline Passed</h1>
             <p className="text-muted-foreground mb-8">
@@ -122,7 +122,7 @@ export default async function EventRegisterPage({ params }: PageProps) {
   const interestAreas = (interestAreasData || []) as NutrivibeInterestArea[];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-20 font-outfit">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16 font-outfit">
       <div className="container mx-auto px-4 py-12 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-12">
@@ -130,7 +130,7 @@ export default async function EventRegisterPage({ params }: PageProps) {
             {event.title}
           </h1>
           <p className="text-xl text-muted-foreground mb-2">
-            {event.description.split('.')[0]}
+            {event.description?.split('.')[0] ?? 'Event registration'}
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-muted-foreground mt-6">
             <div className="flex items-center gap-2">

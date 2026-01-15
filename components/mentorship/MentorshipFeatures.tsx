@@ -50,9 +50,9 @@ function FeatureCard({ feature }: { feature: Feature }) {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       viewport={{ once: true }}
-      className="p-6 rounded-xl bg-white dark:bg-gray-800 shadow-xl hover:shadow-2xl transition-shadow duration-300"
+      className="p-6 rounded-xl bg-blue-50 dark:bg-blue-950/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
     >
-      <div className={`bg-gradient-to-r ${feature.gradient} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
+      <div className={`bg-gradient-to-br ${feature.gradient} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
         <IconComponent className="w-6 h-6 text-white" />
       </div>
       <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
@@ -75,7 +75,7 @@ export default function MentorshipFeatures({ features = [], content }: Mentorshi
   const sectionContent = content || defaultContent;
 
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-900">
+    <section className="py-20 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -84,10 +84,10 @@ export default function MentorshipFeatures({ features = [], content }: Mentorshi
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold mb-4 text-[#009688]">
+          <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
             {sectionContent.title}
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             {sectionContent.description}
           </p>
         </motion.div>

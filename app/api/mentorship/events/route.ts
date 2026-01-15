@@ -80,7 +80,7 @@ export async function POST(req: Request) {
           total_slots: totalSlots,
           available_slots: totalSlots,
           price,
-        },
+        } as any,
       ])
       .select()
       .single();
@@ -198,7 +198,7 @@ export async function PATCH(req: Request) {
         available_slots: newAvailableSlots,
         price,
         updated_at: new Date().toISOString()
-      })
+      } as any)
       .eq('id', id)
       .select()
       .single();

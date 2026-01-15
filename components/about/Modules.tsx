@@ -57,10 +57,10 @@ interface Module {
   id: number;
   title: string;
   icon_svg: string;
-  features: string[];
+  features: string[] | any;
   display_order: number;
-  image_url?: string;
-  learn_more_url?: string;
+  image_url?: string | null;
+  learn_more_url?: string | null;
 }
 
 interface ModulesContent {
@@ -197,7 +197,7 @@ export default function Modules() {
 
                       {module.features.length > 1 && (
                         <div className="flex flex-wrap gap-2 mb-6">
-                          {module.features.slice(1, 4).map((feature, featureIndex) => (
+                          {module.features.slice(1, 4).map((feature: string, featureIndex: number) => (
                             <span 
                               key={featureIndex} 
                               className="px-3 py-1 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded-full text-sm font-outfit"
@@ -260,7 +260,7 @@ export default function Modules() {
                       
                       {module.features.length > 1 && (
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {module.features.slice(1, 3).map((feature, featureIndex) => (
+                          {module.features.slice(1).map((feature: string, featureIndex: number) => (
                             <span 
                               key={featureIndex} 
                               className="px-3 py-1 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded-full text-xs font-outfit"

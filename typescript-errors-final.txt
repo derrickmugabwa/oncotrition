@@ -1,0 +1,20 @@
+﻿components/admin/events/EventRegistrationsManager.tsx(211,42): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+components/admin/events/EventRegistrationsManager.tsx(213,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/admin/events/EventRegistrationsManager.tsx(224,40): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+components/admin/events/EventRegistrationsManager.tsx(226,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/admin/mentorship/EventBookingsTab.tsx(111,17): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+components/events/EventFilters.tsx(39,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/Header.tsx(96,21): error TS2345: Argument of type 'RefObject<HTMLElement | null>' is not assignable to parameter of type 'RefObject<HTMLElement>'.
+  Type 'HTMLElement | null' is not assignable to type 'HTMLElement'.
+    Type 'null' is not assignable to type 'HTMLElement'.
+components/navigation/DropdownMenu.tsx(42,21): error TS2345: Argument of type 'RefObject<HTMLDivElement | null>' is not assignable to parameter of type 'RefObject<HTMLElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLElement'.

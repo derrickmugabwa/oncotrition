@@ -15,7 +15,7 @@ interface EventDetailProps {
 export default function EventDetail({ event }: EventDetailProps) {
   const eventDate = new Date(event.event_date);
   const formattedDate = format(eventDate, 'EEEE, MMMM dd, yyyy');
-  const formattedTime = event.event_time.slice(0, 5); // HH:MM format
+  const formattedTime = event.event_time ? event.event_time.slice(0, 5) : 'TBD'; // HH:MM format
 
   const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
@@ -33,11 +33,11 @@ export default function EventDetail({ event }: EventDetailProps) {
   };
 
   const attendeePercentage = event.max_attendees
-    ? (event.current_attendees / event.max_attendees) * 100
+    ? ((event.current_attendees ?? 0) / event.max_attendees) * 100
     : 0;
 
-  const isFull = event.max_attendees && event.current_attendees >= event.max_attendees;
-  const spotsLeft = event.max_attendees ? event.max_attendees - event.current_attendees : null;
+  const isFull = event.max_attendees && (event.current_attendees ?? 0) >= event.max_attendees;
+  const spotsLeft = event.max_attendees ? event.max_attendees - (event.current_attendees ?? 0) : null;
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 font-outfit">
@@ -71,7 +71,7 @@ export default function EventDetail({ event }: EventDetailProps) {
             {/* Status Badge */}
             <div className="absolute top-6 right-6">
               <Badge 
-                variant={getStatusVariant(event.status)} 
+                variant={getStatusVariant(event.status ?? 'upcoming')} 
                 className={`capitalize text-sm px-4 py-2 ${
                   event.status === 'upcoming' ? 'bg-green-500 text-white hover:bg-green-600' :
                   event.status === 'ongoing' ? 'bg-blue-500 text-white hover:bg-blue-600' :
@@ -236,7 +236,7 @@ export default function EventDetail({ event }: EventDetailProps) {
                       className="w-full bg-white hover:bg-gray-100 text-[#009688]" 
                       variant="secondary" 
                       size="lg"
-                      disabled={isFull}
+                      disabled={!!isFull}
                     >
                       {isFull ? 'Event Full' : 'Register for This Event'}
                     </Button>

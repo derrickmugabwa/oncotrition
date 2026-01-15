@@ -38,8 +38,8 @@ export default function EventsList({ events, featuredEvents, upcomingEvents }: E
         const searchLower = filters.search.toLowerCase();
         const matchesSearch = 
           event.title.toLowerCase().includes(searchLower) ||
-          event.description.toLowerCase().includes(searchLower) ||
-          event.location.toLowerCase().includes(searchLower);
+          (event.description ?? '').toLowerCase().includes(searchLower) ||
+          (event.location ?? '').toLowerCase().includes(searchLower);
         
         if (!matchesSearch) return false;
       }
