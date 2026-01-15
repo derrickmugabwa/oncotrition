@@ -36,7 +36,7 @@ export default function EventFilters({ filters, onFiltersChange }: EventFiltersP
               onValueChange={(value) => onFiltersChange({ ...filters, status: value === 'all' ? undefined : value as any })}
             >
               <SelectTrigger id="status-filter" className="w-full">
-                <SelectValue placeholder="All Statuses" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Statuses</SelectItem>

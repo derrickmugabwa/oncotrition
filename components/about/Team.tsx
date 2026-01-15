@@ -11,8 +11,8 @@ interface TeamMember {
   position: string;
   image_src: string;
   bio: string;
-  linkedin_url?: string;
-  twitter_url?: string;
+  linkedin_url?: string | null;
+  twitter_url?: string | null;
   display_order: number;
 }
 
@@ -130,7 +130,7 @@ export default function Team() {
         if (!sectionError && sectionData) {
           setSectionContent({
             heading: sectionData.heading,
-            description: sectionData.description
+            description: sectionData.description ?? ''
           });
         }
       } catch (error) {

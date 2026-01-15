@@ -88,7 +88,7 @@ const HomepageSmartspoonTab = () => {
         setDescription(data.description || 'Experience the future of nutrition tracking with our innovative smart spoon that helps you make informed dietary decisions in real-time.');
         setButtonText(data.button_text || 'Learn More About Smart Spoon');
         setButtonLink(data.button_link || '/smart-spoon');
-        setServices(data.services || defaultServices);
+        setServices((data.services as any) || defaultServices);
       }
     } catch (error) {
       console.error('Error fetching smartspoon data:', error);

@@ -134,8 +134,8 @@ export default function AdminPage() {
         const formattedData = blogData.map(post => ({
           id: post.id,
           title: post.title,
-          updated_at: post.updated_at,
-          created_at: post.created_at,
+          updated_at: post.updated_at ?? new Date().toISOString(),
+          created_at: post.created_at ?? new Date().toISOString(),
           content: '',
           type: 'blog_post',
           status: post.status as 'draft' | 'published',

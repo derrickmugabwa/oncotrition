@@ -10,9 +10,9 @@ import { cn } from '@/lib/utils';
 interface HeroContent {
   id?: string;
   title: string;
-  subtitle: string;
-  tagline: string;
-  background_image: string;
+  subtitle: string | null;
+  tagline: string | null;
+  background_image: string | null;
 }
 
 export default function HeroSectionTab() {
@@ -176,7 +176,7 @@ export default function HeroSectionTab() {
               </label>
               <input
                 type="text"
-                value={formData.tagline}
+                value={formData.tagline ?? ''}
                 onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
                 placeholder="Enter the tagline text"
                 className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -211,7 +211,7 @@ export default function HeroSectionTab() {
                 </div>
               </label>
               <textarea
-                value={formData.subtitle}
+                value={formData.subtitle ?? ''}
                 onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
                 placeholder="Enter the subtitle text"
                 rows={3}

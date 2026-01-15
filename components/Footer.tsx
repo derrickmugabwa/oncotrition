@@ -12,34 +12,34 @@ interface FooterSettings {
     twitter: string;
     instagram: string;
     linkedin: string;
-  };
+  } | null;
   contact_info: {
     email: string;
     phone: string;
     address: string;
-  };
+  } | null;
   quick_links: Array<{
     name: string;
     href: string;
-  }>;
+  }> | null;
   legal_links: {
     privacy_policy: string;
     terms_of_service: string;
     cookie_policy: string;
-  };
+  } | null;
   newsletter: {
     enabled: boolean;
     description: string;
-  };
+  } | null;
   brand: {
     description: string;
-  };
-  copyright_text: string;
+  } | null;
+  copyright_text: string | null;
   promo_images: Array<{
     image_url: string;
     link_url: string;
-  }>;
-  promo_title: string;
+  }> | null;
+  promo_title: string | null;
 }
 
 const defaultSettings: FooterSettings = {
@@ -95,14 +95,14 @@ const Footer = () => {
         if (data) {
           setSettings({
             ...defaultSettings,
-            ...data,
-            social_links: { ...defaultSettings.social_links, ...data.social_links },
-            contact_info: { ...defaultSettings.contact_info, ...data.contact_info },
-            quick_links: data.quick_links || defaultSettings.quick_links,
-            legal_links: { ...defaultSettings.legal_links, ...data.legal_links },
-            newsletter: { ...defaultSettings.newsletter, ...data.newsletter },
-            brand: { ...defaultSettings.brand, ...data.brand },
-            promo_images: data.promo_images || defaultSettings.promo_images,
+            ...(data as any),
+            social_links: { ...defaultSettings.social_links, ...(data.social_links as any) },
+            contact_info: { ...defaultSettings.contact_info, ...(data.contact_info as any) },
+            quick_links: (data.quick_links as any) || defaultSettings.quick_links,
+            legal_links: { ...defaultSettings.legal_links, ...(data.legal_links as any) },
+            newsletter: { ...defaultSettings.newsletter, ...(data.newsletter as any) },
+            brand: { ...defaultSettings.brand, ...(data.brand as any) },
+            promo_images: (data.promo_images as any) || defaultSettings.promo_images,
             promo_title: data.promo_title || defaultSettings.promo_title
           });
         }
@@ -175,10 +175,10 @@ const Footer = () => {
               Oncotrition
             </h3>
             <p className="text-gray-400">
-              {settings.brand.description}
+              {settings.brand?.description}
             </p>
             <div className="flex space-x-4">
-              {Object.entries(settings.social_links).map(([platform, url]) =>
+              {settings.social_links && Object.entries(settings.social_links).map(([platform, url]) =>
                 url ? (
                   <a
                     key={platform}
@@ -203,7 +203,7 @@ const Footer = () => {
           >
             <h4 className="text-lg font-semibold mb-6 text-white">Quick Links</h4>
             <ul className="space-y-3">
-              {settings.quick_links.map((link) => (
+              {settings.quick_links?.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -225,7 +225,7 @@ const Footer = () => {
           >
             <h4 className="text-lg font-semibold mb-6 text-white">Contact</h4>
             <ul className="space-y-3">
-              {Object.entries(settings.contact_info).map(([key, value]) => 
+              {settings.contact_info && Object.entries(settings.contact_info).map(([key, value]) => 
                 value ? (
                   <li key={key} className="flex items-start space-x-3 text-gray-400">
                     <span className="mt-1">{contactIcons[key as keyof typeof contactIcons]}</span>
@@ -244,11 +244,11 @@ const Footer = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            {settings.promo_images.length > 0 && (
+            {settings.promo_images && settings.promo_images.length > 0 && (
               <div>
                 <h4 className="text-lg font-semibold mb-6 text-white">{settings.promo_title}</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                  {settings.promo_images.map((promo, index) => (
+                  {settings.promo_images?.map((promo, index) => (
                     <motion.a
                       key={index}
                       href={promo.link_url}
@@ -272,11 +272,11 @@ const Footer = () => {
               </div>
             )}
 
-            {settings.newsletter.enabled && (
+            {settings.newsletter?.enabled && (
               <div>
                 <h4 className="text-lg font-semibold mb-6 text-white">Newsletter</h4>
                 <p className="text-gray-400 mb-4">
-                  {settings.newsletter.description}
+                  {settings.newsletter?.description}
                 </p>
                 <form className="space-y-3">
                   <input
@@ -303,17 +303,17 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-sm text-gray-400">
           <p>{settings.copyright_text}</p>
           <div className="flex space-x-6">
-            {settings.legal_links.privacy_policy && (
+            {settings.legal_links?.privacy_policy && (
               <Link href={settings.legal_links.privacy_policy} className="hover:text-primary transition-colors duration-300">
                 Privacy Policy
               </Link>
             )}
-            {settings.legal_links.terms_of_service && (
+            {settings.legal_links?.terms_of_service && (
               <Link href={settings.legal_links.terms_of_service} className="hover:text-primary transition-colors duration-300">
                 Terms of Service
               </Link>
             )}
-            {settings.legal_links.cookie_policy && (
+            {settings.legal_links?.cookie_policy && (
               <Link href={settings.legal_links.cookie_policy} className="hover:text-primary transition-colors duration-300">
                 Cookie Policy
               </Link>

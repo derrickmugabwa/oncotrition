@@ -43,7 +43,7 @@ export default function Banner() {
         .single();
 
       if (!error && data) {
-        setContent(data);
+        setContent(data as any);
       }
     }
 

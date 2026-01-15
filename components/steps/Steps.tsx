@@ -65,8 +65,8 @@ interface StepsSettings {
   description?: string;
 }
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 50 },
+const fadeInUp: any = {
+  initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
@@ -74,7 +74,7 @@ const staggerContainer = {
   animate: { transition: { staggerChildren: 0.2 } },
 };
 
-const cardHover = {
+const cardHover: any = {
   rest: { 
     scale: 1, 
     y: 0,
@@ -91,7 +91,7 @@ const cardHover = {
   },
 };
 
-const iconHover = {
+const iconHover: any = {
   rest: { 
     rotate: 0, 
     scale: 1,
@@ -114,7 +114,7 @@ const iconHover = {
 };
 
 // New scroll animation variants
-const scrollFadeIn = {
+const scrollFadeIn: any = {
   hidden: { opacity: 0, y: 100 },
   visible: (i: number) => ({
     opacity: 1,
@@ -140,7 +140,7 @@ const floatingAnimation = {
   },
 };
 
-const connectingLineAnimation = {
+const connectingLineAnimation: any = {
   hidden: { width: 0, opacity: 0 },
   visible: {
     width: '100%',
@@ -185,7 +185,7 @@ export default function Steps() {
       }
 
       if (data) {
-        setSettings(data);
+        setSettings(data as any);
       }
     } catch (error) {
       console.error('Error fetching steps settings:', error);

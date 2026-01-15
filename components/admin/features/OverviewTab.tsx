@@ -8,9 +8,9 @@ import { motion } from 'framer-motion';
 interface BannerContent {
   id: number;
   title: string;
-  subtitle: string;
-  heading: string;
-  bullet_points: string[];
+  subtitle: string | null;
+  heading: string | null;
+  bullet_points: string[] | any;
 }
 
 export default function OverviewTab() {
@@ -39,9 +39,9 @@ export default function OverviewTab() {
 
     if (data) {
       setTitle(data.title);
-      setSubtitle(data.subtitle);
-      setHeading(data.heading);
-      setBulletPoints(data.bullet_points);
+      setSubtitle(data.subtitle ?? '');
+      setHeading(data.heading ?? '');
+      setBulletPoints((data.bullet_points as any) ?? []);
     }
     setIsLoading(false);
   }

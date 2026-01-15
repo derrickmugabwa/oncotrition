@@ -31,7 +31,7 @@ export default function AnnouncementEditor({ announcement, onClose }: Announceme
   const [formData, setFormData] = useState<AnnouncementFormData>({
     title: announcement?.title || '',
     message: announcement?.message || '',
-    announcement_type: announcement?.announcement_type || 'general',
+    announcement_type: (announcement?.announcement_type as any) || 'general',
     event_id: announcement?.event_id || undefined,
     cta_text: announcement?.cta_text || '',
     cta_link: announcement?.cta_link || '',
@@ -40,7 +40,7 @@ export default function AnnouncementEditor({ announcement, onClose }: Announceme
     end_date: announcement?.end_date ? announcement.end_date.split('T')[0] : '',
     is_active: announcement?.is_active ?? true,
     priority: announcement?.priority || 5,
-    display_frequency: announcement?.display_frequency || 'once',
+    display_frequency: (announcement?.display_frequency as any) || 'once',
   });
 
   useEffect(() => {

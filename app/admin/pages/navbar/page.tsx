@@ -16,20 +16,20 @@ interface NavItem {
   name: string;
   href: string;
   order: number;
-  open_in_new_tab: boolean;
-  type: 'link' | 'dropdown' | 'mega';
-  parent_id?: string;
-  column_index?: number;
-  description?: string;
+  open_in_new_tab: boolean | null;
+  type: string | null;
+  parent_id?: string | null;
+  column_index?: number | null;
+  description?: string | null;
 }
 
 interface NavSection {
   id: string;
-  nav_item_id: string;
+  nav_item_id: string | null;
   title: string;
-  url: string;
-  column_index: number;
-  order_index: number;
+  url: string | null;
+  column_index: number | null;
+  order_index: number | null;
 }
 
 interface EditingSectionState {
@@ -292,7 +292,7 @@ export default function NavbarPage() {
               <Label htmlFor="type">Menu Type</Label>
               <select
                 id="type"
-                value={newItem.type}
+                value={newItem.type ?? ''}
                 onChange={(e) => setNewItem({ ...newItem, type: e.target.value as NavItem['type'] })}
                 className="w-full rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2"
               >
@@ -306,7 +306,7 @@ export default function NavbarPage() {
                 <Label htmlFor="description">Description (Optional)</Label>
                 <Input
                   id="description"
-                  value={newItem.description}
+                  value={newItem.description ?? ''}
                   onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
                   placeholder="Brief description"
                 />
@@ -316,7 +316,7 @@ export default function NavbarPage() {
               <input
                 type="checkbox"
                 id="openInNewTab"
-                checked={newItem.open_in_new_tab}
+                checked={newItem.open_in_new_tab ?? false}
                 onChange={(e) => setNewItem({ ...newItem, open_in_new_tab: e.target.checked })}
                 className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
               />
@@ -500,7 +500,7 @@ export default function NavbarPage() {
                                   id: section.id,
                                   title: section.title,
                                   url: section.url || '',
-                                  column_index: section.column_index
+                                  column_index: section.column_index ?? 0
                                 })}
                                 variant="ghost"
                                 size="sm"

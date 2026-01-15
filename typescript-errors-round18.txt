@@ -1,0 +1,100 @@
+﻿components/admin/events/EventRegistrationsManager.tsx(211,42): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+components/admin/events/EventRegistrationsManager.tsx(213,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/admin/events/EventRegistrationsManager.tsx(224,40): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+components/admin/events/EventRegistrationsManager.tsx(226,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/admin/mentorship/EventBookingsTab.tsx(111,17): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+components/blog/RelatedPosts.tsx(67,9): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/RelatedPosts.tsx(80,13): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/blog/RelatedPosts.tsx(154,9): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+components/contact/ContactForm.tsx(59,22): error TS2345: Argument of type '{ address: string | null; created_at: string; description: string | null; email: string | null; id: number; phone: string | null; social_links: Json; title: string; updated_at: string; }' is not assignable to parameter of type 'SetStateAction<ContactInfo | null>'.
+  Type '{ address: string | null; created_at: string; description: string | null; email: string | null; id: number; phone: string | null; social_links: Json; title: string; updated_at: string; }' is not assignable to type 'ContactInfo'.
+    Types of property 'description' are incompatible.
+      Type 'string | null' is not assignable to type 'string'.
+        Type 'null' is not assignable to type 'string'.
+components/events/EventCard.tsx(20,25): error TS18047: 'event.event_time' is possibly 'null'.
+components/events/EventCard.tsx(38,8): error TS18047: 'event.current_attendees' is possibly 'null'.
+components/events/EventCard.tsx(41,41): error TS18047: 'event.current_attendees' is possibly 'null'.
+components/events/EventCard.tsx(78,41): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+components/events/EventDetail.tsx(18,25): error TS18047: 'event.event_time' is possibly 'null'.
+components/events/EventDetail.tsx(36,8): error TS18047: 'event.current_attendees' is possibly 'null'.
+components/events/EventDetail.tsx(39,41): error TS18047: 'event.current_attendees' is possibly 'null'.
+components/events/EventDetail.tsx(40,65): error TS18047: 'event.current_attendees' is possibly 'null'.
+components/events/EventDetail.tsx(74,43): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+components/events/EventDetail.tsx(239,23): error TS2322: Type 'boolean | 0 | null' is not assignable to type 'boolean | undefined'.
+  Type 'null' is not assignable to type 'boolean | undefined'.
+components/events/EventDetailClient.tsx(21,23): error TS18047: 'event.event_time' is possibly 'null'.
+components/events/EventDetailClient.tsx(43,22): error TS18047: 'event.description' is possibly 'null'.
+components/events/EventFilters.tsx(39,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/events/EventsList.tsx(41,11): error TS18047: 'event.description' is possibly 'null'.
+components/events/EventsList.tsx(42,11): error TS18047: 'event.location' is possibly 'null'.
+components/features/Banner.tsx(46,20): error TS2345: Argument of type '{ bullet_points: Json; created_at: string; heading: string; id: number; subtitle: string; title: string; updated_at: string; }' is not assignable to parameter of type 'SetStateAction<BannerContent | null>'.
+  Type '{ bullet_points: Json; created_at: string; heading: string; id: number; subtitle: string; title: string; updated_at: string; }' is not assignable to type 'BannerContent'.
+    Types of property 'bullet_points' are incompatible.
+      Type 'Json' is not assignable to type 'string[]'.
+        Type 'null' is not assignable to type 'string[]'.
+components/features/FeaturesGrid.tsx(105,7): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType | undefined'.
+components/Footer.tsx(99,62): error TS2698: Spread types may only be created from object types.
+components/Footer.tsx(100,62): error TS2698: Spread types may only be created from object types.
+components/Footer.tsx(101,13): error TS2322: Type 'string | number | true | { [key: string]: Json | undefined; } | Json[] | { name: string; href: string; }[] | null' is not assignable to type '{ name: string; href: string; }[] | null'.
+  Type 'string' is not assignable to type '{ name: string; href: string; }[]'.
+components/Footer.tsx(102,60): error TS2698: Spread types may only be created from object types.
+components/Footer.tsx(103,58): error TS2698: Spread types may only be created from object types.
+components/Footer.tsx(104,48): error TS2698: Spread types may only be created from object types.
+components/Footer.tsx(105,13): error TS2322: Type 'string | number | true | { [key: string]: Json | undefined; } | Json[] | { image_url: string; link_url: string; }[] | null' is not assignable to type '{ image_url: string; link_url: string; }[] | null'.
+  Type 'string' is not assignable to type '{ image_url: string; link_url: string; }[]'.
+components/Footer.tsx(178,16): error TS18047: 'settings.brand' is possibly 'null'.
+components/Footer.tsx(181,31): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(o: { [s: string]: string; } | ArrayLike<string>): [string, string][]', gave the following error.
+    Argument of type '{ facebook: string; twitter: string; instagram: string; linkedin: string; } | null' is not assignable to parameter of type '{ [s: string]: string; } | ArrayLike<string>'.
+      Type 'null' is not assignable to type '{ [s: string]: string; } | ArrayLike<string>'.

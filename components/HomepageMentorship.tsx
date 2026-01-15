@@ -14,10 +14,10 @@ interface MentorshipData {
   title: string;
   subtitle: string;
   description: string;
-  image_url: string;
+  image_url: string | null;
   button_text: string;
   button_link: string;
-  features: string[];
+  features: string[] | any;
 }
 
 const defaultMentorshipData: MentorshipData = {
@@ -162,7 +162,7 @@ export default function HomepageMentorship() {
 
             {/* Feature Pills */}
             <div className="mt-8 flex flex-wrap gap-3">
-              {mentorshipData.features.map((feature) => (
+              {mentorshipData.features.map((feature: string) => (
                 <motion.div key={feature} whileHover={{ scale: 1.05 }}>
                   <Badge className="px-6 py-2 text-sm rounded-full bg-white dark:bg-gray-800 text-teal-700 dark:text-teal-300 border-2 border-teal-300 dark:border-teal-700 hover:bg-teal-50 dark:hover:bg-teal-950/50 hover:border-teal-500 dark:hover:border-teal-500 shadow-sm hover:shadow-md transition-all duration-300 font-medium">
                     {feature}

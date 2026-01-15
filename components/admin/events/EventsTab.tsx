@@ -53,8 +53,8 @@ export default function EventsTab() {
       filtered = filtered.filter(
         event =>
           event.title.toLowerCase().includes(query) ||
-          event.description.toLowerCase().includes(query) ||
-          event.location.toLowerCase().includes(query)
+          event.description?.toLowerCase().includes(query) ||
+          event.location?.toLowerCase().includes(query)
       );
     }
 
@@ -231,13 +231,13 @@ export default function EventsTab() {
                         Registration
                       </span>
                     )}
-                    <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(event.status)}`}>
-                      {event.status}
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(event.status ?? 'upcoming')}`}>
+                      {event.status ?? 'upcoming'}
                     </span>
                   </div>
 
                   {/* Description */}
-                  <p className="text-gray-600 mb-4 line-clamp-2">{event.description}</p>
+                  <p className="text-gray-600 mb-4 line-clamp-2">{event.description ?? 'No description'}</p>
 
                   {/* Event Details */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -250,12 +250,12 @@ export default function EventsTab() {
                     <div>
                       <span className="text-gray-500">Time:</span>
                       <span className="ml-2 font-medium text-gray-900">
-                        {event.event_time.slice(0, 5)}
+                        {event.event_time?.slice(0, 5) ?? 'TBD'}
                       </span>
                     </div>
                     <div>
                       <span className="text-gray-500">Location:</span>
-                      <span className="ml-2 font-medium text-gray-900">{event.location}</span>
+                      <span className="ml-2 font-medium text-gray-900">{event.location ?? 'TBD'}</span>
                     </div>
                   </div>
 
@@ -263,12 +263,12 @@ export default function EventsTab() {
                   {event.max_attendees && (
                     <div className="mt-3">
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <span>Attendees: {event.current_attendees} / {event.max_attendees}</span>
+                        <span>Attendees: {event.current_attendees ?? 0} / {event.max_attendees}</span>
                         <div className="flex-1 max-w-xs bg-gray-200 rounded-full h-2">
                           <div
                             className="bg-[#009688] h-2 rounded-full transition-all"
                             style={{
-                              width: `${Math.min((event.current_attendees / event.max_attendees) * 100, 100)}%`
+                              width: `${Math.min(((event.current_attendees ?? 0) / event.max_attendees) * 100, 100)}%`
                             }}
                           />
                         </div>

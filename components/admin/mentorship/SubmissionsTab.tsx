@@ -24,12 +24,12 @@ export default function SubmissionsTab() {
 
   const fetchSubmissions = async () => {
     const { data, error } = await supabase
-      .from('mentorship_submissions')
+      .from('mentorship_submissions' as any)
       .select('*')
       .order('created_at', { ascending: false });
 
     if (data) {
-      setSubmissions(data);
+      setSubmissions(data as any);
     }
   };
 

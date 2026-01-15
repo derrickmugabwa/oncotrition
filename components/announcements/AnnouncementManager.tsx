@@ -89,13 +89,13 @@ export default function AnnouncementManager({ announcements }: AnnouncementManag
         }
 
         // Check if already viewed based on frequency
-        if (hasViewedAnnouncement(announcement.id, announcement.display_frequency)) {
+        if (hasViewedAnnouncement(announcement.id, announcement.display_frequency ?? 'once')) {
           return false;
         }
 
         return true;
       })
-      .sort((a, b) => b.priority - a.priority); // Sort by priority (highest first)
+      .sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0)); // Sort by priority (highest first)
 
     setAnnouncementQueue(filteredAnnouncements);
   }, [announcements]);

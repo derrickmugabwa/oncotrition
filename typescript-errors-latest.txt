@@ -1,0 +1,100 @@
+﻿app/(site)/events/[id]/register/page.tsx(31,34): error TS2339: Property 'title' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(32,24): error TS2339: Property 'description' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(32,61): error TS2339: Property 'title' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(34,36): error TS2339: Property 'title' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(35,26): error TS2339: Property 'description' does not exist on type 'never'.
+app/(site)/events/[id]/register/page.tsx(35,63): error TS2339: Property 'title' does not exist on type 'never'.
+app/(site)/layout.tsx(52,32): error TS2339: Property 'value' does not exist on type 'never'.
+app/(site)/layout.tsx(75,49): error TS2339: Property 'value' does not exist on type 'never'.
+app/(site)/layout.tsx(76,55): error TS2339: Property 'value' does not exist on type 'never'.
+app/(site)/layout.tsx(77,55): error TS2339: Property 'value' does not exist on type 'never'.
+app/(site)/layout.tsx(117,41): error TS2339: Property 'phone_number' does not exist on type 'never'.
+app/(site)/layout.tsx(118,37): error TS2339: Property 'message' does not exist on type 'never'.
+app/(site)/layout.tsx(119,38): error TS2339: Property 'position' does not exist on type 'never'.
+app/(site)/layout.tsx(120,37): error TS2339: Property 'enabled' does not exist on type 'never'.
+app/(site)/layout.tsx(125,38): error TS2339: Property 'property_id' does not exist on type 'never'.
+app/(site)/layout.tsx(126,36): error TS2339: Property 'widget_id' does not exist on type 'never'.
+app/(site)/layout.tsx(127,35): error TS2339: Property 'enabled' does not exist on type 'never'.
+app/admin/page.tsx(135,20): error TS2339: Property 'id' does not exist on type 'never'.
+app/admin/page.tsx(136,23): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/page.tsx(137,28): error TS2339: Property 'updated_at' does not exist on type 'never'.
+app/admin/page.tsx(138,28): error TS2339: Property 'created_at' does not exist on type 'never'.
+app/admin/page.tsx(141,24): error TS2339: Property 'status' does not exist on type 'never'.
+app/admin/pages/events/[id]/check-in/page.tsx(24,29): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/pages/events/[id]/check-in/page.tsx(64,14): error TS2339: Property 'has_internal_registration' does not exist on type 'never'.
+app/admin/pages/events/[id]/check-in/page.tsx(64,49): error TS2339: Property 'registration_type' does not exist on type 'never'.
+app/admin/pages/events/[id]/interest-areas/page.tsx(24,29): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/pages/events/[id]/pricing/page.tsx(24,29): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/pages/events/[id]/registrations/page.tsx(24,29): error TS2339: Property 'title' does not exist on type 'never'.
+app/admin/pages/events/[id]/registrations/page.tsx(50,14): error TS2339: Property 'has_internal_registration' does not exist on type 'never'.
+app/admin/pages/events/[id]/registrations/page.tsx(50,49): error TS2339: Property 'registration_type' does not exist on type 'never'.
+app/admin/pages/navbar/page.tsx(114,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "navigation_items", never, "POST">', gave the following error.
+    Argument of type '{ name: string; href: string; order: number; open_in_new_tab: boolean | undefined; type: "link" | "dropdown" | "mega" | undefined; parent_id: string | undefined; column_index: number | undefined; description: string | undefined; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "navigation_items", never, "POST">', gave the following error.
+    Type '{ name: string; href: string; order: number; open_in_new_tab: boolean | undefined; type: "link" | "dropdown" | "mega" | undefined; parent_id: string | undefined; column_index: number | undefined; description: string | undefined; }' is not assignable to type 'never'.
+app/admin/pages/navbar/page.tsx(148,17): error TS2345: Argument of type 'Partial<NavItem>' is not assignable to parameter of type 'never'.
+app/admin/pages/navbar/page.tsx(165,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "navigation_sections", never, "POST">', gave the following error.
+    Argument of type '{ nav_item_id: string; title: string; url: string; column_index: number; order_index: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "navigation_sections", never, "POST">', gave the following error.
+    Type '{ nav_item_id: string; title: string; url: string; column_index: number; order_index: number; }' is not assignable to type 'never'.
+app/admin/pages/navbar/page.tsx(188,17): error TS2345: Argument of type 'Partial<NavSection>' is not assignable to parameter of type 'never'.
+app/admin/pages/navbar/page.tsx(255,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ order: number; id: string; name: string; href: string; open_in_new_tab: boolean; type: "link" | "dropdown" | "mega"; parent_id?: string | undefined; column_index?: number | undefined; description?: string | undefined; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ order: number; id: string; name: string; href: string; open_in_new_tab: boolean; type: "link" | "dropdown" | "mega"; parent_id?: string | undefined; column_index?: number | undefined; description?: string | undefined; }[]' is not assignable to parameter of type 'never[]'.
+      Type '{ order: number; id: string; name: string; href: string; open_in_new_tab: boolean; type: "link" | "dropdown" | "mega"; parent_id?: string; column_index?: number; description?: string; }' is not assignable to type 'never'.
+app/admin/settings/page.tsx(129,17): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+app/admin/settings/page.tsx(153,15): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+app/api/admin/mentorship/hero/route.ts(66,17): error TS2345: Argument of type '{ title: any; subtitle: any; tagline: any; background_image: any; }' is not assignable to parameter of type 'never'.
+app/api/admin/mentorship/hero/route.ts(72,32): error TS2339: Property 'id' does not exist on type 'never'.
+app/api/admin/mentorship/hero/route.ts(83,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_hero", never, "POST">', gave the following error.
+    Argument of type '{ title: any; subtitle: any; tagline: any; background_image: any; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_hero", never, "POST">', gave the following error.
+    Type '{ title: any; subtitle: any; tagline: any; background_image: any; }' is not assignable to type 'never'.
+app/api/admin/smartspoon/hero/route.ts(33,17): error TS2345: Argument of type '{ title: any; subtitle: any; tagline: any; background_image: any; }' is not assignable to parameter of type 'never'.
+app/api/admin/smartspoon/hero/route.ts(39,35): error TS2339: Property 'id' does not exist on type 'never'.
+app/api/admin/smartspoon/hero/route.ts(42,55): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_hero", never, "POST">', gave the following error.
+    Argument of type '{ title: any; subtitle: any; tagline: any; background_image: any; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "smartspoon_hero", never, "POST">', gave the following error.
+    Type '{ title: any; subtitle: any; tagline: any; background_image: any; }' is not assignable to type 'never'.
+app/api/debug/route.ts(31,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_events", never, "POST">', gave the following error.
+    Argument of type '{ name: string; date: string; total_slots: number; available_slots: number; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_events", never, "POST">', gave the following error.
+    Type '{ name: string; date: string; total_slots: number; available_slots: number; }' is not assignable to type 'never'.
+app/api/init/route.ts(21,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "site_settings", never, "POST">', gave the following error.
+    Argument of type '{ logo_url: null; favicon_url: null; show_site_name: boolean; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "site_settings", never, "POST">', gave the following error.
+    Type '{ logo_url: null; favicon_url: null; show_site_name: true; }' is not assignable to type 'never'.
+app/api/mentorship/bookings/route.ts(91,15): error TS2339: Property 'available_slots' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(94,26): error TS2339: Property 'name' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(95,31): error TS2339: Property 'available_slots' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(115,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "event_bookings", never, "POST">', gave the following error.
+    Argument of type '{ event_id: any; name: any; email: any; phone: any; amount: any; payment_status: any; booking_status: string; payment_phone: any; }[]' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "event_bookings", never, "POST">', gave the following error.
+    Type '{ event_id: any; name: any; email: any; phone: any; amount: any; payment_status: any; booking_status: string; payment_phone: any; }' is not assignable to type 'never'.
+app/api/mentorship/bookings/route.ts(241,42): error TS2339: Property 'booking_status' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(243,19): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(254,17): error TS2345: Argument of type '{ available_slots: number; updated_at: string; }' is not assignable to parameter of type 'never'.
+app/api/mentorship/bookings/route.ts(255,36): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(258,27): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(267,49): error TS2339: Property 'booking_status' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(271,17): error TS2345: Argument of type '{ available_slots: any; updated_at: string; }' is not assignable to parameter of type 'never'.
+app/api/mentorship/bookings/route.ts(272,36): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(275,27): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(289,15): error TS2345: Argument of type '{ booking_status: any; }' is not assignable to parameter of type 'never'.
+app/api/mentorship/bookings/route.ts(320,26): error TS2339: Property 'id' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(321,33): error TS2339: Property 'booking_status' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(322,31): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(323,38): error TS2339: Property 'mentorship_events' does not exist on type 'never'.
+app/api/mentorship/bookings/route.ts(324,31): error TS2339: Property 'booking_status' does not exist on type 'never'.
+app/api/mentorship/events/route.ts(76,8): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ PostgrestVersion: "12"; }, never, never, null, "mentorship_events", never, "POST">', gave the following error.
+    Argument of type '{ name: any; date: any; total_slots: any; available_slots: any; price: any; }[]' is not assignable to parameter of type 'never'.

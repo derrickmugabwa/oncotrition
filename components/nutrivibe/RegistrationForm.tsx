@@ -12,7 +12,8 @@ import { NetworkingPurposeStep } from './NetworkingPurposeStep';
 import { PaymentSummary } from './PaymentSummary';
 import { NutrivibePricing, NutrivibeInterestArea, RegistrationFormData } from '@/types/nutrivibe';
 import { Event } from '@/types/events';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface RegistrationFormProps {
   event: Event;
@@ -77,15 +78,38 @@ export function RegistrationForm({ event, pricing, interestAreas }: Registration
       console.log('Registration response:', { status: response.status, data });
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to register');
+        const errorMessage = data.error || 'Failed to register';
+        throw new Error(errorMessage);
       }
 
+      // Show success message
+      toast.success('Registration successful! Redirecting to payment...');
+      
       // Redirect to Paystack payment page
       window.location.href = data.paymentUrl;
     } catch (err) {
       console.error('Registration error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      
+      // Show error in both toast and alert
+      toast.error(errorMessage, {
+        duration: 6000,
+        position: 'top-center',
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+          fontWeight: '500',
+          padding: '16px',
+          borderRadius: '8px',
+        },
+        icon: '⚠️',
+      });
+      
+      setError(errorMessage);
       setIsSubmitting(false);
+      
+      // Scroll to top to show the error alert
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -115,8 +139,9 @@ export function RegistrationForm({ event, pricing, interestAreas }: Registration
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
+        <Alert variant="destructive" className="border-2">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="ml-2 font-medium">{error}</AlertDescription>
         </Alert>
       )}
 

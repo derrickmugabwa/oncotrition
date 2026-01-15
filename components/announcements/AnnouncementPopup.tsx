@@ -83,7 +83,7 @@ export default function AnnouncementPopup({ announcement, onClose, onDontShowAga
                 className="object-cover"
                 priority
               />
-              <div className={`absolute inset-0 bg-gradient-to-t ${getTypeColor(announcement.announcement_type)} opacity-20`} />
+              <div className={`absolute inset-0 bg-gradient-to-t ${getTypeColor(announcement.announcement_type ?? 'general')} opacity-20`} />
             </div>
           )}
 
@@ -107,7 +107,7 @@ export default function AnnouncementPopup({ announcement, onClose, onDontShowAga
                     href={announcement.cta_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${getTypeColor(announcement.announcement_type)} text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-base`}
+                    className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${getTypeColor(announcement.announcement_type ?? 'general')} text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-base`}
                   >
                     {announcement.cta_text}
                     <ExternalLink className="w-5 h-5" />
@@ -116,7 +116,7 @@ export default function AnnouncementPopup({ announcement, onClose, onDontShowAga
                   <Link
                     href={announcement.cta_link}
                     onClick={onClose}
-                    className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${getTypeColor(announcement.announcement_type)} text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-base`}
+                    className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${getTypeColor(announcement.announcement_type ?? 'general')} text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-300 text-base`}
                   >
                     {announcement.cta_text}
                   </Link>

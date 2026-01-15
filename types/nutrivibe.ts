@@ -2,24 +2,24 @@
 
 export interface NutrivibePricing {
   id: string;
-  event_id: string;
+  event_id: string | null;
   participation_type: string;
   price: number;
   description: string | null;
-  is_active: boolean;
-  display_order: number;
-  created_at: string;
-  updated_at: string;
+  is_active: boolean | null;
+  display_order: number | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 export interface NutrivibeInterestArea {
   id: string;
-  event_id: string; // NEW - Links to events table
+  event_id: string | null; // NEW - Links to events table
   name: string;
   description: string | null;
-  display_order: number;
-  is_active: boolean;
-  created_at: string;
+  display_order: number | null;
+  is_active: boolean | null;
+  created_at: string | null;
 }
 
 export interface NutrivibeSettings {
@@ -49,24 +49,24 @@ export interface NutrivibeRegistration {
   phone_number: string;
   participation_type: string;
   participation_type_other: string | null;
-  interest_areas: string[];
+  interest_areas: string[] | any;
   interest_areas_other: string | null;
   networking_purpose: string | null;
   price_amount: number;
-  payment_status: 'pending' | 'completed' | 'failed';
+  payment_status: string | null;
   payment_reference: string | null;
   paystack_reference: string | null;
   qr_code_url: string | null;
   qr_code_data: string | null;
-  registration_date: string;
+  registration_date: string | null;
   payment_date: string | null;
-  email_sent: boolean;
+  email_sent: boolean | null;
   email_sent_at: string | null;
-  checked_in: boolean;
+  checked_in: boolean | null;
   checked_in_at: string | null;
   checked_in_by: string | null;
-  created_at: string;
-  updated_at: string;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 export interface RegistrationFormData {

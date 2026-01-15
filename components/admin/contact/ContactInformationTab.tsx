@@ -39,7 +39,7 @@ export default function ContactInformationTab() {
         .single();
 
       if (error) throw error;
-      setContactInfo(data);
+      setContactInfo(data as any);
     } catch (error) {
       console.error('Error:', error);
       toast.error('Failed to fetch contact information');

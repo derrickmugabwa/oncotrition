@@ -9,15 +9,15 @@ interface Package {
   id: number;
   name: string;
   price: number;
-  international_price: number;
-  title: string;
-  description: string;
+  international_price: number | null;
+  title: string | null;
+  description: string | null;
   features: string[];
   recommended: boolean;
   gradient: string;
   order_number: number;
   duration_type: string;
-  url: string;
+  url: string | null;
   show_price: boolean;
 }
 
@@ -76,8 +76,8 @@ export default function PackagesTab() {
         recommended: editingPackage.recommended,
         gradient: editingPackage.gradient,
         order_number: editingPackage.order_number,
-        duration_type: editingPackage.duration_type,
-        url: editingPackage.url,
+        duration_type: editingPackage.duration_type ?? '',
+        url: editingPackage.url ?? '',
         show_price: editingPackage.show_price,
       });
     }
@@ -101,14 +101,14 @@ export default function PackagesTab() {
         if (data[0].title) {
           setSectionSettings(prev => ({
             ...prev,
-            title: data[0].title
+            title: data[0].title ?? prev.title
           }));
         }
         
         if (data[0].description) {
           setSectionSettings(prev => ({
             ...prev,
-            description: data[0].description
+            description: data[0].description ?? prev.description
           }));
         }
       }

@@ -18,10 +18,10 @@ interface Step {
 
 interface StepsSettings {
   id?: number
-  background_image?: string
-  title?: string
-  subtitle?: string
-  description?: string
+  background_image?: string | null
+  title?: string | null
+  subtitle?: string | null
+  description?: string | null
 }
 
 const iconMap = {

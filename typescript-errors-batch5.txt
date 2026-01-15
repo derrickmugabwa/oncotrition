@@ -1,0 +1,200 @@
+﻿app/admin/pages/events/[id]/registrations/page.tsx(88,9): error TS2322: Type '{ checked_in: boolean | null; checked_in_at: string | null; checked_in_by: string | null; created_at: string | null; designation: string | null; email: string; email_sent: boolean | null; ... 19 more ...; updated_at: string | null; }[]' is not assignable to type 'NutrivibeRegistration[]'.
+  Type '{ checked_in: boolean | null; checked_in_at: string | null; checked_in_by: string | null; created_at: string | null; designation: string | null; email: string; email_sent: boolean | null; ... 19 more ...; updated_at: string | null; }' is not assignable to type 'NutrivibeRegistration'.
+    Types of property 'registration_date' are incompatible.
+      Type 'string | null' is not assignable to type 'string'.
+        Type 'null' is not assignable to type 'string'.
+components/admin/about/components/ModuleContentEditor.tsx(33,11): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: { created_at?: string | undefined; description: string; heading: string; id?: undefined; }, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | ... 2 more ... | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Type 'number' is not assignable to type 'undefined'.
+  Overload 2 of 2, '(values: { created_at?: string | undefined; description: string; heading: string; id?: undefined; }[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | ... 2 more ... | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type '{ created_at?: string | undefined; description: string; heading: string; id?: undefined; }[]'.
+components/admin/about/ComponentsTab.tsx(127,27): error TS2322: Type 'boolean | null' is not assignable to type 'boolean | undefined'.
+  Type 'null' is not assignable to type 'boolean | undefined'.
+components/admin/about/TeamTab.tsx(47,22): error TS2345: Argument of type '{ bio: string; created_at: string; display_order: number; id: number; image_src: string; linkedin_url: string | null; name: string; position: string; twitter_url: string | null; updated_at: string; }[]' is not assignable to parameter of type 'SetStateAction<TeamMember[]>'.
+  Type '{ bio: string; created_at: string; display_order: number; id: number; image_src: string; linkedin_url: string | null; name: string; position: string; twitter_url: string | null; updated_at: string; }[]' is not assignable to type 'TeamMember[]'.
+    Type '{ bio: string; created_at: string; display_order: number; id: number; image_src: string; linkedin_url: string | null; name: string; position: string; twitter_url: string | null; updated_at: string; }' is not assignable to type 'TeamMember'.
+      Types of property 'linkedin_url' are incompatible.
+        Type 'string | null' is not assignable to type 'string | undefined'.
+          Type 'null' is not assignable to type 'string | undefined'.
+components/admin/about/TeamTab.tsx(59,11): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+components/admin/about/ValuesTab.tsx(139,15): error TS2322: Type 'VisionSection[]' is not assignable to type 'Json | undefined'.
+  Type 'VisionSection[]' is not assignable to type 'Json[]'.
+    Type 'VisionSection' is not assignable to type 'Json'.
+      Type 'VisionSection' is not assignable to type '{ [key: string]: Json | undefined; }'.
+        Index signature for type 'string' is missing in type 'VisionSection'.
+components/admin/events/EventEditor.tsx(37,5): error TS2353: Object literal may only specify known properties, and 'has_internal_registration' does not exist in type 'EventFormData | (() => EventFormData)'.
+components/admin/events/EventEditor.tsx(136,41): error TS2551: Property 'registration_deadline' does not exist on type 'EventFormData'. Did you mean 'registration_link'?
+components/admin/events/EventEditor.tsx(137,39): error TS2339: Property 'early_bird_deadline' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(138,33): error TS2339: Property 'venue_details' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(139,40): error TS2339: Property 'terms_and_conditions' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(347,36): error TS2339: Property 'has_internal_registration' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(347,74): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(351,25): error TS2339: Property 'has_internal_registration' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(351,63): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(371,35): error TS2339: Property 'has_internal_registration' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(386,23): error TS2339: Property 'has_internal_registration' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(398,43): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(411,43): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(422,27): error TS2339: Property 'registration_type' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(430,43): error TS2339: Property 'requires_payment' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(448,43): error TS2551: Property 'registration_deadline' does not exist on type 'EventFormData'. Did you mean 'registration_link'?
+components/admin/events/EventEditor.tsx(461,43): error TS2339: Property 'early_bird_deadline' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(476,41): error TS2339: Property 'early_bird_discount' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(492,41): error TS2339: Property 'venue_details' does not exist on type 'EventFormData'.
+components/admin/events/EventEditor.tsx(507,41): error TS2339: Property 'terms_and_conditions' does not exist on type 'EventFormData'.
+components/admin/events/EventInterestAreasManager.tsx(30,5): error TS2345: Argument of type '{ id: string; name: string; is_active: boolean | null; display_order: number | null; }[]' is not assignable to parameter of type 'InterestAreaFormData[] | (() => InterestAreaFormData[])'.
+  Type '{ id: string; name: string; is_active: boolean | null; display_order: number | null; }[]' is not assignable to type 'InterestAreaFormData[]'.
+    Type '{ id: string; name: string; is_active: boolean | null; display_order: number | null; }' is not assignable to type 'InterestAreaFormData'.
+      Types of property 'is_active' are incompatible.
+        Type 'boolean | null' is not assignable to type 'boolean'.
+          Type 'null' is not assignable to type 'boolean'.
+components/admin/events/EventPricingManager.tsx(33,5): error TS2345: Argument of type '{ id: string; participation_type: string; price: number; description: string; is_active: boolean | null; display_order: number | null; }[]' is not assignable to parameter of type 'PricingFormData[] | (() => PricingFormData[])'.
+  Type '{ id: string; participation_type: string; price: number; description: string; is_active: boolean | null; display_order: number | null; }[]' is not assignable to type 'PricingFormData[]'.
+    Type '{ id: string; participation_type: string; price: number; description: string; is_active: boolean | null; display_order: number | null; }' is not assignable to type 'PricingFormData'.
+      Types of property 'is_active' are incompatible.
+        Type 'boolean | null' is not assignable to type 'boolean'.
+          Type 'null' is not assignable to type 'boolean'.
+components/admin/events/EventRegistrationsManager.tsx(108,16): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number | Date'.
+      Type 'null' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number'.
+      Type 'null' is not assignable to type 'string | number'.
+components/admin/events/EventRegistrationsManager.tsx(211,42): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+components/admin/events/EventRegistrationsManager.tsx(213,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/admin/events/EventRegistrationsManager.tsx(224,40): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+components/admin/events/EventRegistrationsManager.tsx(226,30): error TS2322: Type '{ placeholder: string; }' is not assignable to type 'IntrinsicAttributes & SelectValueProps'.
+  Property 'placeholder' does not exist on type 'IntrinsicAttributes & SelectValueProps'.
+components/admin/events/EventRegistrationsManager.tsx(323,35): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number | Date'.
+      Type 'null' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number'.
+      Type 'null' is not assignable to type 'string | number'.
+components/admin/events/EventRegistrationsManager.tsx(341,65): error TS2322: Type '{ children: Element; variant: "outline"; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+components/admin/events/EventRegistrationsManager.tsx(347,65): error TS2322: Type '{ children: Element; variant: "outline"; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+components/admin/events/EventRegistrationsManager.tsx(353,65): error TS2322: Type '{ children: Element; variant: "outline"; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & (ButtonProps & VariantProps<(props?: (ConfigVariants<{ variant: { default: string; outline: string; secondary: string; ghost: string; destructive: string; link: string; }; size: { ...; }; }> & ClassProp) | undefined) => string>)'.
+components/admin/events/EventsTab.tsx(56,11): error TS18047: 'event.description' is possibly 'null'.
+components/admin/events/EventsTab.tsx(57,11): error TS18047: 'event.location' is possibly 'null'.
+components/admin/events/EventsTab.tsx(234,108): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+components/admin/events/EventsTab.tsx(253,26): error TS18047: 'event.event_time' is possibly 'null'.
+components/admin/events/EventsTab.tsx(271,51): error TS18047: 'event.current_attendees' is possibly 'null'.
+components/admin/features/OverviewTab.tsx(44,23): error TS2345: Argument of type 'Json' is not assignable to parameter of type 'SetStateAction<string[]>'.
+  Type 'null' is not assignable to type 'SetStateAction<string[]>'.
+components/admin/footer/FooterTab.tsx(144,60): error TS2698: Spread types may only be created from object types.
+components/admin/footer/FooterTab.tsx(145,60): error TS2698: Spread types may only be created from object types.
+components/admin/footer/FooterTab.tsx(147,58): error TS2698: Spread types may only be created from object types.
+components/admin/footer/FooterTab.tsx(148,56): error TS2698: Spread types may only be created from object types.
+components/admin/footer/FooterTab.tsx(149,46): error TS2698: Spread types may only be created from object types.
+components/admin/footer/FooterTab.tsx(188,43): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: { brand?: Json | undefined; contact_info?: Json | undefined; copyright?: string | null | undefined; copyright_text?: string | null | undefined; created_at?: string | null | undefined; ... 11 more ...; updated_at?: string | ... 1 more ... | undefined; }, options?: { ...; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Type 'number' is not assignable to type 'undefined'.
+  Overload 2 of 2, '(values: { brand?: Json | undefined; contact_info?: Json | undefined; copyright?: string | null | undefined; copyright_text?: string | null | undefined; created_at?: string | null | undefined; ... 11 more ...; updated_at?: string | ... 1 more ... | undefined; }[], options?: { ...; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type '{ brand?: Json | undefined; contact_info?: Json | undefined; copyright?: string | null | undefined; copyright_text?: string | null | undefined; created_at?: string | null | undefined; ... 11 more ...; updated_at?: string | ... 1 more ... | undefined; }[]'.
+components/admin/footer/FooterTab.tsx(238,45): error TS7006: Parameter '_' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(238,48): error TS7006: Parameter 'i' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(279,46): error TS7006: Parameter 'image' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(279,53): error TS7006: Parameter 'i' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(299,47): error TS7006: Parameter '_' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(299,50): error TS7006: Parameter 'i' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(306,44): error TS7006: Parameter 'image' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(306,51): error TS7006: Parameter 'i' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(377,38): error TS7006: Parameter 'link' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(377,44): error TS7006: Parameter 'index' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(497,13): error TS2322: Type 'string | null' is not assignable to type 'string | number | readonly string[] | undefined'.
+  Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.
+components/admin/footer/FooterTab.tsx(502,39): error TS7006: Parameter 'image' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(502,46): error TS7006: Parameter 'index' implicitly has an 'any' type.
+components/admin/footer/FooterTab.tsx(564,11): error TS2322: Type 'string | null' is not assignable to type 'string | number | readonly string[] | undefined'.
+  Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.
+components/admin/home/ComponentsTab.tsx(57,19): error TS2345: Argument of type '{ component_key: string; created_at: string; display_order: number; id: string; is_visible: boolean | null; name: string; }[]' is not assignable to parameter of type 'SetStateAction<ComponentSetting[]>'.
+  Type '{ component_key: string; created_at: string; display_order: number; id: string; is_visible: boolean | null; name: string; }[]' is not assignable to type 'ComponentSetting[]'.
+    Type '{ component_key: string; created_at: string; display_order: number; id: string; is_visible: boolean | null; name: string; }' is not assignable to type 'ComponentSetting'.
+      Types of property 'is_visible' are incompatible.
+        Type 'boolean | null' is not assignable to type 'boolean'.
+          Type 'null' is not assignable to type 'boolean'.
+components/admin/home/PluginsTab.tsx(40,27): error TS2345: Argument of type '{ created_at: string; enabled: boolean | null; id: number; message: string | null; phone_number: string; position: string | null; updated_at: string; }' is not assignable to parameter of type 'SetStateAction<WhatsAppSettings | null>'.
+  Type '{ created_at: string; enabled: boolean | null; id: number; message: string | null; phone_number: string; position: string | null; updated_at: string; }' is not assignable to type 'WhatsAppSettings'.
+    Types of property 'message' are incompatible.
+      Type 'string | null' is not assignable to type 'string'.
+        Type 'null' is not assignable to type 'string'.
+components/admin/home/PluginsTab.tsx(43,9): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+components/admin/home/PluginsTab.tsx(44,9): error TS2322: Type 'string | null' is not assignable to type '"top-left" | "top-right" | "bottom-left" | "bottom-right"'.
+  Type 'null' is not assignable to type '"top-left" | "top-right" | "bottom-left" | "bottom-right"'.
+components/admin/home/PluginsTab.tsx(45,9): error TS2322: Type 'boolean | null' is not assignable to type 'boolean'.
+  Type 'null' is not assignable to type 'boolean'.
+components/admin/home/PluginsTab.tsx(65,19): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+components/admin/home/TawkToSettings.tsx(36,19): error TS2345: Argument of type '{ created_at: string; enabled: boolean | null; id: number; property_id: string; updated_at: string; widget_id: string; }' is not assignable to parameter of type 'SetStateAction<TawkToSettings | null>'.
+  Type '{ created_at: string; enabled: boolean | null; id: number; property_id: string; updated_at: string; widget_id: string; }' is not assignable to type 'TawkToSettings'.
+    Types of property 'enabled' are incompatible.
+      Type 'boolean | null' is not assignable to type 'boolean'.
+        Type 'null' is not assignable to type 'boolean'.
+components/admin/home/TawkToSettings.tsx(40,9): error TS2322: Type 'boolean | null' is not assignable to type 'boolean'.
+  Type 'null' is not assignable to type 'boolean'.
+components/admin/home/TawkToSettings.tsx(59,19): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+components/admin/HomepageFeaturesTab.tsx(252,19): error TS2345: Argument of type '{ created_at: string; description: string; icon_name: string; id: number; order: number; title: string; updated_at: string; }[]' is not assignable to parameter of type 'SetStateAction<Feature[]>'.
+  Type '{ created_at: string; description: string; icon_name: string; id: number; order: number; title: string; updated_at: string; }[]' is not assignable to type 'Feature[]'.
+    Type '{ created_at: string; description: string; icon_name: string; id: number; order: number; title: string; updated_at: string; }' is not assignable to type 'Feature'.
+      Types of property 'icon_name' are incompatible.
+        Type 'string' is not assignable to type '"features" | "search" | "phone" | "location" | "user" | "scale" | "chart" | "star" | "document" | "list" | "menu" | "presentation" | "table" | "approved" | "info" | "video" | "sync" | ... 67 more ... | "wrench"'.
+components/admin/HomepageFeaturesTab.tsx(315,21): error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
+components/admin/HomepageFeaturesTab.tsx(369,20): error TS2322: Type '{ created_at: string; description: string; icon_name: string; id: number; order: number; title: string; updated_at: string; } | Feature' is not assignable to type 'Feature'.
+  Type '{ created_at: string; description: string; icon_name: string; id: number; order: number; title: string; updated_at: string; }' is not assignable to type 'Feature'.
+    Types of property 'icon_name' are incompatible.
+      Type 'string' is not assignable to type '"features" | "search" | "phone" | "location" | "user" | "scale" | "chart" | "star" | "document" | "list" | "menu" | "presentation" | "table" | "approved" | "info" | "video" | "sync" | ... 67 more ... | "wrench"'.
+components/admin/HomepageFeaturesTab.tsx(369,33): error TS2322: Type '{ created_at: string; description: string; icon_name: string; id: number; order: number; title: string; updated_at: string; }' is not assignable to type 'Feature'.
+  Types of property 'icon_name' are incompatible.
+    Type 'string' is not assignable to type '"features" | "search" | "phone" | "location" | "user" | "scale" | "chart" | "star" | "document" | "list" | "menu" | "presentation" | "table" | "approved" | "info" | "video" | "sync" | ... 67 more ... | "wrench"'.
+components/admin/HomepageSmartspoonTab.tsx(91,21): error TS2345: Argument of type 'Json[] | Service[]' is not assignable to parameter of type 'SetStateAction<Service[]>'.
+  Type 'Json[]' is not assignable to type 'SetStateAction<Service[]>'.
+    Type 'Json[]' is not assignable to type 'Service[]'.
+      Type 'Json' is not assignable to type 'Service'.
+        Type 'null' is not assignable to type 'Service'.
+components/admin/mentorship/EventBookingsTab.tsx(111,17): error TS2345: Argument of type '{ booking_status: "approved" | "rejected"; }' is not assignable to parameter of type 'never'.
+components/admin/mentorship/HeroSectionTab.tsx(179,17): error TS2322: Type 'string | null' is not assignable to type 'string | number | readonly string[] | undefined'.
+  Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.
+components/admin/mentorship/HeroSectionTab.tsx(214,17): error TS2322: Type 'string | null' is not assignable to type 'string | number | readonly string[] | undefined'.
+  Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.
+components/admin/mentorship/NutritionSurveyTab.tsx(123,20): error TS2345: Argument of type '{ answer: string | null; created_at: string; id: string; order_index: number; question: string; updated_at: string; }[]' is not assignable to parameter of type 'SetStateAction<SurveyQuestion[]>'.
+  Type '{ answer: string | null; created_at: string; id: string; order_index: number; question: string; updated_at: string; }[]' is not assignable to type 'SurveyQuestion[]'.
+    Type '{ answer: string | null; created_at: string; id: string; order_index: number; question: string; updated_at: string; }' is not assignable to type 'SurveyQuestion'.
+      Types of property 'answer' are incompatible.
+        Type 'string | null' is not assignable to type 'string'.
+          Type 'null' is not assignable to type 'string'.
+components/admin/mentorship/NutritionSurveyTab.tsx(154,21): error TS2322: Type 'SurveyQuestion | { answer: string | null; created_at: string; id: string; order_index: number; question: string; updated_at: string; }' is not assignable to type 'SurveyQuestion'.
+  Type '{ answer: string | null; created_at: string; id: string; order_index: number; question: string; updated_at: string; }' is not assignable to type 'SurveyQuestion'.
+    Types of property 'answer' are incompatible.
+      Type 'string | null' is not assignable to type 'string'.
+        Type 'null' is not assignable to type 'string'.
+components/admin/mentorship/NutritionSurveyTab.tsx(154,35): error TS2322: Type '{ answer: string | null; created_at: string; id: string; order_index: number; question: string; updated_at: string; }' is not assignable to type 'SurveyQuestion'.
+  Types of property 'answer' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.
+components/admin/mentorship/NutritionSurveyTab.tsx(242,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: { answer?: string | null | undefined; created_at?: string | undefined; id?: string | undefined; order_index: number; question: string; updated_at?: string | undefined; }, options?: { ...; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ id: string; order_index: number; }[]' is not assignable to parameter of type '{ answer?: string | null | undefined; created_at?: string | undefined; id?: string | undefined; order_index: number; question: string; updated_at?: string | undefined; }'.
+      Type '{ id: string; order_index: number; }[]' is missing the following properties from type '{ answer?: string | null | undefined; created_at?: string | undefined; id?: string | undefined; order_index: number; question: string; updated_at?: string | undefined; }': order_index, question
+  Overload 2 of 2, '(values: { answer?: string | null | undefined; created_at?: string | undefined; id?: string | undefined; order_index: number; question: string; updated_at?: string | undefined; }[], options?: { ...; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ id: string; order_index: number; }[]' is not assignable to parameter of type '{ answer?: string | null | undefined; created_at?: string | undefined; id?: string | undefined; order_index: number; question: string; updated_at?: string | undefined; }[]'.
+      Property 'question' is missing in type '{ id: string; order_index: number; }' but required in type '{ answer?: string | null | undefined; created_at?: string | undefined; id?: string | undefined; order_index: number; question: string; updated_at?: string | undefined; }'.
+components/admin/mentorship/PackagesTab.tsx(97,21): error TS2345: Argument of type '{ created_at: string; description: string | null; duration_type: string; features: string[]; gradient: string; id: number; international_price: number | null; name: string; order_number: number; ... 5 more ...; url: string | null; }[]' is not assignable to parameter of type 'SetStateAction<Package[]>'.
+  Type '{ created_at: string; description: string | null; duration_type: string; features: string[]; gradient: string; id: number; international_price: number | null; name: string; order_number: number; ... 5 more ...; url: string | null; }[]' is not assignable to type 'Package[]'.
+    Type '{ created_at: string; description: string | null; duration_type: string; features: string[]; gradient: string; id: number; international_price: number | null; name: string; order_number: number; ... 5 more ...; url: string | null; }' is not assignable to type 'Package'.
+      Types of property 'international_price' are incompatible.

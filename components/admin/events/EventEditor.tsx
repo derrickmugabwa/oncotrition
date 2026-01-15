@@ -26,7 +26,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
     location: event?.location || '',
     additional_info: event?.additional_info || '',
     featured_image_url: event?.featured_image_url || '',
-    status: event?.status || 'upcoming',
+    status: (event?.status as any) || 'upcoming',
     max_attendees: event?.max_attendees || undefined,
     current_attendees: event?.current_attendees || 0,
     registration_link: event?.registration_link || '',

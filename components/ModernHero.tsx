@@ -18,10 +18,10 @@ const poppins = Poppins({
 interface SliderImage {
   id: number
   title: string
-  description: string
-  image_url: string
-  cta_text: string
-  cta_url: string
+  description: string | null
+  image_url: string | null
+  cta_text: string | null
+  cta_url: string | null
   order: number
 }
 
@@ -53,7 +53,7 @@ const highlightText = (text: string) => {
 }
 
 // Animation variants for smooth transitions
-const slideVariants = {
+const slideVariants: any = {
   enter: {
     opacity: 0,
     x: -30,
@@ -77,7 +77,7 @@ const slideVariants = {
   },
 }
 
-const childVariants = {
+const childVariants: any = {
   enter: {
     opacity: 0,
     y: 20,
@@ -278,7 +278,7 @@ export default function ModernHero() {
                     className="relative w-full h-full"
                   >
                     <Image
-                      src={currentSlideData.image_url}
+                      src={currentSlideData.image_url ?? '/placeholder.jpg'}
                       alt={currentSlideData.title}
                       fill
                       className="object-cover"

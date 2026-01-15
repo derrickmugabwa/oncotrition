@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import Logo from './Logo';
 import { createClient } from '@/utils/supabase/client';
@@ -12,11 +12,11 @@ import DropdownMenu from './navigation/DropdownMenu';
 
 interface NavSection {
   id: string;
-  nav_item_id: string;
+  nav_item_id: string | null;
   title: string;
-  column_index: number;
-  order_index: number;
-  url?: string;
+  column_index: number | null;
+  order_index: number | null;
+  url?: string | null;
 }
 
 interface NavItem {
@@ -24,13 +24,17 @@ interface NavItem {
   name: string;
   href: string;
   order: number;
-  open_in_new_tab?: boolean;
-  type: 'link' | 'dropdown' | 'mega';
-  description?: string;
-  column_index?: number;
+  open_in_new_tab?: boolean | null;
+  type: string | null;
+  description?: string | null;
+  column_index?: number | null;
 }
 
-export default function Header() {
+interface HeaderProps {
+  logoUrl?: string | null;
+}
+
+export default function Header({ logoUrl }: HeaderProps = {}) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [navItems, setNavItems] = useState<NavItem[]>([]);
@@ -89,7 +93,7 @@ export default function Header() {
     });
   };
 
-  useOnClickOutside(headerRef, () => setActiveDropdown(null));
+  useOnClickOutside(headerRef as any, () => setActiveDropdown(null));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -136,8 +140,8 @@ export default function Header() {
   const renderDropdownMenu = (item: NavItem) => (
     <DropdownMenu
       key={item.id}
-      item={item}
-      sections={sections}
+      item={item as any}
+      sections={sections as any}
       isScrolled={isScrolled}
       activeDropdown={activeDropdown}
       showDropdown={showDropdown}
@@ -149,8 +153,8 @@ export default function Header() {
   const renderMegaMenu = (item: NavItem) => (
     <MegaMenu
       key={item.id}
-      item={item}
-      sections={sections}
+      item={item as any}
+      sections={sections as any}
       isScrolled={isScrolled}
       activeDropdown={activeDropdown}
       showDropdown={showDropdown}
@@ -185,21 +189,18 @@ export default function Header() {
   };
 
   return (
-    <motion.header
+    <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
           ? 'bg-white dark:bg-gray-900/95 backdrop-blur-md shadow-lg'
           : 'bg-white dark:bg-gray-900/90'
       }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Logo />
+            <Logo logoUrl={logoUrl} />
           </div>
 
           {/* Desktop Navigation */}
@@ -288,7 +289,7 @@ export default function Header() {
 
                               {/* Section links */}
                               {itemSections
-                                .sort((a, b) => a.order_index - b.order_index)
+                                .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
                                 .map((section) => (
                                   <Link
                                     key={section.id}
@@ -325,6 +326,6 @@ export default function Header() {
           )}
         </AnimatePresence>
       </nav>
-    </motion.header>
+    </header>
   );
 }

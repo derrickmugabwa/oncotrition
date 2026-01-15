@@ -249,7 +249,7 @@ const HomepageFeaturesTab = () => {
 
       if (error) throw error
 
-      setFeatures(data || [])
+      setFeatures((data || []) as any)
       setUnsavedChanges({})
     } catch (error) {
       console.error('Error fetching features:', error)
@@ -312,7 +312,7 @@ const HomepageFeaturesTab = () => {
         const { error } = await supabase
           .from('features')
           .update(updates)
-          .eq('id', featureId)
+          .eq('id', parseInt(featureId))
 
         if (error) throw error
       }
@@ -366,7 +366,7 @@ const HomepageFeaturesTab = () => {
 
       if (error) throw error
 
-      setFeatures([...features, data])
+      setFeatures([...features, data as any])
       toast.success('Feature added successfully')
     } catch (error) {
       console.error('Error adding feature:', error)

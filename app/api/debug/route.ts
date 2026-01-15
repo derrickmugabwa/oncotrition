@@ -34,7 +34,7 @@ export async function GET() {
           date: new Date().toISOString().split('T')[0],
           total_slots: 1,
           available_slots: 1,
-        },
+        } as any,
       ])
       .select()
       .single();

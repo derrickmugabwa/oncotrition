@@ -3,10 +3,14 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { FiMail, FiPhone, FiMapPin, FiFacebook, FiTwitter, FiInstagram, FiSend } from 'react-icons/fi';
+import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Send } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import type { Database } from '@/types/supabase';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 type ContactInfo = {
   title: string;
@@ -28,16 +32,6 @@ type FormData = {
   message: string;
 };
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  exit: { opacity: 0, y: -20 }
-};
-
-const staggerContainer = {
-  initial: { opacity: 1 },
-  animate: { opacity: 1, transition: { staggerChildren: 0.1 } }
-};
 
 function ContactForm() {
   const supabase = createClient();
@@ -62,7 +56,7 @@ function ContactForm() {
         .single();
 
       if (error) throw error;
-      setContactInfo(data);
+      setContactInfo(data as any);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -95,237 +89,167 @@ function ContactForm() {
   }
 
   return (
-    <motion.div 
-      variants={fadeInUp}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
-    >
-      <motion.div 
-        variants={staggerContainer}
-        initial="initial"
-        animate="animate"
-        className="grid grid-cols-1 lg:grid-cols-12 gap-6"
-      >
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Contact Information */}
-        <motion.div 
-          variants={fadeInUp}
-          className="lg:col-span-5 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 lg:p-6 transform transition-all duration-300 hover:shadow-xl"
-        >
-          <motion.h2 
-            variants={fadeInUp}
-            className="text-2xl font-bold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-poppins"
-          >
-            {contactInfo?.title || 'Get in Touch'}
-          </motion.h2>
-          <motion.p 
-            variants={fadeInUp}
-            className="text-gray-600 dark:text-gray-300 mb-6 text-sm font-poppins"
-          >
-            {contactInfo?.description || "Have questions? We'll love to hear from you. Send us a message and we'll respond as soon as possible."}
-          </motion.p>
+        <Card className="h-fit">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl">
+              {contactInfo?.title || 'Get in Touch'}
+            </CardTitle>
+            <CardDescription className="text-sm">
+              {contactInfo?.description || "Have questions? We'll love to hear from you. Send us a message and we'll respond as soon as possible."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
 
-          <motion.div variants={staggerContainer} className="space-y-4">
             {contactInfo?.email && (
-              <motion.div 
-                variants={fadeInUp}
-                whileHover={{ scale: 1.02 }}
-                className="flex items-start p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors duration-200"
-              >
-                <div className="flex-shrink-0">
-                  <FiMail className="h-6 w-6 text-primary" />
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Email</p>
-                  <a href={`mailto:${contactInfo.email}`} className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors duration-200">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
+                <Mail className="h-4 w-4 text-emerald-600 mt-0.5" />
+                <div>
+                  <p className="text-xs font-medium mb-0.5">Email</p>
+                  <a href={`mailto:${contactInfo.email}`} className="text-sm text-muted-foreground hover:text-emerald-600 transition-colors">
                     {contactInfo.email}
                   </a>
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {contactInfo?.phone && (
-              <motion.div 
-                variants={fadeInUp}
-                whileHover={{ scale: 1.02 }}
-                className="flex items-start p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors duration-200"
-              >
-                <div className="flex-shrink-0">
-                  <FiPhone className="h-6 w-6 text-primary" />
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Phone</p>
-                  <a href={`tel:${contactInfo.phone}`} className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors duration-200">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
+                <Phone className="h-4 w-4 text-emerald-600 mt-0.5" />
+                <div>
+                  <p className="text-xs font-medium mb-0.5">Phone</p>
+                  <a href={`tel:${contactInfo.phone}`} className="text-sm text-muted-foreground hover:text-emerald-600 transition-colors">
                     {contactInfo.phone}
                   </a>
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {contactInfo?.address && (
-              <motion.div 
-                variants={fadeInUp}
-                whileHover={{ scale: 1.02 }}
-                className="flex items-start p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors duration-200"
-              >
-                <div className="flex-shrink-0">
-                  <FiMapPin className="h-6 w-6 text-primary" />
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
+                <MapPin className="h-4 w-4 text-emerald-600 mt-0.5" />
+                <div>
+                  <p className="text-xs font-medium mb-0.5">Address</p>
+                  <p className="text-sm text-muted-foreground">{contactInfo.address}</p>
                 </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Address</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">{contactInfo.address}</p>
-                </div>
-              </motion.div>
+              </div>
             )}
-          </motion.div>
 
-          {contactInfo?.social_links && Object.keys(contactInfo.social_links).length > 0 && (
-            <motion.div 
-              variants={fadeInUp}
-              className="mt-6"
-            >
-              <motion.p variants={fadeInUp} className="text-sm font-medium text-gray-900 dark:text-white mb-4">
-                Follow Us
-              </motion.p>
-              <motion.div variants={staggerContainer} className="flex space-x-4">
-                {contactInfo.social_links.facebook && (
-                  <motion.a
-                    variants={fadeInUp}
-                    whileHover={{ scale: 1.1 }}
-                    href={contactInfo.social_links.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors duration-200"
-                  >
-                    <FiFacebook className="h-6 w-6" />
-                  </motion.a>
-                )}
-                {contactInfo.social_links.twitter && (
-                  <motion.a
-                    variants={fadeInUp}
-                    whileHover={{ scale: 1.1 }}
-                    href={contactInfo.social_links.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors duration-200"
-                  >
-                    <FiTwitter className="h-6 w-6" />
-                  </motion.a>
-                )}
-                {contactInfo.social_links.instagram && (
-                  <motion.a
-                    variants={fadeInUp}
-                    whileHover={{ scale: 1.1 }}
-                    href={contactInfo.social_links.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-primary transition-colors duration-200"
-                  >
-                    <FiInstagram className="h-6 w-6" />
-                  </motion.a>
-                )}
-              </motion.div>
-            </motion.div>
-          )}
-        </motion.div>
+            {contactInfo?.social_links && Object.keys(contactInfo.social_links).length > 0 && (
+              <div className="pt-4 border-t">
+                <p className="text-xs font-medium mb-3">Follow Us</p>
+                <div className="flex gap-4">
+                  {contactInfo.social_links.facebook && (
+                    <a
+                      href={contactInfo.social_links.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-emerald-600 transition-colors"
+                    >
+                      <Facebook className="h-5 w-5" />
+                    </a>
+                  )}
+                  {contactInfo.social_links.twitter && (
+                    <a
+                      href={contactInfo.social_links.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-emerald-600 transition-colors"
+                    >
+                      <Twitter className="h-5 w-5" />
+                    </a>
+                  )}
+                  {contactInfo.social_links.instagram && (
+                    <a
+                      href={contactInfo.social_links.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-emerald-600 transition-colors"
+                    >
+                      <Instagram className="h-5 w-5" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Contact Form */}
-        <motion.div 
-          variants={fadeInUp}
-          className="lg:col-span-7 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 lg:p-6 transform transition-all duration-300 hover:shadow-xl"
-        >
-          <motion.h2 
-            variants={fadeInUp}
-            className="text-2xl font-bold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-poppins"
-          >
-            Send us a Message
-          </motion.h2>
-          <motion.form 
-            variants={staggerContainer}
-            onSubmit={handleSubmit} 
-            className="space-y-6"
-          >
-            <motion.div variants={fadeInUp}>
-              <label htmlFor="name" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={formData.name}
-                onChange={handleInputChange}
-                className="mt-1 block w-full px-4 py-3 text-base rounded-lg border-2 border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-all duration-200 placeholder-gray-400"
-                placeholder="Enter your name"
-              />
-            </motion.div>
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl">Send us a Message</CardTitle>
+            <CardDescription className="text-sm">Fill out the form below and we'll get back to you soon</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter your name"
+                />
+              </div>
 
-            <motion.div variants={fadeInUp}>
-              <label htmlFor="email" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                value={formData.email}
-                onChange={handleInputChange}
-                className="mt-1 block w-full px-4 py-3 text-base rounded-lg border-2 border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-all duration-200 placeholder-gray-400"
-                placeholder="Enter your email"
-              />
-            </motion.div>
+              <div className="space-y-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email"
+                />
+              </div>
 
-            <motion.div variants={fadeInUp}>
-              <label htmlFor="subject" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Subject
-              </label>
-              <input
-                type="text"
-                id="subject"
-                name="subject"
-                required
-                value={formData.subject}
-                onChange={handleInputChange}
-                className="mt-1 block w-full px-4 py-3 text-base rounded-lg border-2 border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-all duration-200 placeholder-gray-400"
-                placeholder="What is this about?"
-              />
-            </motion.div>
+              <div className="space-y-1.5">
+                <Label htmlFor="subject">Subject</Label>
+                <Input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  required
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  placeholder="What is this about?"
+                />
+              </div>
 
-            <motion.div variants={fadeInUp}>
-              <label htmlFor="message" className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows={6}
-                value={formData.message}
-                onChange={handleInputChange}
-                className="mt-1 block w-full px-4 py-3 text-base rounded-lg border-2 border-gray-300 shadow-sm focus:border-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-all duration-200 placeholder-gray-400"
-                placeholder="Type your message here..."
-              />
-            </motion.div>
+              <div className="space-y-1.5">
+                <Label htmlFor="message">Message</Label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={5}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Type your message here..."
+                />
+              </div>
 
-            <motion.div variants={fadeInUp}>
-              <motion.button
+              <Button
                 type="submit"
                 disabled={loading}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full flex justify-center items-center space-x-3 py-4 px-6 border-2 border-transparent rounded-lg shadow-sm text-base font-medium font-poppins text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="w-full bg-emerald-600 hover:bg-emerald-700"
               >
-                <span>{loading ? 'Sending...' : 'Send Message'}</span>
-                <FiSend className={`h-4 w-4 ${loading ? 'animate-pulse' : 'animate-none'}`} />
-              </motion.button>
-            </motion.div>
-          </motion.form>
-        </motion.div>
-      </motion.div>
-    </motion.div>
+                {loading ? 'Sending...' : 'Send Message'}
+                <Send className="ml-2 h-4 w-4" />
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }
 

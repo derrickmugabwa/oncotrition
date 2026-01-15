@@ -9,6 +9,7 @@ import FloatingImageUploader from './components/FloatingImageUploader';
 interface VisionSection {
   title: string;
   description: string;
+  image_url?: string;
 }
 
 interface Vision {
@@ -33,10 +34,11 @@ export default function ValuesTab() {
   const [editingValues, setEditingValues] = useState(false);
   const [visionForm, setVisionForm] = useState<Partial<Vision>>({});
   const [valuesForm, setValuesForm] = useState<Partial<ValuesImage>>({});
-  const [newSection, setNewSection] = useState<VisionSection>({ title: '', description: '' });
+  const [newSection, setNewSection] = useState<VisionSection>({ title: '', description: '', image_url: '' });
   const [editingSectionIndex, setEditingSectionIndex] = useState<number | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [floatingImageFile, setFloatingImageFile] = useState<File | null>(null);
+  const [sectionImageFile, setSectionImageFile] = useState<File | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -76,8 +78,8 @@ export default function ValuesTab() {
           .select('*')
           .single();
 
-        if (!visionError) {
-          setVision(visionData);
+        if (visionData) {
+          setVision(visionData as any);
         } else {
           console.warn('Error fetching vision data:', visionError);
         }
@@ -92,8 +94,8 @@ export default function ValuesTab() {
           .select('*')
           .single();
 
-        if (!valuesImageError) {
-          setValuesImage(valuesImageData);
+        if (valuesImageData) {
+          setValuesImage(valuesImageData as any);
           // If we successfully got data from the database, clear localStorage
           localStorage.removeItem('values_image');
         } else {
@@ -134,7 +136,7 @@ export default function ValuesTab() {
           const { error: sectionsError } = await supabase
             .from('values_vision')
             .update({
-              sections: visionForm.sections
+              sections: visionForm.sections as any
             })
             .eq('id', vision.id);
 
@@ -177,26 +179,72 @@ export default function ValuesTab() {
 
 
   
-  const addSection = () => {
+  const addSection = async () => {
     if (!newSection.title.trim() || !vision) return;
     
-    const updatedSections = [...(visionForm.sections || vision.sections || []), { ...newSection }];
+    let imageUrl = newSection.image_url || '';
+    
+    // Upload section image if selected
+    if (sectionImageFile) {
+      try {
+        const fileExt = sectionImageFile.name.split('.').pop();
+        const filePath = `section-images/${Date.now()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('images')
+          .upload(filePath, sectionImageFile);
+          
+        if (uploadError) throw uploadError;
+        
+        const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+        imageUrl = data.publicUrl;
+      } catch (uploadErr) {
+        console.warn('Error uploading section image:', uploadErr);
+        toast.error('Failed to upload section image');
+      }
+    }
+    
+    const updatedSections = [...(visionForm.sections || vision.sections || []), { ...newSection, image_url: imageUrl }];
     setVisionForm({ ...visionForm, sections: updatedSections });
-    setNewSection({ title: '', description: '' });
+    setNewSection({ title: '', description: '', image_url: '' });
+    setSectionImageFile(null);
     
     // Also update localStorage as a backup
     localStorage.setItem('vision_sections', JSON.stringify(updatedSections));
   };
   
-  const updateSection = (index: number) => {
+  const updateSection = async (index: number) => {
     if (!vision) return;
     
+    let imageUrl = newSection.image_url || '';
+    
+    // Upload section image if selected
+    if (sectionImageFile) {
+      try {
+        const fileExt = sectionImageFile.name.split('.').pop();
+        const filePath = `section-images/${Date.now()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('images')
+          .upload(filePath, sectionImageFile);
+          
+        if (uploadError) throw uploadError;
+        
+        const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+        imageUrl = data.publicUrl;
+      } catch (uploadErr) {
+        console.warn('Error uploading section image:', uploadErr);
+        toast.error('Failed to upload section image');
+      }
+    }
+    
     const updatedSections = [...(visionForm.sections || vision.sections || [])];
-    updatedSections[index] = newSection;
+    updatedSections[index] = { ...newSection, image_url: imageUrl };
     
     setVisionForm({ ...visionForm, sections: updatedSections });
-    setNewSection({ title: '', description: '' });
+    setNewSection({ title: '', description: '', image_url: '' });
     setEditingSectionIndex(null);
+    setSectionImageFile(null);
     
     // Also update localStorage as a backup
     localStorage.setItem('vision_sections', JSON.stringify(updatedSections));
@@ -218,7 +266,8 @@ export default function ValuesTab() {
     
     if (editingSectionIndex === index) {
       setEditingSectionIndex(null);
-      setNewSection({ title: '', description: '' });
+      setNewSection({ title: '', description: '', image_url: '' });
+      setSectionImageFile(null);
     }
     
     // Also update localStorage as a backup
@@ -446,12 +495,46 @@ export default function ValuesTab() {
                       className="w-full px-3 py-2 border rounded-md text-sm dark:bg-gray-800 dark:border-gray-700"
                       rows={3}
                     />
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Section Image</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setSectionImageFile(e.target.files[0]);
+                          }
+                        }}
+                        className="block w-full text-sm text-gray-500
+                          file:mr-4 file:py-2 file:px-4
+                          file:rounded-md file:border-0
+                          file:text-sm file:font-semibold
+                          file:bg-blue-50 file:text-blue-700
+                          hover:file:bg-blue-100"
+                      />
+                      {sectionImageFile && (
+                        <p className="text-xs text-gray-500">
+                          Selected: {sectionImageFile.name}
+                        </p>
+                      )}
+                      {!sectionImageFile && newSection.image_url && (
+                        <div className="mt-2">
+                          <p className="text-xs text-gray-500 mb-1">Current image:</p>
+                          <img 
+                            src={newSection.image_url} 
+                            alt="Section preview" 
+                            className="w-full max-h-24 object-cover rounded-md"
+                          />
+                        </div>
+                      )}
+                    </div>
                     <div className="flex justify-end gap-2">
                       {editingSectionIndex !== null && (
                         <button
                           onClick={() => {
                             setEditingSectionIndex(null);
-                            setNewSection({ title: '', description: '' });
+                            setNewSection({ title: '', description: '', image_url: '' });
+                            setSectionImageFile(null);
                           }}
                           className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800"
                         >

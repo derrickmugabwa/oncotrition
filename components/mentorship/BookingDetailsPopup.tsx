@@ -126,7 +126,7 @@ export default function BookingDetailsPopup({
         setTransactionDetails(prev => ({
           ...prev,
           booking_status: data.booking_status,
-          payment_status: data.payment_status
+          payment_status: data.payment_status ?? 'pending'
         }));
 
         if (data.payment_status === 'completed') {

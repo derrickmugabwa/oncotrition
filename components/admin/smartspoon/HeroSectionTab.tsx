@@ -12,10 +12,10 @@ import { cn } from '@/lib/utils';
 interface SlideContent {
   id?: number;
   title: string;
-  subtitle: string;
-  background_image: string;
-  cta_text?: string;
-  cta_url?: string;
+  subtitle: string | null;
+  background_image: string | null;
+  cta_text?: string | null;
+  cta_url?: string | null;
   order?: number;
 }
 
@@ -211,7 +211,7 @@ export default function HeroSectionTab() {
 
       const { error } = await supabase
         .from('smartspoon_slides')
-        .upsert(updatedSlides);
+        .upsert(updatedSlides as any);
 
       if (error) throw error;
 

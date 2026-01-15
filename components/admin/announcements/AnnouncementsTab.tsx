@@ -242,8 +242,8 @@ export default function AnnouncementsTab() {
                   {/* Title and Badges */}
                   <div className="flex items-center gap-3 mb-2 flex-wrap">
                     <h3 className="text-xl font-bold text-gray-900">{announcement.title}</h3>
-                    <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getTypeColor(announcement.announcement_type)}`}>
-                      {announcement.announcement_type}
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getTypeColor(announcement.announcement_type ?? 'general')}`}>
+                      {announcement.announcement_type ?? 'general'}
                     </span>
                     <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
                       isActive(announcement)

@@ -12,18 +12,14 @@ import MealPlanCard from './MealPlanCard';
 
 interface MissionContent {
   title: string;
-  subtitle: string;
-  description: string;
-  image_url: string;
+  subtitle: string | null;
+  description: string | null;
+  image_url: string | null;
 }
 
 export default function Mission() {
-  const [content, setContent] = useState<MissionContent>({
-    title: 'Our Mission',
-    subtitle: 'Empowering Health Through Nutrition',
-    description: 'We are dedicated to providing personalized nutrition guidance for cancer patients, combining scientific expertise with compassionate care.',
-    image_url: ''
-  });
+  const [content, setContent] = useState<MissionContent | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const supabase = createClient();
 
@@ -42,11 +38,37 @@ export default function Mission() {
         }
       } catch (err) {
         console.warn('Error fetching mission content:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchContent();
   }, []);
+
+  if (loading) {
+    return (
+      <section className="relative pt-0 pb-2 -mt-16 overflow-hidden bg-white dark:bg-gray-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative pt-32 sm:pt-32 md:pt-20 lg:pt-16">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 py-12">
+            <div className="lg:w-[45%] space-y-8">
+              <div className="h-8 w-32 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
+              <div className="h-10 w-3/4 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
+              <div className="h-6 w-full bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
+              <div className="h-24 w-full bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
+            </div>
+            <div className="lg:w-[55%]">
+              <div className="w-full aspect-[4/3] bg-gray-200 dark:bg-gray-800 rounded-2xl animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!content) {
+    return null;
+  }
 
   return (
     <section className="relative pt-0 pb-2 -mt-16 overflow-hidden bg-white dark:bg-gray-900">

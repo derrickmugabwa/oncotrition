@@ -1,4 +1,4 @@
-import Header from '@/components/Header'
+import HeaderServer from '@/components/HeaderServer'
 import Footer from '@/components/Footer'
 import ThemeToggle from '@/components/ThemeToggle'
 import WhatsAppButton from '@/components/shared/WhatsAppButton';
@@ -43,7 +43,7 @@ export default async function SiteLayout({
   try {
     // Query each setting individually to avoid potential issues with .in() operator
     const { data: modeData } = await supabase
-      .from('site_settings')
+      .from('maintenance_mode')
       .select('value')
       .eq('key', 'maintenance_mode')
       .single();
@@ -55,19 +55,19 @@ export default async function SiteLayout({
     // Only fetch other settings if maintenance mode is enabled
     if (settings.mode) {
       const { data: titleData } = await supabase
-        .from('site_settings')
+        .from('maintenance_mode')
         .select('value')
         .eq('key', 'maintenance_title')
         .single();
       
       const { data: messageData } = await supabase
-        .from('site_settings')
+        .from('maintenance_mode')
         .select('value')
         .eq('key', 'maintenance_message')
         .single();
       
       const { data: contactData } = await supabase
-        .from('site_settings')
+        .from('maintenance_mode')
         .select('value')
         .eq('key', 'maintenance_contact')
         .single();
@@ -107,7 +107,7 @@ export default async function SiteLayout({
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
       <ThemeToggle />
-      <Header />
+      <HeaderServer />
       <main className="flex-grow">
         {children}
       </main>
@@ -115,16 +115,16 @@ export default async function SiteLayout({
       {whatsappSettings && (
         <WhatsAppButton 
           phoneNumber={whatsappSettings.phone_number}
-          message={whatsappSettings.message}
-          position={whatsappSettings.position}
-          enabled={whatsappSettings.enabled}
+          message={whatsappSettings.message ?? undefined}
+          position={(whatsappSettings.position as "bottom-right" | "bottom-left" | "top-right" | "top-left" | undefined) ?? undefined}
+          enabled={whatsappSettings.enabled ?? false}
         />
       )}
       {tawktoSettings && (
         <TawkToChat
           propertyId={tawktoSettings.property_id}
           widgetId={tawktoSettings.widget_id}
-          enabled={tawktoSettings.enabled}
+          enabled={tawktoSettings.enabled ?? false}
         />
       )}
     </div>

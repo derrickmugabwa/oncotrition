@@ -17,7 +17,7 @@ interface EventCardProps {
 export default function EventCard({ event }: EventCardProps) {
   const eventDate = new Date(event.event_date);
   const formattedDate = format(eventDate, 'MMM dd, yyyy');
-  const formattedTime = event.event_time.slice(0, 5); // HH:MM format
+  const formattedTime = event.event_time ? event.event_time.slice(0, 5) : 'TBD'; // HH:MM format
 
   const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
@@ -35,10 +35,10 @@ export default function EventCard({ event }: EventCardProps) {
   };
 
   const attendeePercentage = event.max_attendees
-    ? (event.current_attendees / event.max_attendees) * 100
+    ? ((event.current_attendees ?? 0) / event.max_attendees) * 100
     : 0;
 
-  const isFull = event.max_attendees && event.current_attendees >= event.max_attendees;
+  const isFull = event.max_attendees && (event.current_attendees ?? 0) >= event.max_attendees;
 
   return (
     <motion.div
@@ -75,7 +75,7 @@ export default function EventCard({ event }: EventCardProps) {
           {/* Status Badge */}
           <div className="absolute top-3 right-3">
             <Badge 
-              variant={getStatusVariant(event.status)} 
+              variant={getStatusVariant(event.status ?? 'upcoming')} 
               className={`capitalize ${
                 event.status === 'upcoming' ? 'bg-green-500 text-white hover:bg-green-600' :
                 event.status === 'ongoing' ? 'bg-blue-500 text-white hover:bg-blue-600' :

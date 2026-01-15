@@ -12,8 +12,8 @@ interface TeamMember {
   position: string;
   image_src: string;
   bio: string;
-  linkedin_url?: string;
-  twitter_url?: string;
+  linkedin_url?: string | null;
+  twitter_url?: string | null;
   display_order: number;
 }
 
@@ -56,7 +56,7 @@ export default function TeamTab() {
       if (!sectionError && sectionData) {
         setSectionContent({
           heading: sectionData.heading,
-          description: sectionData.description
+          description: sectionData.description ?? ''
         });
       }
     } catch (error) {
@@ -365,7 +365,7 @@ export default function TeamTab() {
                   <label className="block text-sm font-medium mb-1">LinkedIn URL</label>
                   <input
                     type="text"
-                    value={editForm.linkedin_url}
+                    value={editForm.linkedin_url ?? ''}
                     onChange={(e) => setEditForm({ ...editForm, linkedin_url: e.target.value })}
                     className="w-full px-3 py-2 border rounded-lg"
                   />
@@ -375,7 +375,7 @@ export default function TeamTab() {
                   <label className="block text-sm font-medium mb-1">Twitter URL</label>
                   <input
                     type="text"
-                    value={editForm.twitter_url}
+                    value={editForm.twitter_url ?? ''}
                     onChange={(e) => setEditForm({ ...editForm, twitter_url: e.target.value })}
                     className="w-full px-3 py-2 border rounded-lg"
                   />
