@@ -25,11 +25,11 @@ export default async function EventsPage() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
-  // Fetch all events server-side
+  // Fetch all events server-side (most recent first)
   const { data: allEvents, error } = await supabase
     .from('events')
     .select('*')
-    .order('event_date', { ascending: true });
+    .order('event_date', { ascending: false });
 
   if (error) {
     console.error('Error fetching events:', error);
