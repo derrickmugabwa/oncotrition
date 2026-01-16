@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { createClient } from '@/utils/supabase/client';
 
 interface FAQItem {
@@ -185,7 +186,13 @@ export default function NutritionSurvey() {
       {/* Layout */}
       <div className="relative mx-auto max-w-5xl px-6 py-16">
         {/* Header */}
-        <header className="mb-10 flex flex-col md:flex-row items-start md:items-end justify-between border-b border-gray-200 dark:border-gray-700 pb-6 gap-4">
+        <motion.header 
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-10 flex flex-col md:flex-row items-start md:items-end justify-between border-b border-gray-200 dark:border-gray-700 pb-6 gap-4"
+        >
           <div>
             <h1 className="text-4xl md:text-6xl font-black tracking-tight font-outfit">
               {content.title}
@@ -202,7 +209,7 @@ export default function NutritionSurvey() {
               className="h-10 w-full md:w-56 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 text-sm outline-none transition focus:border-teal-500 dark:focus:border-teal-400 font-outfit"
             />
           </div>
-        </header>
+        </motion.header>
 
         {/* Content */}
         <section className="relative">
@@ -228,7 +235,13 @@ function FAQItemComponent({ question, answer, index }: { question: string; answe
   const [open, setOpen] = useState(false);
   
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm p-5 transition hover:border-teal-400 dark:hover:border-teal-500">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: (index - 1) * 0.1 }}
+      className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm p-5 transition hover:border-teal-400 dark:hover:border-teal-500"
+    >
       <button
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between text-left"
@@ -247,7 +260,7 @@ function FAQItemComponent({ question, answer, index }: { question: string; answe
         </span>
       </button>
       <div
-        className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
           open ? 'mt-3 grid-rows-[1fr]' : 'grid-rows-[0fr]'
         }`}
       >
@@ -265,6 +278,6 @@ function FAQItemComponent({ question, answer, index }: { question: string; answe
       <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
         <div className="absolute -inset-1 rounded-2xl border border-teal-200 dark:border-teal-800" />
       </div>
-    </div>
+    </motion.div>
   );
 }

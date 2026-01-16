@@ -37,7 +37,20 @@ export default function Hero({ content }: HeroProps) {
   };
 
   const [heroContent, setHeroContent] = useState<HeroContent>(content || defaultContent);
+  const [particles, setParticles] = useState<Array<{ top: number; left: number; duration: number; delay: number }>>([]);
   const supabase = createClient();
+
+  // Generate particles only on client side to avoid hydration mismatch
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 20 }, () => ({
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        duration: 3 + Math.random() * 2,
+        delay: Math.random() * 2,
+      }))
+    );
+  }, []);
 
   // Update local state when props change
   useEffect(() => {
@@ -88,22 +101,22 @@ export default function Hero({ content }: HeroProps) {
 
       {/* Floating Particles */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-white/30 rounded-full"
             style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
+              top: `${particle.top}%`,
+              left: `${particle.left}%`,
             }}
             animate={{
               y: [0, -30, 0],
               opacity: [0.2, 0.5, 0.2],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: particle.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: particle.delay,
             }}
           />
         ))}

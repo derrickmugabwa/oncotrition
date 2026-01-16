@@ -54,15 +54,15 @@ export default function Logo({ className = "", showLink = true, logoUrl: initial
 
   const LogoContent = () => (
     <div 
-      className={`relative flex items-center justify-center h-12 -ml-8 ${className}`} 
-      style={{ width: '160px', minWidth: '160px' }}
+      className={`relative flex items-center justify-center h-16 -my-2 -ml-8 ${className}`} 
+      style={{ width: '200px', minWidth: '200px' }}
     >
       {!imageError && logoUrl ? (
         <Image
           src={logoUrl}
           alt="Site Logo"
           fill
-          sizes="160px"
+          sizes="200px"
           className="object-contain"
           priority={true}
           onError={() => setImageError(true)}
