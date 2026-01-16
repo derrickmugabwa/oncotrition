@@ -149,10 +149,10 @@ export default function Values() {
   ];
 
   return (
-    <section className="relative py-20 bg-background">
+    <section className="relative py-20 bg-background overflow-hidden">
       <div className="container relative mx-auto px-4">
-        {/* Background label */}
-        <span className="absolute -top-10 -z-50 select-none text-[180px] font-extrabold leading-[1] text-foreground/[0.025] md:text-[250px] lg:text-[400px] -left-[18%]">
+        {/* Background label - hidden on mobile to prevent overflow */}
+        <span className="hidden md:block absolute -top-10 -z-50 select-none text-[250px] font-extrabold leading-[1] text-foreground/[0.025] lg:text-[400px] md:-left-[18%]">
           Values
         </span>
         
