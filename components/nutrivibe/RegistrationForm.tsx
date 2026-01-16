@@ -212,12 +212,12 @@ export function RegistrationForm({ event, pricing, interestAreas }: Registration
         <CardContent className="pt-6">
           <p className="text-sm text-blue-900 dark:text-blue-100">
             <strong>Need help?</strong> Contact us at{' '}
-            <a href="mailto:events@oncotrition.com" className="underline hover:text-blue-700">
-              events@oncotrition.com
+            <a href="mailto:nutrivibe@oncotritionhc.com" className="underline hover:text-blue-700">
+              nutrivibe@oncotritionhc.com
             </a>
             {' '}or call{' '}
-            <a href="tel:+254700000000" className="underline hover:text-blue-700">
-              +254 700 000 000
+            <a href="tel:+254711118283" className="underline hover:text-blue-700">
+              +254 711 118 283
             </a>
           </p>
         </CardContent>
