@@ -75,10 +75,8 @@ export default async function About() {
         </AboutAnimatedSection>
         <AboutAnimatedSection 
           delay={0.8}
-          className="relative bg-gray-50 dark:bg-gray-950"
+          className="relative bg-white dark:bg-gray-900"
         >
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent to-blue-50/50 dark:to-blue-950/30"></div>
           <Modules />
         </AboutAnimatedSection>
         <AboutAnimatedSection 
@@ -104,7 +102,7 @@ export default async function About() {
       Mission: "relative bg-white dark:bg-gray-900",
       WhyChooseUs: "relative bg-gray-50 dark:bg-gray-950",
       Values: "relative bg-white dark:bg-gray-900",
-      Modules: "relative bg-gray-50 dark:bg-gray-950",
+      Modules: "relative bg-white dark:bg-gray-900",
       Team: "relative bg-white dark:bg-gray-900"
     };
 
@@ -120,6 +118,8 @@ export default async function About() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(99,102,241,0.1),transparent_50%)]"></div>
             <Component />
           </>
+        ) : component.component_key === 'Modules' ? (
+          <Component />
         ) : (
           <>
             <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
