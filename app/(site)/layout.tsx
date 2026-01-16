@@ -1,6 +1,5 @@
 import HeaderServer from '@/components/HeaderServer'
 import Footer from '@/components/Footer'
-import ThemeToggle from '@/components/ThemeToggle'
 import WhatsAppButton from '@/components/shared/WhatsAppButton';
 import TawkToChat from '@/components/shared/TawkToChat';
 import { createClient } from '@/utils/supabase/server';
@@ -85,7 +84,6 @@ export default async function SiteLayout({
   if (settings.mode) {
     return (
       <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
-        <ThemeToggle />
         <MaintenancePage 
           title={settings.title}
           message={settings.message}
@@ -106,7 +104,6 @@ export default async function SiteLayout({
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
-      <ThemeToggle />
       <HeaderServer />
       <main className="flex-grow">
         {children}

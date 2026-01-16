@@ -209,7 +209,7 @@ export default function Header({ logoUrl }: HeaderProps = {}) {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex items-center space-x-6 md:hidden">
+          <div className="flex items-center space-x-4 md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`p-2 rounded-md ${

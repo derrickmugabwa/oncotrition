@@ -70,7 +70,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={outfit.variable}>
       <body className={cn(outfit.className, "font-outfit")}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} forcedTheme="light">
           <Providers>
             {children}
             <AnnouncementManager announcements={(announcements as Announcement[]) || []} />

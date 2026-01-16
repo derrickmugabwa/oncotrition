@@ -50,14 +50,14 @@ export default function Mission() {
     return (
       <section className="relative pt-0 pb-2 -mt-16 overflow-hidden bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative pt-32 sm:pt-32 md:pt-20 lg:pt-16">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 py-12">
-            <div className="lg:w-[45%] space-y-8">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16 py-12">
+            <div className="w-full lg:w-[45%] space-y-6 lg:space-y-8 order-2 lg:order-1">
               <div className="h-8 w-32 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
               <div className="h-10 w-3/4 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
               <div className="h-6 w-full bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
               <div className="h-24 w-full bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
             </div>
-            <div className="lg:w-[55%]">
+            <div className="w-full lg:w-[55%] order-1 lg:order-2">
               <div className="w-full aspect-[4/3] bg-gray-200 dark:bg-gray-800 rounded-2xl animate-pulse"></div>
             </div>
           </div>
@@ -79,14 +79,14 @@ export default function Mission() {
         transition={{ duration: 1 }}
         className="container mx-auto px-4 sm:px-6 lg:px-8 relative pt-32 sm:pt-32 md:pt-20 lg:pt-16">
         {/* Increased padding significantly since floating cards removed - more breathing room */}
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 py-12">
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16 py-12">
           {/* Content Side */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="lg:w-[45%] space-y-8 relative z-10"
+            className="w-full lg:w-[45%] space-y-6 lg:space-y-8 relative z-10 order-2 lg:order-1"
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -131,7 +131,7 @@ export default function Mission() {
             whileInView={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="lg:w-[55%]"
+            className="w-full lg:w-[55%] order-1 lg:order-2"
           >
             <div className="relative">
               {/* Meal Plan Card - HIDDEN FOR NOW (uncomment to re-enable) */}
@@ -168,7 +168,7 @@ export default function Mission() {
                 />
               </div> */}
               
-              <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border border-border">
+              <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border border-border bg-gray-100">
                 {content.image_url ? (
                   <Image
                     src={content.image_url}

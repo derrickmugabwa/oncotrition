@@ -45,7 +45,7 @@ const highlightText = (text: string) => {
     const regex = new RegExp(`\\b(${keyword})\\b`, 'gi')
     highlightedText = highlightedText.replace(
       regex, 
-      `<span class="text-green-600 font-bold">$1</span>`
+      `<span class="text-green-600 dark:text-green-400 font-bold">$1</span>`
     )
   })
   
@@ -181,22 +181,22 @@ export default function ModernHero() {
   // Don't render until data is loaded to prevent flash
   if (isLoading || slides.length === 0) {
     return (
-      <div className={`relative min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 overflow-hidden ${poppins.className}`}>
+      <div className={`relative min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 overflow-hidden ${poppins.className}`}>
         <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-pulse text-gray-400">Loading...</div>
+          <div className="animate-pulse text-gray-400 dark:text-gray-500">Loading...</div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className={`relative min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 overflow-hidden ${poppins.className}`}>
+    <div className={`relative min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 overflow-hidden ${poppins.className}`}>
       {/* Background Pattern */}
       <div className="absolute inset-0">
         {/* Geometric shapes */}
-        <div className="absolute top-20 right-20 w-32 h-32 bg-blue-100 rounded-full opacity-30"></div>
-        <div className="absolute top-40 right-40 w-16 h-16 bg-blue-200 rounded-full opacity-40"></div>
-        <div className="absolute bottom-32 right-32 w-24 h-24 bg-blue-100 rounded-full opacity-25"></div>
+        <div className="absolute top-20 right-20 w-32 h-32 bg-blue-100 dark:bg-blue-900/30 rounded-full opacity-30"></div>
+        <div className="absolute top-40 right-40 w-16 h-16 bg-blue-200 dark:bg-blue-800/30 rounded-full opacity-40"></div>
+        <div className="absolute bottom-32 right-32 w-24 h-24 bg-blue-100 dark:bg-blue-900/30 rounded-full opacity-25"></div>
         
         {/* Subtle grid pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -207,8 +207,8 @@ export default function ModernHero() {
         </div>
         
         {/* Large background circles */}
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-gray-100 to-blue-100 rounded-full opacity-15 blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/20 dark:to-blue-800/20 rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-gray-100 to-blue-100 dark:from-gray-800/20 dark:to-blue-900/20 rounded-full opacity-15 blur-3xl"></div>
       </div>
 
 
@@ -228,13 +228,13 @@ export default function ModernHero() {
               >
                 <motion.h1 
                   variants={childVariants}
-                  className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight"
+                  className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
                   dangerouslySetInnerHTML={{ __html: highlightText(currentSlideData.title) }}
                 />
 
                 <motion.p 
                   variants={childVariants}
-                  className="text-lg text-gray-600 leading-relaxed max-w-lg"
+                  className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-lg"
                 >
                   {currentSlideData.description}
                 </motion.p>
@@ -265,7 +265,7 @@ export default function ModernHero() {
             className="relative"
           >
             {/* Main Image Card */}
-            <div className="bg-white rounded-2xl shadow-2xl p-8 space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 space-y-8">
               {/* Main Image */}
               <div className="relative w-full h-80 rounded-xl overflow-hidden">
                 <AnimatePresence mode="wait">
@@ -300,8 +300,8 @@ export default function ModernHero() {
                       onClick={() => setCurrentSlide(index)}
                       className={`w-2 h-2 rounded-full transition-all duration-300 ${
                         index === currentSlide
-                          ? 'bg-purple-600 w-6'
-                          : 'bg-gray-300 hover:bg-gray-400'
+                          ? 'bg-purple-600 dark:bg-purple-400 w-6'
+                          : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
                       }`}
                     />
                   ))}
@@ -314,15 +314,15 @@ export default function ModernHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="absolute -top-6 -left-6 bg-white rounded-xl shadow-lg p-4 border border-gray-100"
+              className="absolute -top-6 -left-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <ChartBarIcon className="w-5 h-5 text-green-600" />
+                <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                  <ChartBarIcon className="w-5 h-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-gray-900">Health Score</div>
-                  <div className="text-xs text-gray-500">+12% this week</div>
+                  <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">Health Score</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">+12% this week</div>
                 </div>
               </div>
             </motion.div>
@@ -331,15 +331,15 @@ export default function ModernHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
-              className="absolute -bottom-6 -right-6 bg-white rounded-xl shadow-lg p-4 border border-gray-100"
+              className="absolute -bottom-6 -right-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                  <UserGroupIcon className="w-5 h-5 text-purple-600" />
+                <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
+                  <UserGroupIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-gray-900">Community</div>
-                  <div className="text-xs text-gray-500">2.4k members</div>
+                  <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">Community</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">2.4k members</div>
                 </div>
               </div>
             </motion.div>
