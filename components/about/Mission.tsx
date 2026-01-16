@@ -86,7 +86,7 @@ export default function Mission() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="w-full lg:w-[45%] space-y-6 lg:space-y-8 relative z-10 order-2 lg:order-1"
+            className="w-full lg:w-[45%] space-y-6 lg:space-y-8 relative order-2 lg:order-1"
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}

@@ -28,6 +28,7 @@ export default function AboutAnimatedSection({
         ease: [0.21, 0.47, 0.32, 0.98]
       }}
       className={className}
+      style={{ position: 'relative', zIndex: 0 }}
     >
       {children}
     </motion.div>

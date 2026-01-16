@@ -40,7 +40,7 @@ export default async function About() {
     console.error('Error fetching components:', error);
     // Return default components if database fails
     return (
-      <div className="relative font-poppins">
+      <div className="relative font-poppins" style={{ zIndex: 0 }}>
         <AboutAnimatedSection 
           delay={0}
           className="relative bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900"
@@ -132,7 +132,7 @@ export default async function About() {
   };
 
   return (
-    <div className="relative font-poppins">
+    <div className="relative font-poppins" style={{ zIndex: 0 }}>
       {visibleComponents.map((component, index) => renderComponent(component, index))}
       <AboutClientWrapper initialComponents={visibleComponents} />
     </div>
