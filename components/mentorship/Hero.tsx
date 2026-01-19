@@ -89,7 +89,7 @@ export default function Hero({ content }: HeroProps) {
       <div className="absolute inset-0">
         <Image
           src={heroContent.background_image}
-          alt="Mentorship Hero Background"
+          alt="Nutriprenuership"
           fill
           className="object-cover"
           priority
