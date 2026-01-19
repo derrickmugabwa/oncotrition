@@ -5,12 +5,12 @@ import Users from '@/components/smartspoon/Users'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'SmartSpoon - AI-Powered Nutrition Tracking | Oncotrition',
-  description: 'Discover SmartSpoon, our revolutionary AI-powered nutrition tracking device. Get personalized meal recommendations, track your nutrition intake, and improve your health with cutting-edge technology.',
-  keywords: 'smart spoon, AI nutrition, nutrition tracking, meal planning, health technology, personalized nutrition',
+  title: 'Smartspoon PLus',
+  description: 'Experience the future of nutrition tracking with our innovative smart spoon technology.',
+  keywords: 'Smartspoon, nutrition tracking, meal planning, health technology, personalized nutrition',
   openGraph: {
-    title: 'SmartSpoon - AI-Powered Nutrition Tracking',
-    description: 'Revolutionary AI-powered nutrition tracking device for personalized health management.',
+    title: 'Smartspoon PLus',
+    description: 'Experience the future of nutrition tracking with our innovative smart spoon technology.',
     type: 'website',
   },
 }
