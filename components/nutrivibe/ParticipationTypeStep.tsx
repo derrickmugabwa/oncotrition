@@ -61,12 +61,12 @@ export function ParticipationTypeStep({
               }`}
               onClick={() => handleSelect(option.participation_type)}
             >
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <div
-                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                           isSelected
                             ? 'border-[#009688] bg-[#009688]'
                             : 'border-gray-300'
@@ -74,7 +74,7 @@ export function ParticipationTypeStep({
                       >
                         {isSelected && <Check className="w-3 h-3 text-white" />}
                       </div>
-                      <Label className="text-lg font-semibold cursor-pointer">
+                      <Label className="text-base sm:text-lg font-semibold cursor-pointer leading-tight">
                         {option.description}
                       </Label>
                     </div>
@@ -84,8 +84,8 @@ export function ParticipationTypeStep({
                       </p>
                     )}
                   </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-[#009688]">
+                  <div className="text-left sm:text-right ml-8 sm:ml-0">
+                    <div className="text-xl sm:text-2xl font-bold text-[#009688]">
                       KES {option.price.toLocaleString()}
                     </div>
                   </div>
