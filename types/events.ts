@@ -1,3 +1,15 @@
+// Event Image type
+export interface EventImage {
+  id: string;
+  event_id: string;
+  image_url: string;
+  display_order: number;
+  is_primary: boolean;
+  caption: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
 // Event types
 export interface Event {
   id: string;
@@ -27,6 +39,14 @@ export interface Event {
   terms_and_conditions: string | null;
   requires_payment: boolean | null;
   venue_details: string | null;
+  
+  // Sponsorship system fields
+  accepts_sponsorships: boolean | null;
+  sponsorship_deadline: string | null;
+  sponsorship_terms: string | null;
+  
+  // Image gallery (joined data)
+  event_images?: EventImage[];
 }
 
 // Announcement types
@@ -86,6 +106,10 @@ export interface EventFormData {
   terms_and_conditions?: string;
   requires_payment?: boolean;
   venue_details?: string;
+  // Sponsorship system fields
+  accepts_sponsorships?: boolean;
+  sponsorship_deadline?: string;
+  sponsorship_terms?: string;
 }
 
 export interface AnnouncementFormData {

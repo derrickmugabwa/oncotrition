@@ -8,12 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Event } from '@/types/events';
 import { NutrivibeInterestArea } from '@/types/nutrivibe';
 import { Plus, Trash2, Save, ArrowLeft, GripVertical } from 'lucide-react';
 
 interface EventInterestAreasManagerProps {
-  event: Event;
+  event: { id: string; title: string };
   interestAreas: NutrivibeInterestArea[];
 }
 

@@ -1,5 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import EventsManagement from '@/components/admin/events/EventsManagement';
+import { Event } from '@/types/events';
+import { Announcement } from '@/types/events';
 
 export default async function AdminEventsPage() {
   const supabase = await createClient();
@@ -26,8 +28,8 @@ export default async function AdminEventsPage() {
       </div>
 
       <EventsManagement 
-        events={events || []}
-        announcements={announcements || []}
+        events={(events || []) as Event[]}
+        announcements={(announcements || []) as Announcement[]}
       />
     </div>
   );

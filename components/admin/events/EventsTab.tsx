@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
-import { Calendar, Plus, Edit, Trash2, Eye, Search, Filter, Users } from 'lucide-react';
+import { Calendar, Plus, Edit, Trash2, Eye, Search, Filter, Users, DollarSign } from 'lucide-react';
 import { Event } from '@/types/events';
 import EventEditor from './EventEditor';
 import { format } from 'date-fns';
@@ -35,7 +35,7 @@ export default function EventsTab() {
         .order('event_date', { ascending: false });
 
       if (error) throw error;
-      setEvents(data || []);
+      setEvents((data || []) as Event[]);
     } catch (error: any) {
       console.error('Error fetching events:', error);
       toast.error('Failed to load events');
@@ -287,6 +287,16 @@ export default function EventsTab() {
                       title="View registrations"
                     >
                       <Users className="w-5 h-5" />
+                    </a>
+                  )}
+                  {/* View Sponsorships - Only show for events that accept sponsorships */}
+                  {event.accepts_sponsorships && (
+                    <a
+                      href={`/admin/pages/events/${event.id}/sponsorships`}
+                      className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                      title="View sponsorships"
+                    >
+                      <DollarSign className="w-5 h-5" />
                     </a>
                   )}
                   <a

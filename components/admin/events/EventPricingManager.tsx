@@ -9,12 +9,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Event } from '@/types/events';
 import { NutrivibePricing } from '@/types/nutrivibe';
 import { Plus, Trash2, Save, ArrowLeft, DollarSign } from 'lucide-react';
 
 interface EventPricingManagerProps {
-  event: Event;
+  event: { id: string; title: string };
   pricing: NutrivibePricing[];
 }
 

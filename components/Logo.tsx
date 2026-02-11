@@ -17,10 +17,30 @@ export default function Logo({ className = "", showLink = true, logoUrl: initial
   const supabase = createClient()
   
   useEffect(() => {
-    // Set initial logo URL if provided
-    if (initialLogoUrl) {
-      setLogoUrl(initialLogoUrl)
+    // Fetch initial logo URL from database
+    const fetchLogo = async () => {
+      if (initialLogoUrl) {
+        setLogoUrl(initialLogoUrl)
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('logo_url')
+        .eq('id', 1)
+        .single()
+
+      if (data?.logo_url && !error) {
+        const url = data.logo_url.startsWith('http')
+          ? data.logo_url
+          : data.logo_url.startsWith('/')
+            ? data.logo_url
+            : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logos/${data.logo_url}`
+        setLogoUrl(url)
+      }
     }
+
+    fetchLogo()
 
     // Subscribe to changes in site_settings for real-time admin updates
     const channel = supabase

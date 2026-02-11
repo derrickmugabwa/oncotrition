@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Event } from '@/types/events';
 import { QRScanner } from './QRScanner';
 import { 
   QrCode, 
@@ -23,7 +22,7 @@ import {
 } from 'lucide-react';
 
 interface EventCheckInScannerProps {
-  event: Event;
+  event: { id: string; title: string };
   totalRegistrations: number;
   checkedInCount: number;
 }

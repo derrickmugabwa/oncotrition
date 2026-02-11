@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import EventImageSlider from './EventImageSlider';
 
 interface EventDetailProps {
   event: Event;
@@ -52,24 +53,34 @@ export default function EventDetail({ event }: EventDetailProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2">
-          {/* Featured Image */}
-          <div className="relative h-96 rounded-2xl overflow-hidden mb-8 shadow-2xl">
-            {event.featured_image_url ? (
-              <Image
-                src={event.featured_image_url}
-                alt={event.title}
-                fill
-                className="object-cover"
-                priority
+          {/* Image Slider or Featured Image */}
+          <div className="relative mb-8">
+            {event.event_images && event.event_images.length > 0 ? (
+              <EventImageSlider 
+                images={event.event_images} 
+                eventTitle={event.title}
               />
+            ) : event.featured_image_url ? (
+              <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl bg-gray-100 dark:bg-gray-800">
+                <Image
+                  src={event.featured_image_url}
+                  alt={event.title}
+                  fill
+                  className="object-contain"
+                  priority
+                  unoptimized
+                />
+              </div>
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-[#009688] to-blue-500 flex items-center justify-center">
-                <Calendar className="w-24 h-24 text-white/30" />
+              <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#009688] to-blue-500 flex items-center justify-center">
+                  <Calendar className="w-24 h-24 text-white/30" />
+                </div>
               </div>
             )}
             
             {/* Status Badge */}
-            <div className="absolute top-6 right-6">
+            <div className="absolute top-6 right-6 z-20">
               <Badge 
                 variant={getStatusVariant(event.status ?? 'upcoming')} 
                 className={`capitalize text-sm px-4 py-2 ${
@@ -231,16 +242,31 @@ export default function EventDetail({ event }: EventDetailProps) {
                       })}
                     </p>
                   )}
-                  <Link href={`/events/${event.id}/register`} className="block w-full">
-                    <Button 
-                      className="w-full bg-white hover:bg-gray-100 text-[#009688]" 
-                      variant="secondary" 
-                      size="lg"
-                      disabled={!!isFull}
-                    >
-                      {isFull ? 'Event Full' : 'Register for This Event'}
-                    </Button>
-                  </Link>
+                  <div className="space-y-3">
+                    <Link href={`/events/${event.id}/register`} className="block w-full">
+                      <Button 
+                        className="w-full bg-white hover:bg-gray-100 text-[#009688]" 
+                        variant="secondary" 
+                        size="lg"
+                        disabled={!!isFull}
+                      >
+                        {isFull ? 'Event Full' : 'Attend As Participant'}
+                      </Button>
+                    </Link>
+                    
+                    {/* Sponsorship Button */}
+                    {event.accepts_sponsorships && (
+                      <Link href={`/events/${event.id}/sponsor`} className="block w-full">
+                        <Button 
+                          className="w-full bg-white/10 hover:bg-white/20 text-white border-2 border-white/50" 
+                          variant="outline" 
+                          size="lg"
+                        >
+                          Exhibit or Partner With Us
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -257,16 +283,31 @@ export default function EventDetail({ event }: EventDetailProps) {
                       ? 'This event is currently full. Register to join the waitlist.'
                       : 'Secure your spot at this event today!'}
                   </p>
-                  <a
-                    href={event.registration_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block w-full"
-                  >
-                    <Button className="w-full bg-white hover:bg-gray-100 text-primary" variant="secondary" size="lg">
-                      {isFull ? 'Join Waitlist' : 'Register Now'}
-                    </Button>
-                  </a>
+                  <div className="space-y-3">
+                    <a
+                      href={event.registration_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full"
+                    >
+                      <Button className="w-full bg-white hover:bg-gray-100 text-primary" variant="secondary" size="lg">
+                        {isFull ? 'Join Waitlist' : 'Register Now'}
+                      </Button>
+                    </a>
+                    
+                    {/* Sponsorship Button */}
+                    {event.accepts_sponsorships && (
+                      <Link href={`/events/${event.id}/sponsor`} className="block w-full">
+                        <Button 
+                          className="w-full bg-white/10 hover:bg-white/20 text-white border-2 border-white/50" 
+                          variant="outline" 
+                          size="lg"
+                        >
+                          Exhibit or Partner With Us
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             )}

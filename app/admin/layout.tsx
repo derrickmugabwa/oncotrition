@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import Sidebar from "@/components/admin/Sidebar";
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Toaster } from 'react-hot-toast';
 
 export default function AdminLayout({
   children,
@@ -66,6 +67,7 @@ export default function AdminLayout({
   // Admin dashboard layout
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      <Toaster position="top-right" />
       <div className="flex">
         {/* Mobile sidebar overlay */}
         {sidebarOpen && (
@@ -75,9 +77,9 @@ export default function AdminLayout({
           />
         )}
 
-        {/* Sidebar - mobile drawer and desktop fixed */}
+        {/* Sidebar - mobile drawer and desktop sticky */}
         <div className={`
-          fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:relative md:z-auto md:translate-x-0
+          fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:sticky md:top-0 md:h-screen md:z-auto md:translate-x-0
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         `}>
           <div className="flex min-h-0 flex-1 flex-col bg-white dark:bg-gray-800 shadow-sm h-full">

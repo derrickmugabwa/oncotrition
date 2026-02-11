@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import ThemeToggle from '@/components/ThemeToggle'
+import Logo from '@/components/Logo'
 import {
   HomeIcon,
   InformationCircleIcon,
@@ -45,17 +45,15 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Logo and Theme Toggle */}
-      <div className="p-6 flex items-center justify-between flex-shrink-0">
+      {/* Logo */}
+      <div className="p-6 flex items-center justify-center flex-shrink-0">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-400 bg-clip-text text-transparent"
         >
-          Oncotrition
+          <Logo showLink={false} />
         </motion.div>
-        <ThemeToggle />
       </div>
 
       {/* Navigation - Scrollable */}

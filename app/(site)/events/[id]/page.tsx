@@ -67,6 +67,18 @@ export default async function EventPage({ params }: EventPageProps) {
     notFound();
   }
 
+  // Try to fetch event images (optional - table may not exist yet)
+  const { data: eventImages } = await supabase
+    .from('event_images')
+    .select('*')
+    .eq('event_id', id)
+    .order('display_order', { ascending: true });
+
+  // Attach images to event if they exist
+  if (eventImages) {
+    (event as any).event_images = eventImages;
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16">
       <EventDetail event={event as Event} />

@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Event } from '@/types/events';
 import { NutrivibeRegistration, NutrivibePricing } from '@/types/nutrivibe';
 import { 
   Download, 
@@ -29,7 +28,7 @@ import {
 } from 'lucide-react';
 
 interface EventRegistrationsManagerProps {
-  event: Event;
+  event: { id: string; title: string };
   registrations: NutrivibeRegistration[];
   pricing: NutrivibePricing[];
 }

@@ -54,7 +54,8 @@ export default function EventCard({ event }: EventCardProps) {
               src={event.featured_image_url}
               alt={event.title}
               fill
-              className="object-cover"
+              className="object-cover object-center"
+              unoptimized
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">

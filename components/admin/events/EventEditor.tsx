@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-hot-toast';
 import { ArrowLeft, Save, Upload, X, Image as ImageIcon } from 'lucide-react';
-import { Event, EventFormData } from '@/types/events';
+import { Event, EventFormData, EventImage } from '@/types/events';
 import Image from 'next/image';
+import EventImageManager from './EventImageManager';
 
 interface EventEditorProps {
   event: Event | null;
@@ -17,6 +18,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [eventImages, setEventImages] = useState<EventImage[]>(event?.event_images || []);
   
   const [formData, setFormData] = useState<EventFormData>({
     title: event?.title || '',
@@ -42,7 +44,32 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
     requires_payment: event?.requires_payment || false,
     venue_details: event?.venue_details || '',
     terms_and_conditions: event?.terms_and_conditions || '',
+    // Sponsorship fields
+    accepts_sponsorships: event?.accepts_sponsorships || false,
+    sponsorship_deadline: event?.sponsorship_deadline || '',
+    sponsorship_terms: event?.sponsorship_terms || '',
   });
+
+  const refreshEventImages = useCallback(async () => {
+    if (!event?.id) return;
+    
+    const { data, error } = await supabase
+      .from('event_images' as any)
+      .select('id, event_id, image_url, display_order, is_primary, caption, created_at, updated_at')
+      .eq('event_id', event.id)
+      .order('display_order', { ascending: true });
+
+    if (!error && data) {
+      setEventImages(data as any as EventImage[]);
+    }
+  }, [event?.id, supabase]);
+
+  // Fetch event images on mount
+  useEffect(() => {
+    if (event?.id) {
+      refreshEventImages();
+    }
+  }, [event?.id, refreshEventImages]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -137,6 +164,9 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
         early_bird_deadline: formData.early_bird_deadline || null,
         venue_details: formData.venue_details || null,
         terms_and_conditions: formData.terms_and_conditions || null,
+        // Sponsorship fields
+        sponsorship_deadline: formData.sponsorship_deadline || null,
+        sponsorship_terms: formData.sponsorship_terms || null,
       };
 
       if (event) {
@@ -535,6 +565,82 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
           </div>
         </div>
 
+        {/* Sponsorship Configuration */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Sponsorship Configuration</h3>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                name="accepts_sponsorships"
+                checked={formData.accepts_sponsorships}
+                onChange={handleChange}
+                className="w-4 h-4 text-[#009688] border-gray-300 rounded focus:ring-[#009688]"
+              />
+              <span className="text-sm font-medium text-gray-700">Accept Sponsorships</span>
+            </label>
+          </div>
+
+          <p className="text-sm text-gray-600 mb-4">
+            Enable sponsorships to allow companies to partner with your event. You can manage sponsorship tiers and benefits after saving.
+          </p>
+
+          {formData.accepts_sponsorships && (
+            <div className="space-y-4 pt-4 border-t border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Sponsorship Deadline */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Sponsorship Deadline
+                  </label>
+                  <input
+                    type="datetime-local"
+                    name="sponsorship_deadline"
+                    value={formData.sponsorship_deadline}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Last date companies can register as sponsors
+                  </p>
+                </div>
+              </div>
+
+              {/* Sponsorship Terms */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Sponsorship Terms & Conditions
+                </label>
+                <textarea
+                  name="sponsorship_terms"
+                  value={formData.sponsorship_terms}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
+                  placeholder="Terms and conditions for sponsorships, refund policy, contract requirements, etc."
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  These terms will be shown during sponsorship registration
+                </p>
+              </div>
+
+              {/* Info Box */}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <p className="text-sm text-amber-900 font-medium mb-2">
+                  💼 After Enabling Sponsorships:
+                </p>
+                <ul className="text-sm text-amber-700 space-y-1">
+                  <li>• Set up sponsorship tiers (Bronze, Silver, Gold, Platinum) in Sponsorship Tiers page</li>
+                  <li>• Add benefits for each tier</li>
+                  <li>• Companies can register and pay through the platform</li>
+                  <li>• Track sponsorships and manage contracts in the Sponsorships page</li>
+                  <li>• Export sponsorship data to CSV</li>
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Organizer Information */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Organizer Information</h3>
@@ -584,6 +690,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
                   alt="Event featured image"
                   fill
                   className="object-cover"
+                  unoptimized
                 />
               </div>
               <button
@@ -627,6 +734,15 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
             </div>
           )}
         </div>
+
+        {/* Event Images Gallery - Only show for existing events */}
+        {event?.id && (
+          <EventImageManager
+            eventId={event.id}
+            images={eventImages}
+            onImagesUpdate={refreshEventImages}
+          />
+        )}
 
         {/* Status & Settings */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
