@@ -17,11 +17,11 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
 
   // Generate iCal file content
   const generateICalFile = () => {
-    const eventDate = new Date(event.event_date);
+    const eventDate = event.event_date ? new Date(event.event_date) : new Date();
     const eventTime = (event.event_time ?? '09:00').split(':');
     const startDateTime = new Date(eventDate);
     startDateTime.setHours(parseInt(eventTime[0]), parseInt(eventTime[1]), 0);
-    
+
     // Assume 2 hour duration
     const endDateTime = new Date(startDateTime);
     endDateTime.setHours(startDateTime.getHours() + 2);

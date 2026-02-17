@@ -36,19 +36,19 @@ export default function EventsList({ events, featuredEvents, upcomingEvents }: E
       // Search filter
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
-        const matchesSearch = 
+        const matchesSearch =
           event.title.toLowerCase().includes(searchLower) ||
           (event.description ?? '').toLowerCase().includes(searchLower) ||
           (event.location ?? '').toLowerCase().includes(searchLower);
-        
+
         if (!matchesSearch) return false;
       }
 
       // Date range filter
-      if (filters.dateFrom && event.event_date < filters.dateFrom) {
+      if (filters.dateFrom && event.event_date && event.event_date < filters.dateFrom) {
         return false;
       }
-      if (filters.dateTo && event.event_date > filters.dateTo) {
+      if (filters.dateTo && event.event_date && event.event_date > filters.dateTo) {
         return false;
       }
 
@@ -185,7 +185,7 @@ export default function EventsList({ events, featuredEvents, upcomingEvents }: E
         <h2 className="text-2xl font-bold text-foreground mb-6">
           {filters.status ? `${filters.status.charAt(0).toUpperCase() + filters.status.slice(1)} Events` : 'All Events'}
         </h2>
-        
+
         {filteredEvents.length === 0 ? (
           <div className="text-center py-16">
             <Calendar className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />

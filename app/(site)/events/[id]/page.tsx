@@ -79,9 +79,17 @@ export default async function EventPage({ params }: EventPageProps) {
     (event as any).event_images = eventImages;
   }
 
+  // Fetch pricing options for this event (event-specific or global)
+  const { data: pricing } = await supabase
+    .from('nutrivibe_pricing')
+    .select('*')
+    .or(`event_id.eq.${id},event_id.is.null`)
+    .eq('is_active', true)
+    .order('display_order', { ascending: true });
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16">
-      <EventDetail event={event as Event} />
+      <EventDetail event={event as Event} pricing={pricing || []} />
       <EventDetailClient event={event as Event} />
     </main>
   );

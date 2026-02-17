@@ -21,6 +21,7 @@ interface PricingFormData {
   id?: string;
   participation_type: string;
   price: number;
+  door_price: number | null;
   description: string;
   is_active: boolean | null;
   display_order: number | null;
@@ -33,6 +34,7 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
       id: p.id,
       participation_type: p.participation_type,
       price: p.price,
+      door_price: p.door_price ?? null,
       description: p.description || '',
       is_active: p.is_active ?? true,
       display_order: p.display_order ?? 0,
@@ -52,6 +54,7 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
       {
         participation_type: '',
         price: 0,
+        door_price: null,
         description: '',
         is_active: true,
         display_order: newOrder,
@@ -155,27 +158,28 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Participation Type */}
-                <div className="space-y-2">
-                  <Label htmlFor={`type-${index}`}>
-                    Participation Type <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id={`type-${index}`}
-                    value={option.participation_type}
-                    onChange={(e) => updatePricingOption(index, 'participation_type', e.target.value)}
-                    placeholder="e.g., nutrition_student, professional"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Use snake_case (e.g., nutrition_student, healthcare_professional)
-                  </p>
-                </div>
+              {/* Participation Type - Full Width */}
+              <div className="space-y-2">
+                <Label htmlFor={`type-${index}`}>
+                  Participation Type <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id={`type-${index}`}
+                  value={option.participation_type}
+                  onChange={(e) => updatePricingOption(index, 'participation_type', e.target.value)}
+                  placeholder="e.g., nutrition_student, professional"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Use snake_case (e.g., nutrition_student, healthcare_professional)
+                </p>
+              </div>
 
-                {/* Price */}
+              {/* Price Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Early Bird Price */}
                 <div className="space-y-2">
                   <Label htmlFor={`price-${index}`}>
-                    Price (KES) <span className="text-destructive">*</span>
+                    Early Bird Price (KES) <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -189,6 +193,32 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
                       step="100"
                     />
                   </div>
+                  <p className="text-xs text-muted-foreground">
+                    Regular/Early bird registration price
+                  </p>
+                </div>
+
+                {/* Door Price */}
+                <div className="space-y-2">
+                  <Label htmlFor={`door-price-${index}`}>
+                    Last Call/Door Price (KES)
+                  </Label>
+                  <div className="relative">
+                    <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id={`door-price-${index}`}
+                      type="number"
+                      value={option.door_price ?? ''}
+                      onChange={(e) => updatePricingOption(index, 'door_price', e.target.value ? parseFloat(e.target.value) : null)}
+                      className="pl-10"
+                      min="0"
+                      step="100"
+                      placeholder="Optional"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Higher price for late/door registrations (optional)
+                  </p>
                 </div>
               </div>
 
@@ -280,9 +310,16 @@ export function EventPricingManager({ event, pricing }: EventPricingManagerProps
                       <p className="text-sm text-muted-foreground">{option.description}</p>
                     )}
                   </div>
-                  <p className="text-lg font-bold text-[#009688]">
-                    KES {option.price.toLocaleString()}
-                  </p>
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-[#009688]">
+                      KES {option.price.toLocaleString()}
+                    </p>
+                    {option.door_price && (
+                      <p className="text-sm text-muted-foreground">
+                        Door: KES {option.door_price.toLocaleString()}
+                      </p>
+                    )}
+                  </div>
                 </div>
               ))}
             {pricingOptions.filter(p => p.is_active).length === 0 && (

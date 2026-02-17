@@ -244,7 +244,7 @@ export default function EventsTab() {
                     <div>
                       <span className="text-gray-500">Date:</span>
                       <span className="ml-2 font-medium text-gray-900">
-                        {format(new Date(event.event_date), 'MMM dd, yyyy')}
+                        {event.event_date ? format(new Date(event.event_date), 'MMM dd, yyyy') : 'TBD'}
                       </span>
                     </div>
                     <div>

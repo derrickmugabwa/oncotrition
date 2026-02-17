@@ -39,16 +39,16 @@ export default async function EventsPage() {
 
   // Separate events by status for better organization
   const today = new Date().toISOString().split('T')[0];
-  
+
   const upcomingEvents = events.filter(
-    event => event.status === 'upcoming' && event.event_date >= today
+    event => event.status === 'upcoming' && event.event_date !== null && event.event_date >= today
   );
-  
+
   const featuredEvents = upcomingEvents.filter(event => event.is_featured);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16">
-      <EventsList 
+      <EventsList
         events={events}
         featuredEvents={featuredEvents}
         upcomingEvents={upcomingEvents}

@@ -5,6 +5,7 @@ export interface NutrivibePricing {
   event_id: string | null;
   participation_type: string;
   price: number;
+  door_price?: number | null; // Last call/door price for late registrations
   description: string | null;
   is_active: boolean | null;
   display_order: number | null;

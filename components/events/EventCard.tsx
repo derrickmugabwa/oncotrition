@@ -15,9 +15,16 @@ interface EventCardProps {
 }
 
 export default function EventCard({ event }: EventCardProps) {
-  const eventDate = new Date(event.event_date);
-  const formattedDate = format(eventDate, 'MMM dd, yyyy');
-  const formattedTime = event.event_time ? event.event_time.slice(0, 5) : 'TBD'; // HH:MM format
+  const formattedDate = event.date_tbd 
+    ? 'To Be Determined' 
+    : event.event_date 
+      ? format(new Date(event.event_date), 'MMM dd, yyyy')
+      : 'TBD';
+  const formattedTime = event.time_tbd 
+    ? 'To Be Determined' 
+    : event.event_time 
+      ? event.event_time.slice(0, 5) 
+      : 'TBD'; // HH:MM format
 
   const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {

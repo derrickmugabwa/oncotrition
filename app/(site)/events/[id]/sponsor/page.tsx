@@ -172,11 +172,13 @@ export default async function EventSponsorPage({ params }: PageProps) {
                 />
               </svg>
               <span>
-                {new Date(event.event_date).toLocaleDateString('en-US', {
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric',
-                })}
+                {event.event_date
+                  ? new Date(event.event_date).toLocaleDateString('en-US', {
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })
+                  : 'Date TBA'}
               </span>
             </div>
             <div className="flex items-center gap-2">

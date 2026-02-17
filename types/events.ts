@@ -15,8 +15,10 @@ export interface Event {
   id: string;
   title: string;
   description: string | null;
-  event_date: string; // ISO date string
-  event_time: string | null; // Time string (HH:MM:SS)
+  event_date: string | null; // ISO date string (nullable when date_tbd is true)
+  event_time: string | null; // Time string (HH:MM:SS) (nullable when time_tbd is true)
+  date_tbd: boolean | null; // To Be Determined flag for date
+  time_tbd: boolean | null; // To Be Determined flag for time
   location: string | null;
   additional_info: string | null;
   featured_image_url: string | null;
@@ -87,6 +89,8 @@ export interface EventFormData {
   description: string;
   event_date: string;
   event_time: string;
+  date_tbd?: boolean;
+  time_tbd?: boolean;
   location: string;
   additional_info?: string;
   featured_image_url?: string;

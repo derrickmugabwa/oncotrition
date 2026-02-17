@@ -121,6 +121,23 @@ export default async function EventRegisterPage({ params }: PageProps) {
 
   const interestAreas = (interestAreasData || []) as NutrivibeInterestArea[];
 
+  const formattedDate = (() => {
+    if (event.date_tbd) return 'To Be Determined';
+    if (!event.event_date) return 'To Be Determined';
+
+    return new Date(event.event_date).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  })();
+
+  const formattedTime = (() => {
+    if (event.time_tbd) return 'To Be Determined';
+    if (!event.event_time) return 'To Be Determined';
+    return event.event_time.slice(0, 5);
+  })();
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-16 font-outfit">
       <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -138,18 +155,14 @@ export default async function EventRegisterPage({ params }: PageProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <span>
-                {new Date(event.event_date).toLocaleDateString('en-US', {
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric',
-                })}
+                {formattedDate}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-[#009688]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>{event.event_time}</span>
+              <span>{formattedTime}</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-[#009688]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

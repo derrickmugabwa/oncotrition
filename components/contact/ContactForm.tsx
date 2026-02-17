@@ -67,11 +67,20 @@ function ContactForm() {
     
     try {
       setLoading(true);
-      const { error } = await supabase
-        .from('form_submissions')
-        .insert([formData]);
+      
+      const response = await fetch('/api/contact/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-      if (error) throw error;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
 
       setFormData({ name: '', email: '', subject: '', message: '' });
       toast.success('Message sent successfully! We will get back to you soon.');

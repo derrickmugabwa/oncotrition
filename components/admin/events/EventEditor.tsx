@@ -19,12 +19,14 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [eventImages, setEventImages] = useState<EventImage[]>(event?.event_images || []);
-  
+
   const [formData, setFormData] = useState<EventFormData>({
     title: event?.title || '',
     description: event?.description || '',
     event_date: event?.event_date || '',
     event_time: event?.event_time || '14:00:00',
+    date_tbd: event?.date_tbd || false,
+    time_tbd: event?.time_tbd || false,
     location: event?.location || '',
     additional_info: event?.additional_info || '',
     featured_image_url: event?.featured_image_url || '',
@@ -52,7 +54,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
 
   const refreshEventImages = useCallback(async () => {
     if (!event?.id) return;
-    
+
     const { data, error } = await supabase
       .from('event_images' as any)
       .select('id, event_id, image_url, display_order, is_primary, caption, created_at, updated_at')
@@ -75,7 +77,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
-    
+
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
@@ -140,8 +142,12 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
       toast.error('Please enter an event description');
       return;
     }
-    if (!formData.event_date) {
-      toast.error('Please select an event date');
+    if (!formData.date_tbd && !formData.event_date) {
+      toast.error('Please select an event date or mark it as TBD');
+      return;
+    }
+    if (!formData.time_tbd && !formData.event_time) {
+      toast.error('Please select an event time or mark it as TBD');
       return;
     }
     if (!formData.location.trim()) {
@@ -151,38 +157,61 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
 
     setSaving(true);
     try {
-      const eventData = {
-        ...formData,
-        additional_info: formData.additional_info || null,
-        featured_image_url: formData.featured_image_url || null,
-        max_attendees: formData.max_attendees || null,
-        registration_link: formData.registration_link || null,
-        organizer_name: formData.organizer_name || null,
-        organizer_contact: formData.organizer_contact || null,
-        // Handle date fields - convert empty strings to null
-        registration_deadline: formData.registration_deadline || null,
-        early_bird_deadline: formData.early_bird_deadline || null,
-        venue_details: formData.venue_details || null,
-        terms_and_conditions: formData.terms_and_conditions || null,
-        // Sponsorship fields
-        sponsorship_deadline: formData.sponsorship_deadline || null,
-        sponsorship_terms: formData.sponsorship_terms || null,
-      };
 
       if (event) {
-        // Update existing event
+        // Update existing event - can use undefined for optional fields
+        const updateData = {
+          ...formData,
+          event_date: formData.date_tbd ? undefined : (formData.event_date || undefined),
+          event_time: formData.time_tbd ? undefined : (formData.event_time || undefined),
+          date_tbd: formData.date_tbd || false,
+          time_tbd: formData.time_tbd || false,
+          additional_info: formData.additional_info || null,
+          featured_image_url: formData.featured_image_url || null,
+          max_attendees: formData.max_attendees || null,
+          registration_link: formData.registration_link || null,
+          organizer_name: formData.organizer_name || null,
+          organizer_contact: formData.organizer_contact || null,
+          registration_deadline: formData.registration_deadline || null,
+          early_bird_deadline: formData.early_bird_deadline || null,
+          venue_details: formData.venue_details || null,
+          terms_and_conditions: formData.terms_and_conditions || null,
+          sponsorship_deadline: formData.sponsorship_deadline || null,
+          sponsorship_terms: formData.sponsorship_terms || null,
+        };
+
         const { error } = await supabase
           .from('events')
-          .update(eventData)
+          .update(updateData)
           .eq('id', event.id);
 
         if (error) throw error;
         toast.success('Event updated successfully');
       } else {
-        // Create new event
+        // Create new event - must use null instead of undefined for optional fields
+        const insertData = {
+          ...formData,
+          event_date: formData.date_tbd ? null : formData.event_date,
+          event_time: formData.time_tbd ? null : formData.event_time,
+          date_tbd: formData.date_tbd || false,
+          time_tbd: formData.time_tbd || false,
+          additional_info: formData.additional_info || null,
+          featured_image_url: formData.featured_image_url || null,
+          max_attendees: formData.max_attendees || null,
+          registration_link: formData.registration_link || null,
+          organizer_name: formData.organizer_name || null,
+          organizer_contact: formData.organizer_contact || null,
+          registration_deadline: formData.registration_deadline || null,
+          early_bird_deadline: formData.early_bird_deadline || null,
+          venue_details: formData.venue_details || null,
+          terms_and_conditions: formData.terms_and_conditions || null,
+          sponsorship_deadline: formData.sponsorship_deadline || null,
+          sponsorship_terms: formData.sponsorship_terms || null,
+        };
+
         const { error } = await supabase
           .from('events')
-          .insert([eventData]);
+          .insert([insertData as any]);
 
         if (error) throw error;
         toast.success('Event created successfully');
@@ -224,7 +253,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
         {/* Basic Information */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
-          
+
           <div className="space-y-4">
             {/* Title */}
             <div>
@@ -278,36 +307,68 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
         {/* Date, Time & Location */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Date, Time & Location</h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Event Date *
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Event Date {!formData.date_tbd && '*'}
+                </label>
+                <label className="flex items-center gap-2 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    name="date_tbd"
+                    checked={formData.date_tbd}
+                    onChange={handleChange}
+                    className="rounded border-gray-300 text-[#009688] focus:ring-[#009688]"
+                  />
+                  <span>To Be Determined</span>
+                </label>
+              </div>
               <input
                 type="date"
                 name="event_date"
                 value={formData.event_date}
                 onChange={handleChange}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
+                required={!formData.date_tbd}
+                disabled={formData.date_tbd}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688] disabled:bg-gray-100 disabled:cursor-not-allowed"
               />
+              {formData.date_tbd && (
+                <p className="text-xs text-gray-500 mt-1">Date will be announced later</p>
+              )}
             </div>
 
             {/* Time */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Event Time *
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Event Time {!formData.time_tbd && '*'}
+                </label>
+                <label className="flex items-center gap-2 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    name="time_tbd"
+                    checked={formData.time_tbd}
+                    onChange={handleChange}
+                    className="rounded border-gray-300 text-[#009688] focus:ring-[#009688]"
+                  />
+                  <span>To Be Determined</span>
+                </label>
+              </div>
               <input
                 type="time"
                 name="event_time"
                 value={formData.event_time.slice(0, 5)}
                 onChange={(e) => setFormData(prev => ({ ...prev, event_time: e.target.value + ':00' }))}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688]"
+                required={!formData.time_tbd}
+                disabled={formData.time_tbd}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009688] disabled:bg-gray-100 disabled:cursor-not-allowed"
               />
+              {formData.time_tbd && (
+                <p className="text-xs text-gray-500 mt-1">Time will be announced later</p>
+              )}
             </div>
 
             {/* Location */}
@@ -331,7 +392,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
         {/* Attendees & Registration */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Attendees & Registration</h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Max Attendees */}
             <div>
@@ -390,7 +451,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
         {/* Internal Registration Settings */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Internal Registration System</h3>
-          
+
           <div className="space-y-4">
             {/* Enable Internal Registration */}
             <div className="flex items-center gap-3 p-4 bg-teal-50 border border-teal-200 rounded-lg">
@@ -644,7 +705,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
         {/* Organizer Information */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Organizer Information</h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Organizer Name */}
             <div>
@@ -681,7 +742,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
         {/* Featured Image */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Featured Image</h3>
-          
+
           {formData.featured_image_url ? (
             <div className="relative">
               <div className="relative h-64 rounded-lg overflow-hidden">
@@ -747,7 +808,7 @@ export default function EventEditor({ event, onClose }: EventEditorProps) {
         {/* Status & Settings */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Status & Settings</h3>
-          
+
           <div className="space-y-4">
             {/* Status */}
             <div>

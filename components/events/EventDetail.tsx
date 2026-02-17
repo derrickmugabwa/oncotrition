@@ -2,21 +2,31 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Clock, MapPin, Users, User, Mail, Phone, ArrowLeft, AlertCircle } from 'lucide-react';
 import { Event } from '@/types/events';
+import { NutrivibePricing } from '@/types/nutrivibe';
 import { format } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import EventImageSlider from './EventImageSlider';
+import EventPricingBanner from './EventPricingBanner';
 
 interface EventDetailProps {
   event: Event;
+  pricing?: NutrivibePricing[];
 }
 
-export default function EventDetail({ event }: EventDetailProps) {
-  const eventDate = new Date(event.event_date);
-  const formattedDate = format(eventDate, 'EEEE, MMMM dd, yyyy');
-  const formattedTime = event.event_time ? event.event_time.slice(0, 5) : 'TBD'; // HH:MM format
+export default function EventDetail({ event, pricing = [] }: EventDetailProps) {
+  const formattedDate = event.date_tbd 
+    ? 'To Be Determined' 
+    : event.event_date 
+      ? format(new Date(event.event_date), 'EEEE, MMMM dd, yyyy')
+      : 'TBD';
+  const formattedTime = event.time_tbd 
+    ? 'To Be Determined' 
+    : event.event_time 
+      ? event.event_time.slice(0, 5) 
+      : 'TBD'; // HH:MM format
 
   const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
@@ -118,6 +128,13 @@ export default function EventDetail({ event }: EventDetailProps) {
               )}
             </CardContent>
           </Card>
+
+          {/* Pricing Banner */}
+          {pricing && pricing.length > 0 && (
+            <div className="mb-8">
+              <EventPricingBanner pricing={pricing} showDoorPrices={false} />
+            </div>
+          )}
 
           {/* Organizer Information */}
           {(event.organizer_name || event.organizer_contact) && (

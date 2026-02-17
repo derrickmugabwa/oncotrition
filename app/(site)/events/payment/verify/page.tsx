@@ -95,12 +95,14 @@ export default function EventPaymentVerifyPage() {
                   <div>
                     <h3 className="text-xl font-bold">{event.title}</h3>
                     <p className="text-muted-foreground mt-2">
-                      {new Date(event.event_date).toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}{' '}
+                      {event.event_date
+                        ? new Date(event.event_date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })
+                        : 'Date TBA'}{' '}
                       at {event.event_time}
                     </p>
                     <p className="text-muted-foreground">{event.location}</p>
