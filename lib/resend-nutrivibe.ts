@@ -10,6 +10,7 @@ interface SendRegistrationEmailData {
   fullName: string;
   registrationId: string;
   qrCodeUrl: string;
+  logoUrl?: string | null;
   eventDetails: {
     event_date: string;
     event_time: string;

@@ -192,7 +192,7 @@ export function SponsorshipForm({ event, tiers }: SponsorshipFormProps) {
                       key={tier.id}
                       tier={tier}
                       isSelected={formData.tierId === tier.id}
-                      onSelect={() => updateFormData({ tierId: tier.id })}
+                      onSelect={() => { updateFormData({ tierId: tier.id }); nextStep(); }}
                       isRecommended={tier.is_recommended || false}
                     />
                   ))}
@@ -451,10 +451,10 @@ export function SponsorshipForm({ event, tiers }: SponsorshipFormProps) {
           <p className="text-sm text-blue-900 dark:text-blue-100">
             <strong>Need help?</strong> Contact us at{' '}
             <a
-              href="mailto:partnerships@oncotritionhc.com"
+              href="mailto:info@oncotritionhc.com"
               className="underline hover:text-blue-700"
             >
-              partnerships@oncotritionhc.com
+              info@oncotritionhc.com
             </a>
             {' '}or call{' '}
             <a href="tel:+254711118283" className="underline hover:text-blue-700">

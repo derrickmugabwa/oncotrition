@@ -123,11 +123,25 @@ export async function POST(request: NextRequest) {
 
     // Send confirmation email
     try {
+      // Fetch logo URL from site_settings
+      const { data: settings } = await supabase
+        .from('site_settings')
+        .select('logo_url')
+        .eq('id', 1)
+        .single();
+
+      const logoUrl = settings?.logo_url
+        ? settings.logo_url.startsWith('http')
+          ? settings.logo_url
+          : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/logos/${settings.logo_url}`
+        : null;
+
       await sendRegistrationEmail({
         to: registration.email,
         fullName: registration.full_name,
         registrationId: registration.id,
         qrCodeUrl: qrCodeUrl,
+        logoUrl,
         eventDetails: {
           event_date: event.event_date,
           event_time: event.event_time,

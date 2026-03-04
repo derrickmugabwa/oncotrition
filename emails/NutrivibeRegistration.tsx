@@ -18,6 +18,7 @@ interface NutrivibeRegistrationEmailProps {
   fullName: string;
   registrationId: string;
   qrCodeUrl: string;
+  logoUrl?: string | null;
   eventDetails: {
     event_date: string;
     event_time: string;
@@ -32,6 +33,7 @@ export function NutrivibeRegistrationEmail({
   fullName,
   registrationId,
   qrCodeUrl,
+  logoUrl,
   eventDetails,
   participationType,
   amount,
@@ -59,7 +61,7 @@ export function NutrivibeRegistrationEmail({
           {/* Header with Logo */}
           <Section style={header}>
             <Img
-              src="https://oncotrition.com/logo.png"
+              src={logoUrl ?? 'https://oncotrition.com/logo.png'}
               width="150"
               height="auto"
               alt="Oncotrition"
@@ -70,9 +72,9 @@ export function NutrivibeRegistrationEmail({
           {/* Main Content */}
           <Section style={content}>
             <Heading style={h1}>Welcome to NutriVibe! 🎉</Heading>
-            
+
             <Text style={text}>Dear {fullName},</Text>
-            
+
             <Text style={text}>
               Thank you for registering for <strong>The NutriVibe Session</strong>! We're excited to have you join us for this networking and professional development event.
             </Text>
@@ -147,7 +149,7 @@ export function NutrivibeRegistrationEmail({
             <Text style={text}>
               We look forward to seeing you at NutriVibe!
             </Text>
-            
+
             <Text style={signature}>
               Best regards,<br />
               <strong>The Oncotrition Team</strong>

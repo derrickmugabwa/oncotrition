@@ -84,13 +84,13 @@ export function RegistrationForm({ event, pricing, interestAreas }: Registration
 
       // Show success message
       toast.success('Registration successful! Redirecting to payment...');
-      
+
       // Redirect to Paystack payment page
       window.location.href = data.paymentUrl;
     } catch (err) {
       console.error('Registration error:', err);
       const errorMessage = err instanceof Error ? err.message : 'An error occurred';
-      
+
       // Show error in both toast and alert
       toast.error(errorMessage, {
         duration: 6000,
@@ -104,10 +104,10 @@ export function RegistrationForm({ event, pricing, interestAreas }: Registration
         },
         icon: '⚠️',
       });
-      
+
       setError(errorMessage);
       setIsSubmitting(false);
-      
+
       // Scroll to top to show the error alert
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -212,8 +212,8 @@ export function RegistrationForm({ event, pricing, interestAreas }: Registration
         <CardContent className="pt-6">
           <p className="text-sm text-blue-900 dark:text-blue-100">
             <strong>Need help?</strong> Contact us at{' '}
-            <a href="mailto:nutrivibe@oncotritionhc.com" className="underline hover:text-blue-700">
-              nutrivibe@oncotritionhc.com
+            <a href="mailto:info@oncotritionhc.com" className="underline hover:text-blue-700">
+              info@oncotritionhc.com
             </a>
             {' '}or call{' '}
             <a href="tel:+254711118283" className="underline hover:text-blue-700">
